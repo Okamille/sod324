@@ -1,0 +1,263 @@
+# using Printf
+
+mutable struct Instance
+    planes::Array{Plane}
+    name::String
+
+    nb_kinds::Int
+
+    nb_planes::Int
+    n::Int # alias pour nb_planes (car utilisé partout !)
+
+    freeze_time::Int
+    # nb_planes n'est pas un attribut, mais une méthode retournant la
+    # taille de la liste planes
+
+    # Coût linéaire
+    sep_mat::Matrix{Int} # tableau d'éléments de type Int et de dimension 2
+
+    # # plus grande valeur d'écart entre avions
+    # sep_max::Int
+    #
+    # # date la plus tardive possible
+    # ub_max::Int
+    #
+    # # plus grande valeur de la date ub parmi les avions
+    # etp_max::Float64
+
+    loglevel::Int
+
+    function Instance() 
+        this = new()
+        this.loglevel = 0 # Doit poivoir fonctionner sans utiliser Args.get("level")
+        return this
+    end 
+
+    # Lit une instance en fonction du paramètre format
+    # - Si format vaut alp, ampl ou orlib : ce format est utilisé
+    # - Si format vaut AUTO alors l'argument de la ligne de commande
+    #   est utilisé :
+    #   - si l'argument impose un format, celui-ci est utilisé
+    #   - sinon (AUTO) le format est deviné à partir de l'instance
+    function Instance(infile::AbstractString; format = "AUTO")
+        this = new()
+        this.loglevel = Args.get("level")
+        this.name = "NO_NAME"
+
+        if !isfile(infile)
+            println("\nERREUR : fichier \"$infile\" inexistant ou illisible !\n")
+            exit(1)
+        end
+        read_alp(this, infile)
+
+        # Mise à jour des attributs dérivés des avions
+        # (seulement costs pour l'instant)
+        update_costs!.(this.planes)
+
+        return this
+    end
+end
+# Quelques méthodes auxiliaires simplifiant le codage
+sep_max(inst::Instance) = maximum(inst.sep_mat)
+ub_max(inst::Instance) = maximum(p->p.ub, inst.planes)
+lb_min(inst::Instance) = minimum(p->p.lb, inst.planes)
+
+# Plus grande valeur de pénalité (d'avance ou de retard)
+etp_max(inst::Instance) = maximum(p->max(p.ep, p.tp), inst.planes)
+
+# Retourne le meilleur coût connu pour le nom d'instance donné
+#
+function best_known_cost(name::String)
+    best_costs = Dict(
+        "01_k3" => 700.0,
+        "02_k3" => 1480.0,
+        "03_k3" => 820.0,
+        "04_k3" => 2520.0,
+        "05_k3" => 3100.0,
+        "06_k3" => 24442.0,
+        "07_k3" => 1550.0,
+        # "08_k3" => 1860.0-INVALID-TABOO_FAYE.sol
+        "08_k3"   => 1950.0,
+
+        "09_k3"   => 5611.7,
+        "09_k11"  => 1429.2695872,  # ok 04/11/2018
+        "09_k51"  => 787.9622532,  # ok 04/11/2018
+        "09_k201" => 756.1230078,
+
+        "10_k3"   => 12292.2,
+        "10_k11"  => 3499.8857854,  # ok 04/11/2018
+        "10_k51"  => 2433.2069502,  # ok 04/11/2018
+        "10_k201" => 2384.0274141,
+
+        "11_k3"   => 12418.32,
+        "11_k11"  => 2982.5029145,  # ok 04/10/2018
+        "11_k51"  => 1494.9744707,  # ok 04/10/2018
+        "11_k201" => 1425.637509,
+
+        "12_k3"   => 16122.18,
+        "12_k11"  => 3857.9681494, # 03/10/2018
+        "12_k51"  => 2333.22565,   # 03/11/2018
+        "12_k201" => 2251.0904176,
+
+        # "13_k3"   => 37064.11, # RECORD, MAIS JE VEUX LES SOL VOISINES
+        "13_k3"   => 37300.00, # SEUIL D'ENREGISTREMENT
+        "13_k11"  => 9214.8175394, # 03/11/2018 (new) (old: 9233.694213
+        "13_k51"  => 5713.1255061, # 03/11/2018
+        "13_k201" => 5543.8883451,
+
+        "09b_k3"  => 602387.0,
+    )
+    m = match(r"(\d+).*_k(\d+)", name)
+    # @show name
+    # @show m
+    if m === nothing
+        return 0.0
+    end
+    short_name = "$(m[1])_k$(m[2])"
+    if haskey(best_costs, short_name)
+        return best_costs[short_name]
+    else
+        return typemax(Int32)
+    end
+end
+function best_known_cost(inst::Instance)
+    return best_known_cost(inst.name)
+end
+
+# Version de haut niveau pour accéder au temps de séparation entre avion
+# (les méthodes de bas niveau peuvent accéder directement au tableau inst.sep_mat)
+function get_sep(inst::Instance, p1::Plane, p2::Plane)
+    inst.sep_mat[p1.kind, p2.kind]
+end
+
+# Enregistre l'instance dans un fichier au format demandé
+function write(inst::Instance, filename::AbstractString; format="alpx")
+    fh = open(filename, "w")
+    println(fh, to_s_long(inst))
+    close(fh)
+end
+
+# Quelques fonctions raccourcis
+to_s_alp(inst::Instance) = to_s_long(inst, format="alp")
+to_s_alpx(inst::Instance) = to_s_long(inst, format="alpx")
+
+# génère une chaine au format demandé (ampl, alp, alpx)
+function to_s_long(inst::Instance)
+    io = IOBuffer()
+    println(io, "# ALP instance version 1.0")
+    println(io)
+    println(io, "name ", inst.name)
+    println(io, "nb_planes ", inst.nb_planes)
+    println(io, "nb_kinds ", inst.nb_kinds)
+    println(io, "freeze_time ", inst.freeze_time)
+    println(io)
+    # println(io, "#    name  kind   at     E     T     L    ep    tp ")
+    println(io, to_s_alp_plane_header())
+    for p in inst.planes
+        println(io, to_s_long(p))
+    end
+    println(io)
+
+    println(io, "# Separation time between aircraft kinds")
+    for k1 = 1:inst.nb_kinds, k2 in 1:inst.nb_kinds
+        println(io, "sep ", k1, " ", k2, " ", inst.sep_mat[k1,k2])
+    end
+    String(take!(io))
+end
+
+
+# génère une chaine de statistiques sur l'instance
+function to_s_stats(inst::Instance)
+    io = IOBuffer()
+    print(io, "Statistiques sur l'instance\n")
+    println(io)
+    println(io, "  name: ", inst.name)
+    println(io, "  nb_planes: ", inst.nb_planes, " (",
+                                 inst.planes[1].name, "..",
+                                 inst.planes[end].name, ")")
+    println(io, "  nb_kinds: ", inst.nb_kinds)
+    println(io, "  freeze_time: ", inst.freeze_time)
+    println(io, "  Nombre total de timecosts :",
+            sum(p->length(p.timecosts), inst.planes))
+
+    println(io, "="^70)
+    println(io, "Caractéristiques des avions\n")
+    println(io, "  at:     ", minimum(p->p.at, inst.planes), "..",
+                              maximum(p->p.at, inst.planes),)
+    println(io, "  lb:     ", minimum(p->p.lb, inst.planes), "..",
+                              maximum(p->p.lb, inst.planes),)
+    println(io, "  target: ", minimum(p->p.target, inst.planes), "..",
+                              maximum(p->p.target, inst.planes),)
+    println(io, "  ub:     ", minimum(p->p.ub, inst.planes), "..",
+                              maximum(p->p.ub, inst.planes),)
+    println(io, "  ub-lb:  ", minimum(p->(p.ub-p.lb), inst.planes), "..",
+                              maximum(p->(p.ub-p.lb), inst.planes),)
+    println(io, "  ep:     ", minimum(p->p.ep, inst.planes), "..",
+                              maximum(p->p.ep, inst.planes),)
+    println(io, "  tp:     ", minimum(p->p.tp, inst.planes), "..",
+                              maximum(p->p.tp, inst.planes),)
+    println(io, "Nombre de timecosts :")
+    println(io, "nb_tc:    ", minimum(p->length(p.timecosts), inst.planes), "..",
+                              maximum(p->length(p.timecosts), inst.planes),)
+
+    viols = get_inequality_viols(inst)
+    println(io, "-"^70)
+    println(io, "Test de get_inequality_viols : nb_viols=$(length(viols))")
+    for viol in viols
+        (k1, k2, k3, sep12, sep23, sep13) = viol
+        print(io,"  $k1->$k3=$sep13 >= ")
+        println(io,"$k1->$k2=$(sep12) + $k2->$k3=$(sep23))")
+    end
+    String(take!(io))
+end
+
+# Retourne l'avion à partir de son nom
+#
+function get_plane_from_name(inst::Instance, name::AbstractString)
+    # TODO : utiliser plutot une fonction de recherche de Julia
+    for plane in inst.planes
+        if  plane.name == name
+            return  plane
+        end
+    end
+    # Cas particulier où les noms d'avion sont de la forme "p1" alors que l'on
+    # recherche le nom "1"
+    for plane in inst.planes
+        if  plane.name == "p$name"
+            return  plane
+        end
+    end
+    error("\nAucun avion de nom : $(name)\n")
+end
+
+# Retourne la liste des viols de l'hypothese de l'inégalité triangulaire
+#
+#    sep(k1,k3) > sep(k1,k2) + sep(k2,k3)  => viol existe
+#
+# En effet, l'inégalité triangulaire impose que pour toute paire de types
+# d'avions (k1,k3), on ne puisse pas insérer un autre avion de type k2 qui
+# permette de raccourcir l'écart des temps d'atterrissage entre un avion de type
+# k1 et un avion de type k3.
+#
+# Un viol est représenté par un tuple de six entiers
+# (k1, k2, k3, sep12, sep23, sep13)
+#
+function get_inequality_viols(inst::Instance)
+    viols = Vector{Tuple{Int, Int, Int, Int, Int, Int}}()
+    if inst.nb_kinds < 2
+        # pas de problème d'inégalité triangulaire car moins de 3 types d'avions !
+        return viols
+    end
+    for k1 in 1:inst.nb_kinds, k3 in 1:inst.nb_kinds, k2 in 1:inst.nb_kinds
+        sep13 = inst.sep_mat[k1, k3]
+        sep12 = inst.sep_mat[k1, k2]
+        sep23 = inst.sep_mat[k2, k3]
+        if sep13 > sep12+sep23
+            viol = (k1, k2, k3, sep12, sep23, sep13)
+            push!(viols, viol)
+        end
+    end
+    viols
+end
+
+# END TYPE Instance
