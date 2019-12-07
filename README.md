@@ -42,7 +42,7 @@ Un avion est caractérisé par :
 - ses dates d'atterrissage au plus tôt (E_i = lb_i) et au plus tard (L_i = ub_i)
 - son type (plus ou moins gros, ...)
 - des coûts de pénalité par unité de retard (tp = tardiness penality),
-  ou d'avance (ep = earliness penality)
+  ou d'avance (ep = earliness penalty)
 
 Une durée d'écart minimale S_{kl} doit être respectée entre un avion de type k
 et un avion de type l.
@@ -226,12 +226,12 @@ Certaines fonctionnalités de ce projet peuvent ne pas fonctionner.
 
 ## À propos des instances
 
-Les instances d'origines (de la bibliohèque orlib) sont accessibles depuis le 
+Les instances d'origines (de la bibliohèque orlib) sont accessibles depuis le
 site :
 
-- http://people.brunel.ac.uk/~mastjjb/jeb/jeb.html#aircraft
-- http://people.brunel.ac.uk/~mastjjb/jeb/orlib/airlandinfo.html
-- http://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/
+- <http://people.brunel.ac.uk/~mastjjb/jeb/jeb.html#aircraft>
+- <http://people.brunel.ac.uk/~mastjjb/jeb/orlib/airlandinfo.html>
+- <http://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/>
 
 Ces 13 instances ont été transformées dans un nouveau format plus lisible, plus dense
 et mieux adapté à une évolution de la fonction de coût.
