@@ -55,7 +55,7 @@ if need_jump
     @ms using JuMP
     const MOI = JuMP.MathOptInterface
     # print("include solvers/lp_timing.jl $(ms())...")
-    @ms include("model_util.jl")
+    @ms include("utils/model.jl")
     @ms include("solvers/lp_timing.jl")
 
     if external_mip_solver == :glpk

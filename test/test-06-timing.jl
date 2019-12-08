@@ -4,7 +4,7 @@ using Cbc
 using Clp
 using JuMP
 
-include("../src/model_util.jl")
+include("../src/utils/model.jl")
 # include("../src/solvers/mip.jl")
 include("../src/solvers/lp_timing.jl")
 include("../src/solvers/earliest_timing.jl")

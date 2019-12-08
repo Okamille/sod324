@@ -1,4 +1,4 @@
-include("../src/file_util.jl")
+include("../src/utils/file.jl")
 include("../src/solution_readsol.jl")
 
 args = Args.parse_commandline()

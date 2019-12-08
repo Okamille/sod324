@@ -1,4 +1,4 @@
-include("../src/model_util.jl")
+include("../src/utils/model.jl")
 include("../src/solvers/descent.jl")
 include("../src/solvers/lp_timing.jl")
 # include("../src/solvers/lp2_timing.jl")
