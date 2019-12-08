@@ -1,5 +1,5 @@
 include("../src/solution.jl")
-include("../src/explore_solver.jl")
+include("../src/solvers/explore.jl")
 
 # ===========
 # Préparartion des arguments

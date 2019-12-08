@@ -1,4 +1,4 @@
-# include("taboo_solver.jl")
+# include("solvers/taboo.jl")
 
 # Cette action est destinée à la mise au point de code (nouveau solveurs,
 # nouveaux voisinages, ...) 

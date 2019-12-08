@@ -34,7 +34,7 @@ include("../src/instance.jl")
 include("../src/array_util.jl")
 include("../src/solution.jl")
 
-include("../src/earliest_timing_solver.jl")
+include("../src/solvers/earliest_timing.jl")
 
 include("../src/instance_read_alp.jl")
 include("../src/instance_generators.jl")

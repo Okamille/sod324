@@ -5,9 +5,9 @@ using Clp
 using JuMP
 
 include("../src/model_util.jl")
-# include("../src/mip_solver.jl")
-include("../src/lp_timing_solver.jl")
-include("../src/earliest_timing_solver.jl")
+# include("../src/solvers/mip.jl")
+include("../src/solvers/lp_timing.jl")
+include("../src/solvers/earliest_timing.jl")
 
 # EXEMPLE DE LIGNE DE COMMANDE TESTÉE :
 # ./bin/seqata.jl val -i data/ampl/01.ampl -p 3,4,5,6,7,8,9,1,10,2 -x clp
