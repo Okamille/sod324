@@ -1,4 +1,4 @@
-@ms include("mip_discret_solver.jl")
+@ms include("solvers/mip_discret.jl")
 
 function main_dmip(args)
     println("="^70)

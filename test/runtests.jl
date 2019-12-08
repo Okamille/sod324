@@ -11,13 +11,13 @@ global const APPDIR = dirname(dirname(realpath(@__FILE__())))
 @show APPDIR
 
 # Démarrage des fonctions de chronométrage
-include("../src/time_util.jl")
+include("../src/utils/time.jl")
 println("Début des tests en ", ms(), "s")
 
-using Test   
-using Random 
-using Printf 
-using Dates  
+using Test
+using Random
+using Printf
+using Dates
 
 if !@isdefined(Args)
     include("../src/args.jl")
@@ -28,17 +28,17 @@ if !@isdefined(APPDIR)
 end
 
 
-include("../src/log_util.jl")
+include("../src/utils/log.jl")
 include("../src/plane.jl")
-include("../src/instance.jl")
-include("../src/array_util.jl")
-include("../src/solution.jl")
+include("../src/processing/instance.jl")
+include("../src/utils/array.jl")
+include("../src/processing/solution.jl")
 
-include("../src/earliest_timing_solver.jl")
+include("../src/solvers/earliest_timing.jl")
 
-include("../src/instance_read_alp.jl")
-include("../src/instance_generators.jl")
-# include("../src/solution.jl")
+include("../src/processing/instance_read_alp.jl")
+include("../src/processing/instance_generators.jl")
+# include("../src/processing/solution.jl")
 
 include("seqata_test_util.jl")
 

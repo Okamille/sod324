@@ -13,7 +13,7 @@ global const APPDIR = dirname(dirname(@__FILE__()))
 global args=nothing
 global settings=nothing
 
-include("abbrev_dict.jl")
+include("utils/abbrev_dict.jl")
 
 using ArgParse
 using DataStructures # risque de pollution du scope

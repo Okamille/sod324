@@ -4,7 +4,7 @@ using CPLEX
 using JuMP
 
 include("seqata_test_model_util.jl")
-include("../src/mip_solver.jl")
+include("../src/solvers/mip.jl")
 
 # ===========
 # Préparartion des arguments

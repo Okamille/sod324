@@ -2,7 +2,7 @@
 println("Test de l'analyse des logging... ")
 
 
-include("../src/log_util.jl")
+include("../src/utils/log.jl")
 
 args = Args.parse_commandline()
 Args.set(:level, 2)

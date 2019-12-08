@@ -54,9 +54,9 @@ ulg("timing_algo_solver=$timing_algo_solver")
 if need_jump
     @ms using JuMP
     const MOI = JuMP.MathOptInterface
-    # print("include lp_timing_solver.jl $(ms())...")
-    @ms include("model_util.jl")
-    @ms include("lp_timing_solver.jl")
+    # print("include solvers/lp_timing.jl $(ms())...")
+    @ms include("utils/model.jl")
+    @ms include("solvers/lp_timing.jl")
 
     if external_mip_solver == :glpk
         # @ms using GLPKMathProgInterface
@@ -72,7 +72,7 @@ if need_jump
 end
 
 if timing_algo_solver == :earliest
-    @ms include("earliest_timing_solver.jl")
+    @ms include("solvers/earliest_timing.jl")
 end
 
 USINGS_IS_LOADED = true
