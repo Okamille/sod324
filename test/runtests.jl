@@ -30,15 +30,15 @@ end
 
 include("../src/utils/log.jl")
 include("../src/plane.jl")
-include("../src/preprocessing/instance.jl")
+include("../src/processing/instance.jl")
 include("../src/utils/array.jl")
-include("../src/preprocessing/solution.jl")
+include("../src/processing/solution.jl")
 
 include("../src/solvers/earliest_timing.jl")
 
-include("../src/preprocessing/instance_read_alp.jl")
-include("../src/preprocessing/instance_generators.jl")
-# include("../src/preprocessing/solution.jl")
+include("../src/processing/instance_read_alp.jl")
+include("../src/processing/instance_generators.jl")
+# include("../src/processing/solution.jl")
 
 include("seqata_test_util.jl")
 

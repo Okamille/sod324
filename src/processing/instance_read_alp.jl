@@ -1,5 +1,5 @@
 
-@ms include("utils/file.jl")
+@ms include("../utils/file.jl")
 function read_alp(inst::Instance, filename::AbstractString)
     inst.loglevel>=4 && println("read_alp BEGIN $filename")
 

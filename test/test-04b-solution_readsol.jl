@@ -1,5 +1,5 @@
 include("../src/utils/file.jl")
-include("../src/preprocessing/solution_read.jl")
+include("../src/processing/solution_read.jl")
 
 args = Args.parse_commandline()
 Args.set(:level, 1)
