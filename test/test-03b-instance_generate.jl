@@ -1,4 +1,4 @@
-include("../src/instance_generators.jl")
+include("../src/preprocessing/instance_generators.jl")
 
 args = Args.parse_commandline()
 Args.set(:level, 1)

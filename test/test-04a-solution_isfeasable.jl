@@ -1,4 +1,4 @@
-include("../src/solution_readsol.jl")
+include("../src/preprocessing/solution_read.jl")
 
 # Test de la méthode is_feasable(sol::Solution)
 
