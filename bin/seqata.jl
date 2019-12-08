@@ -14,7 +14,7 @@ global const APPDIR = dirname(dirname(realpath(@__FILE__())))
 push!(LOAD_PATH, "$APPDIR/src")
 println("LOAD_PATH=\n    ", join(LOAD_PATH, "\n    "))
 
-include("$APPDIR/src/time_util.jl") # pour la macro @ms()
+include("$APPDIR/src/utils/time.jl") # pour la macro @ms()
 
 using Printf
 using Random
@@ -45,16 +45,16 @@ else
     # using Revise # pour rechargement dynamique des fichiers/fonctions modifiés
 
     @ms include("$APPDIR/src/args.jl");
-    @ms include("$APPDIR/src/log_util.jl")
-    @ms include("$APPDIR/src/console_util.jl")
+    @ms include("$APPDIR/src/utils/log.jl")
+    @ms include("$APPDIR/src/utils/console.jl")
     @ms include("$APPDIR/src/plane.jl")
-    @ms include("$APPDIR/src/instance.jl")
-    @ms include("$APPDIR/src/instance_generators.jl")
-    @ms include("$APPDIR/src/instance_read_alp.jl")
-    @ms include("$APPDIR/src/array_util.jl")
-    @ms include("$APPDIR/src/file_util.jl")
-    @ms include("$APPDIR/src/solution.jl")
-    @ms include("$APPDIR/src/solution_readsol.jl")
+    @ms include("$APPDIR/src/processing/instance.jl")
+    @ms include("$APPDIR/src/processing/instance_generators.jl")
+    @ms include("$APPDIR/src/processing/instance_read_alp.jl")
+    @ms include("$APPDIR/src/utils/array.jl")
+    @ms include("$APPDIR/src/utils/file.jl")
+    @ms include("$APPDIR/src/processing/solution.jl")
+    @ms include("$APPDIR/src/processing/solution_read.jl")
 
     @ms using JuMP
     @ms using CPLEX
@@ -63,14 +63,14 @@ else
     @ms using Test
 
 
-    @ms include("$APPDIR/src/model_util.jl")
-    @ms include("$APPDIR/src/earliest_timing_solver.jl")
-    @ms include("$APPDIR/src/lp_timing_solver.jl")
-    @ms include("$APPDIR/src/mip_solver.jl")
+    @ms include("$APPDIR/src/utils/model.jl")
+    @ms include("$APPDIR/src/solvers/earliest_timing.jl")
+    @ms include("$APPDIR/src/solvers/lp_timing.jl")
+    @ms include("$APPDIR/src/solvers/mip.jl")
 
-    @ms include("$APPDIR/src/annealing_solver.jl")
-    @ms include("$APPDIR/src/descent_solver.jl")
-    @ms include("$APPDIR/src/explore_solver.jl")
+    @ms include("$APPDIR/src/solvers/annealing.jl")
+    @ms include("$APPDIR/src/solvers/descent.jl")
+    @ms include("$APPDIR/src/solvers/explore.jl")
 
 
     # On impose des arguments par défaut
