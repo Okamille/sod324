@@ -5,6 +5,7 @@
 as(sym::Symbol, val) = Args.set(sym, val)
 ag(sym::Symbol, val) = Args.set(sym, val)
 ag(sym::Symbol)      = Args.get(sym)
+ag()                 = Args.show_args()
 
 # Raccourci pour la gestion du level (pour les messages d'erreur)
 lv(L) = Args.set(:level, L)
@@ -31,19 +32,6 @@ p11="$data/alp_11_p200.alp"
 p12="$data/alp_12_p250.alp"
 p13="$data/alp_13_p500.alp"
 
-# i01=Instance("$data/alp_01_p10.alp")
-# i02=Instance("$data/alp_02_p15.alp")
-# i03=Instance("$data/alp_03_p20.alp")
-# i04=Instance("$data/alp_04_p20.alp")
-# i05=Instance("$data/alp_05_p20.alp")
-# i06=Instance("$data/alp_06_p30.alp")
-# i07=Instance("$data/alp_07_p44.alp")
-# i08=Instance("$data/alp_08_p50.alp")
-# i09=Instance("$data/alp_09_p100.alp")
-# i10=Instance("$data/alp_10_p150.alp")
-# i11=Instance("$data/alp_11_p200.alp")
-# i12=Instance("$data/alp_12_p250.alp")
-# i13=Instance("$data/alp_13_p500.alp")
 i01=Instance(p01)
 i02=Instance(p02)
 i03=Instance(p03)
@@ -58,7 +46,63 @@ i11=Instance(p11)
 i12=Instance(p12)
 i13=Instance(p13)
 
-# cam=generate_mutations
+# Macro @i pour simplifier les "include" en interactif
+# Exemple d'itilisation :
+#    @i "04" "05"
+# Recherche tous les fichiers correspondant à la gpatternes *04* et *05*
+# puis les recharges par include (dans l'ordre)
+# Recherche d'abord dans le répertoire racine, puis dans src/ puis dans test/
+# 
+# ASTUCE : 
+# Si les arguments sont purement alphanumériques, alors on peut éviter des 
+# guillemets 
+#   @i inst       ok
+#   => charge tous les fichiers contenant "inst" dans src/ ou dans test/
+#   @i  src/inst   KO  
+#   @i "src/inst"  ok
+#   @i  04         KO (car est équivalent à @i "4" qui couvre plus large)
+#   @i "04"        ok
+# 
+macro i(pats...)
+    files = get_files_from_pats(pats...)
 
+    if length(files) == 0
+        println("Aucun fichier ne correspond.")
+    else
+        for absfile in files
+            relfiles = replace(absfile, "$APPDIR/" => "")
+            println("### include file: \"", relfiles, "\" ...")
+            include(absfile)
+            println("### include file: \"", relfiles, "\" FAIT")
+            # println("include done.")
+        end
+    end
+end
 
+# macro f (find)
+# Affiche les fichiers correspondants aux patternes passées (avec date de modif)
+macro f(pats...)
+    files = get_files_from_pats(pats...)
+    wd = pwd(); cd(APPDIR)
+    # On rend le chemin des fichiers relatifs par rapport au projet pour
+    # alléger le listing (quelque soit le répertoire courant)
+    files = replace.(files, "$APPDIR/" => "")
+    for file in files
+        run(`ls -l $file`)
+    end
+    cd(wd)
+end
+
+function get_files_from_pats(pats...)
+    # @show typeof(pats)
+    # @show pats
+    files = []
+    for pat in pats
+        append!(files, glob("$pat", "$APPDIR") )
+        append!(files, glob("*$pat*", "$APPDIR") )
+        append!(files, glob("*$pat*", "$APPDIR/src") )
+        append!(files, glob("*$pat*", "$APPDIR/test") )
+    end
+    return files
+end
 #./

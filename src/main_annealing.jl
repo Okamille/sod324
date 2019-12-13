@@ -10,18 +10,14 @@ function main_annealing(args)
   ln1("Solution correspondant à l'ordre de l'instance")
   ln1(to_s(sol))
 
-  # ON POURRAIT AUSSI REPARTIR DE LA SOLUTION DU GLOUTON INTELLIGENT !
-  initial_sort!(sol) 
-  
+  # ON POURRAIT AUSSI REPARTIR DE LA SOLUTION DU GLOUTON INTELLIGENT 
+  initial_sort!(sol)
   ln1("Solution initiale envoyée au solver")
   ln1(to_s(sol))
 
 
   # Choix des options pour le solver
   user_opts = Dict(
-      :loglevel           => Args.get("level"),
-      # :loglevel           => 2,
-
       # :startsol           => nothing,  # nothing pour auto à partir de l'instance
       :startsol           => sol,  # nothing pour auto à partir de l'instance
       :step_size          => inst.nb_planes,   # à renommer en step_size
@@ -35,7 +31,6 @@ function main_annealing(args)
       # :nb_cons_no_improv_max => 500*inst.size*inst.size,
       :nb_cons_no_improv_max => 5000*inst.nb_planes,
   )
-
   sv = AnnealingSolver(inst, user_opts)
   ln1(get_stats(sv))
   solve(sv)

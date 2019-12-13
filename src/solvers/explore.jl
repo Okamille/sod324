@@ -31,49 +31,49 @@ mutable struct ExploreSolver
     end
 end
 
-function solve(s::ExploreSolver, itermax_max::Int)
+function solve(sv::ExploreSolver, itermax_max::Int)
     ln2("BEGIN solve(ExploreSolver)")
     itermax = 1 # car on veut faire une seule itération si on passe itermax_max=1
 
     lg1("iter <nb_move>=<nb_improve>+<nb_degrade> => <bestcost>")
 
     while itermax <= itermax_max
-        prevcost = s.cursol.cost
-        swap!(s.cursol)
-        # println("APRES SWAP: ", to_s(s.cursol))
-        s.nb_move += 1
-        degrad = s.cursol.cost - prevcost
+        prevcost = sv.cursol.cost
+        swap!(sv.cursol)
+        # println("APRES SWAP: ", to_s(sv.cursol))
+        sv.nb_move += 1
+        degrad = sv.cursol.cost - prevcost
         ln4("degrad=$(degrad)")
         if degrad < 0
             # Ce voisin est meilleur : on l'accepte
             lg3("+")
-            s.nb_improve += 1
+            sv.nb_improve += 1
             # mise a jour éventuelle de la meilleure solution
-            if s.cursol.cost < s.bestsol.cost
+            if sv.cursol.cost < sv.bestsol.cost
                 # La sauvegarde dans bestsol n'est utile que si on ne fait une descente pure
-                copy!(s.bestsol, s.cursol)
+                copy!(sv.bestsol, sv.cursol)
                 if lg1()
-                    msg = string("\niter ", s.nb_move, "=", s.nb_improve, "+",
-                                 s.nb_degrad)
+                    msg = string("\niter ", sv.nb_move, "=", sv.nb_improve, "+",
+                                 sv.nb_degrad)
                     if lg2()
                         # affiche coût + ordre des avions
-                        msg *= string(" => ", to_s(s.bestsol))
+                        msg *= string(" => ", to_s(sv.bestsol))
                     else
                         # affiche seulement le coût
-                        msg *= string(" => ", ts.bestsol.cost)
+                        msg *= string(" => ", sv.bestsol.cost)
                     end
                     print(msg)
                 end
             end
         else # degrad < 0
             # Ce voisin est plus mauvais : on l'accepte aussi (car exploration) !!
-            s.nb_degrad += 1
+            sv.nb_degrad += 1
             if Args.get(:level) in 3:3
                 print("-")
             end
             if lg4()
-                msg = string("\n     ", s.nb_move, ":", s.nb_improve, "+/",
-                             s.nb_degrad, "- cursol=", to_s(s.cursol) )
+                msg = string("\n     ", sv.nb_move, ":", sv.nb_improve, "+/",
+                             sv.nb_degrad, "- cursol=", to_s(sv.cursol) )
                 print(msg)
             end
         end

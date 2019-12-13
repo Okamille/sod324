@@ -3,7 +3,6 @@
 mutable struct AnnealingSolver
     inst::Instance
     opts::Dict
-    loglevel::Int         # niveau de verbosité
 
     temp_init::Float64 # température courante
     temp_mini::Float64 # température mini avant arrêt
@@ -30,14 +29,14 @@ mutable struct AnnealingSolver
     testsol::Solution       # nouvelle solution courante potentielle
 
     function AnnealingSolver(inst::Instance, user_opts=Dict())
+        # ...
+        error("\n\nConstructeur de AnnealingSolver non implanté : AU BOULOT :-)\n\n")
+        # ...
+
         this=new()
         this.inst = inst
 
         this.opts = Dict(
-            :loglevel           => Args.get("level"),
-            # :loglevel           => 2,
-
-            # :startsol           => nothing,  # nothing pour auto à partir de l'instance
             :startsol           => nothing,    # nothing pour auto à partir de l'instance
             :step_size          => 1,
             :temp_init          => -1.0, # -1.0 pour automatique
@@ -47,7 +46,7 @@ mutable struct AnnealingSolver
             :nb_cons_reject_max => 1_000_000_000, # infini
             # :nb_cons_no_improv_max => 500*inst.size*inst.size,
             :nb_cons_no_improv_max => 5000*inst.nb_planes,
-       )
+        )
         nb_options=length(this.opts)
         merge!(this.opts, user_opts)
         if length(this.opts) != nb_options
@@ -60,6 +59,7 @@ mutable struct AnnealingSolver
             this.cursol = user_opts[:startsol]
         end
 
+        
         # On calcule éventuellement la température initiale automatiquement
         if this.opts[:temp_init] == nothing
             this.opts[:temp_init] = guess_temp_init(
@@ -69,12 +69,10 @@ mutable struct AnnealingSolver
             )
         end
 
-        # ...
-        error("\n\nConstructeur de AnnealingSolver non implanté : AU BOULOT :-)\n\n")
-        # ...
 
+        # A POURSUIVRE !!
 
-        # this.bestsol = Solution(this.cursol)
+        
         this.bestsol = Solution(this.cursol)
         this.testsol = Solution(this.cursol)
 
@@ -92,7 +90,6 @@ end
 function get_stats(sv::AnnealingSolver)
     txt = "
     Paramètres de l'objet AnnealingSolver :
-    loglevel=          $(sv.loglevel)
     step_size=         $(sv.step_size)
     temp_init=         $(sv.temp_init)
     temp_init_rate=    $(sv.opts[:temp_init_rate])
@@ -112,7 +109,7 @@ function get_stats(sv::AnnealingSolver)
     bestsol.cost=$(sv.bestsol.cost)
     sv.testsol.solver.nb_infeasable=$(sv.testsol.solver.nb_infeasable)
     "
-    return replace(txt,r"^ {4}", "")
+    return replace(txt, r"^ {4}" => "")
 end
 
 # Calcul d'une température initiale de manière à avoir un
@@ -158,6 +155,7 @@ end
 function guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
     # A FAIRE EVENTUELLEMENT
     t_init = 0    # stupide : pour faire une descente pure !
+    # Initialisations diverses
     return t_init
 end
 
@@ -166,6 +164,8 @@ function solve(sv::AnnealingSolver)
 
     error("\n\nMéthode solve(sv::AnnealingSolver) non implanté : AU BOULOT :-)\n\n")
 
-    sv.loglevel>=2 && println(get_stats(sv))
+    # ...
+    
+    lg2() && println(get_stats(sv))
     println("END solve(AnnealingSolver)")
 end

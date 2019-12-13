@@ -3,23 +3,23 @@ mutable struct MipDiscretSolver
     inst::Instance
     loglevel::Int         # niveau de verbosité
     bestsol::Solution     # meilleure Solution rencontrée
-    # Les attribut spécifiques au modèle
-    mip_model::Model  # Le modèle MIP
-    mip_x         # vecteur des variables d'atterrissage
-    mip_b         # vecteur des variables de précédence (before)
-    mip_cost      # variable du cout de la solution
-    mip_costs     # variables du cout de chaque avion
+    # Les attributs spécifiques au modèle
+    model::Model  # Le modèle MIP
+    x         # vecteur des variables d'atterrissage
+    b         # vecteur des variables de précédence (before)
+    cost      # variable du cout de la solution
+    costs     # variables du cout de chaque avion
     # Le constructeur
     function MipDiscretSolver(inst::Instance)
         this=new()
         this.inst = inst
         this.loglevel = Args.get("level")
-        this.bestsol = Solution(inst)
-        this.mip_model = new_model(mode=:mip, log_level=this.loglevel)
+        # this.bestsol = Solution(inst) # plante dans le proto car timing non dispo !
+        this.bestsol = Solution(inst, update=false) # pas besoin de résoudre le timing !
+        this.model = new_model(mode=:mip, log_level=this.loglevel)
         return this
     end
 end
-
 
 # Création du modèle discrétisé (plus lent, mais polyvalent)
 #
@@ -28,15 +28,15 @@ function buildSeqataModel(sv::MipDiscretSolver)
     # nb d'avion, pour abréger l'écriture
     planes = sv.inst.planes
     n = sv.inst.nb_planes
-    model = sv.mip_model
+    model = sv.model
 
     # Quelques raccourcis car utilisés un peu partout
     lbmin = lb_min(sv.inst)
     ubmax = ub_max(sv.inst)
 
-    #
-    # Création des contraintes
-    #
+    ##########################################################
+    # Création des variables
+    ##########################################################
 
     # y: indicateur des dates d'atterrissage
     # y=1 si l'avion i atterrit à la date t dans [0,T-1]
@@ -45,7 +45,7 @@ function buildSeqataModel(sv::MipDiscretSolver)
 
     # variable dérivée : date d'atterrissage effective de l'avion i
     @expression(model, x[p in planes], sum(t*y[p,t] for t in lbmin:ubmax))
-    sv.mip_x = x
+    sv.x = x
 
 
     # Coût de chaque avion compte tenu de sa date d'atterrissage
@@ -56,14 +56,18 @@ function buildSeqataModel(sv::MipDiscretSolver)
     @expression(model, total_cost,
                 sum(get_cost(p,t)*y[p,t] for p in planes for t in lbmin:ubmax))
 
-    sv.mip_costs = costs
-    sv.mip_cost = total_cost
+    sv.costs = costs
+    sv.cost = total_cost
+
+    ##########################################################
+    # Définition de l'objectif
+    ##########################################################
 
     @objective(model, Min, total_cost)
 
-    #
+    ##########################################################
     # Création des contraintes
-    #
+    ##########################################################
 
     # Contrainte sur les bornes de la date d'atterrissage
     # AMPL: C1 {i in 1..n} : E[i] <= x[i] <= L[i];
@@ -107,37 +111,28 @@ function solve(sv::MipDiscretSolver)
     ln2("fait ($(ms())).")
 
     lg2("Lancement de la résolution ($(ms())) ... ")
-    optimize!(sv.mip_model)
+    optimize!(sv.model)
     ln2("fait ($(ms())).")
 
-    lg2("Exploitation des résultats ($(ms())) ... ")
-    if  JuMP.termination_status(sv.mip_model) != MOI.OPTIMAL
+    lg2("Test de validité de la solution ($(ms())) ... ")
+    if  JuMP.termination_status(sv.model) != MOI.OPTIMAL
         print("ERREUR : pas de solution pour :\n    ")
-        @show JuMP.termination_status(sv.mip_model)
+        @show JuMP.termination_status(sv.model)
         println( to_s(sv.bestsol) )
         exit(1)
     end
 
-    # Si les variables sv.mip_x et sv.mip_costs sont indicées par le planes (objet)
-    #
+    lg2("Exploitation des résultats (mise à jour de la solution)($(ms())) ... ")
     # Extraction des valeurs entières des variables d'atterrissage
-
-    xvals = round.(Int, value.(sv.mip_x))
 
     # Il reste maintenant à mettre à jour notre objet solution à partir du
     # résultat de la résolution MIP
-    #
-    mip_costs = value.(sv.mip_costs)
-    mip_cost = value(sv.mip_cost)
-
     for (i, p) in enumerate(sv.inst.planes)
-        # p = sv.bestsol.planes[i]
         sv.bestsol.planes[i] = p
-        sv.bestsol.x[i] = value(sv.mip_x[p])
-        sv.bestsol.costs[i] = value(sv.mip_costs[p])
+        sv.bestsol.x[i] = round(Int, value(sv.x[p]))  # value() retourne Float64 !
+        sv.bestsol.costs[i] = value(sv.costs[p])
     end    
-    sv.bestsol.cost = value(sv.mip_cost)
-
+    sv.bestsol.cost = round(value(sv.cost), digits=Args.args[:cost_precision])
 
     # On trie juste la solution par date d'atterrissage croissante des avions
     # pour améliorer la présentation de la solution

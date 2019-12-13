@@ -1,4 +1,4 @@
-# Quelque méthode de manipulation de tableau/vecteur
+# Quelques méthodes de manipulation de tableau/vecteur
 
 # shift! : déplacement d'un élément dans un tableau
 # - v : vecteur à modifier
@@ -14,7 +14,7 @@
 #   => 1×7 LinearAlgebra.Adjoint{Int64,Array{Int64,1}}:
 #      7  1  2  3  4  5  6
 #
-# Voir aussi les méthodes julia
+# Voir aussi les méthodes intégrées au langage julia :
 # - permutate()
 # - circshift()
 #

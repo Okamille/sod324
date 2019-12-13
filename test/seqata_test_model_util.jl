@@ -22,7 +22,7 @@ function test_one_lp_descent(spec)
     lg2(" (", spec.lp_timing_solver, "... ")
     Args.set(:external_mip_solver, spec.external_mip_solver)
     sol = Solution(inst, algo=spec.algo)
-    model = sol.solver.mip_model
+    model = sol.solver.model
     initial_sort!(sol, presort=:shuffle)
 
 

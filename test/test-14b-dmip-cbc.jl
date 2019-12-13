@@ -1,6 +1,7 @@
 # using CPLEX
 # using GLPK
 using Cbc
+using Clp
 using JuMP
 
 include("seqata_test_model_util.jl")
@@ -26,15 +27,19 @@ Args.set("external_mip_solver", :cbc)
 Args.set(:level, 0)
 solver = MipDiscretSolver(inst)
 Args.set(:level, TEST_LEVEL)
-# @test typeof(solver.mip_model.solver) ==
-#       Cbc.CbcMathProgSolverInterface.CbcSolver
-backend_model = JuMP.backend(solver.mip_model).optimizer.model.optimizer # SPECIAL CBC
-# dump(JuMP.backend(solver.mip_model).optimizer.model)
-@test typeof(backend_model) == Cbc.Optimizer
+
+# Le nom du solver Cbc n'est pas standard :
+#   @show solver_name(solver.model)
+#   => "COIN Branch-and-Cut (Cbc)"
+# Donc ceci ne fonctionne pas :
+#   @test Symbol(lowercase(solver_name(solver.model))) == :cbc
+# Je teste alors la présence de la sous-chaine cbs
+@test occursin("cbc", lowercase(solver_name(solver.model)))
+
 ln1(" fait.")
 
 # ===========
-lg1("2. Résolution par MipDiscretSolver pour Cbc (cost=700.0 ?) LONG (80s+) ... ")
+lg1("2. Résolution par MipDiscretSolver pour Cbc (cost=700.0 ?) LONG (9mn+) ... ")
 solve(solver)
 bestsol = solver.bestsol
 # @test bestsol.cost == 700.0
