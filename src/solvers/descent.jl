@@ -115,6 +115,7 @@ function solve(sv::DescentSolver;
 
     while !finished(sv)
         sv.nb_test += 1
+
         error("\n\nMéthode solve(DescentSolve, ...) non implanté : AU BOULOT :-)\n\n")
 
         # On peut ici tirer aléatoirement des voisinages différents plus ou 
@@ -125,6 +126,7 @@ function solve(sv::DescentSolver;
         # i1 = rand(1:sv.inst.nb_planes)
         # 
         # On modifie testsol, puis on teste sa valeur, puis on...
+
         # ...
 
     end # fin while !finished
@@ -140,7 +142,7 @@ end
 # - i3 est distant au maximum de ecartmaxout du couple (i1,i2)
 function sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)
 
-    # Vesrion stupide car trop large !
+    # Version stupide car trop large !
     i1 = rand(1:sol.inst.nb_planes)
     i2 = rand(1:sol.inst.nb_planes)
     i3 = rand(1:sol.inst.nb_planes)
@@ -149,11 +151,10 @@ function sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-
     return (i1, i2, i3, i4)
 end
 
-
 function record_bestsol(sv::DescentSolver; movemsg="")
     copy!(sv.bestsol, sv.cursol)
     sv.bestiter = sv.nb_test
-    if sv.do_save_bestsol && sv.bestsol.cost <= best_known_cost(sv.inst)
+    if sv.do_save_bestsol
         write(sv.bestsol)
     end
     if lg3()
