@@ -197,18 +197,9 @@ end
 
 function to_s_long(sol::Solution)
     io = IOBuffer()
-    # prc = Args.args[:cost_precision] + 2 # cmt le 30/10/2018 car 7 par défaut
     prc = Args.args[:cost_precision]
     cost = round(sol.cost, digits=prc)
-
     viol_cost = get_viol_penality(sol)
-
-    # On adapte la précision d'arrondi à la complexité de la fonction de coût
-    prc = Args.args[:cost_precision]
-    nbseg = maximum([nb_segments(p) for p in sol.planes])
-    if nbseg > 2
-        prc += 2
-    end
 
     println(io, "# ALP solution version 1.0")
     println(io, "name $(sol.inst.name)  # nb_planes=$(length(sol.planes))")
@@ -273,43 +264,6 @@ function to_s_long(sol::Solution)
     String(take!(io))
 end
 
-# # Vérifie que la solution est intrinséquement faisable.
-# # Elle retourne un coût de pénalité représentatif du nombre d'avions non
-# # plaçables.
-# # Cette méthode se base sur l'ordre des avions, les limites ub et lb de
-# # chaque avion et la contrainte d'écart. Elle ne prend pas en compte
-# # l'information sol.x de la date d'atterrissage réelle de chaque avion.
-# #
-# # Principe : l'ordre des avions étant imposé et compte-tenu des temps de
-# # séparation, on essaie de placer les avions au plus tôt.
-# # Au premier avion non plaçable, on peut arrêter le calcul et on renvoie une
-# # pénalité calculée comme suit :
-# #   BIGPEN * nb_avions_non_placables
-# #
-# # BIGPEN est le coût de pénalité pour chaque avion non plaçable et doit être
-# # superieure au plus grand coût de tout avion dans toute solution réalisable.
-# # BIGPEN vaut Arbitrairement 10_000 pour l'instant
-# #
-# # REMARQUE :
-# #   Il est possible qu'un avions soit non plaçable, mais que les suivants le
-# #   soit. Dans ce cas les successeurs sont considérés comme non plaçables
-# #   également.
-# function get_infeasibility_penality(sol::Solution)
-#     BIGPEN = 10_000.0
-#     p1 = sol.planes[1]
-#     current_lb_time = p1.lb
-#     for i2 in 2:length(sol.planes)
-#         p2 = sol.planes[i2]
-#         sep = get_sep(sol.inst, p1, p2)
-#         current_lb_time = max(current_lb_time + sep, p2.lb)
-#         if current_lb_time > p2.ub
-#             lg3() && println("infaisable : $p2: $current_lb_time>$(p2.ub)")
-#             return BIGPEN * (1 + length(sol.planes) - i2)
-#         end
-#         p1 = p2
-#     end
-#     return 0.0
-# end
 
 # Vérifie la faisabilité de la solution par rapport aux dates d'atterrissage
 # réelle de la solution.
@@ -357,9 +311,6 @@ function get_viol_penality(sol::Solution)
             # s_val = sol.inst.sep_mat[p1.kind, p2.kind]
             s_val = get_sep(sol.inst, p1, p2)
             if sol.x[i2] < sol.x[i1] + s_val
-                ### puts "unit_penality=#{unit_penality}"
-                ### puts "@x[i1] =#{@x[i1]}"
-                ### puts "@x[i2] =#{@x[i2]}"
                 total_penality += unit_penality * (sol.x[i1] + s_val  - sol.x[i2])
                 # il faudrait pousser j
                 feasible = false
@@ -441,7 +392,6 @@ function get_viol_description(sol::Solution)
             #       break
             #   end
 
-            # s_sepval = sol.inst.sep_mat[p1.kind, p2.kind]
             sep = get_sep(sol.inst, p1, p2)
             if x2 < x1 + sep
                 print(io,  "$(p1.name)->$(p2.name) : écart insuffisant ")
@@ -472,7 +422,7 @@ end
 #
 function is_feasable(sol::Solution; param_bidon=nothing)
     # ASSUME_TRINEQ = Args.get(:assume_trineq)
-    ASSUME_TRINEQ = false
+    ASSUME_TRINEQ = false # L'inégalité triangulaire n'est pas présupposée
 
     n = length(sol.planes)
     # x : vecteur des placements au plus tôt des avions
@@ -518,7 +468,7 @@ end
 # est modifié
 # TODO: prévoir paramètre from_index=1 pour permettre un recalcul partiel.
 #
-# do_update_cost (false par défaut) : si vrai , met à jours les coûts
+# do_update_cost (false par défaut) : si vrai, met à jours les coûts.
 # REMARQUE :
 # - l'option do_update_cost n'est utile que si ce n'est pas déjà fait
 #   par le TimingSolver.
@@ -528,38 +478,7 @@ end
 # - Si aucun TimingSolver n'a été spécifié lors de la création de la solution
 #   alors on utilise la résolution au plus tot.
 #
-function solve!(sol::Solution; do_update_cost::Bool=false)
-    # TODO: tester ici l'infaisabilité
-    # MAIS ATTENTION : SOURCE DE PROBLEME (RÉCURSIVITÉ PARASITE)
-    # Si infaisable : mettre à jour le coût global cost sans mettre à jour les
-    # coûts individuels. Il est toujours possible d'appeler update_cost!  pour
-    # avoir une mise-à jour plus précise des coûts individuels avec pénalités.
-    #
-    # sol.cost = get_infeasibility_penality(sol)
-    # # sol.cost = get_viol_penality(sol)
-    # if sol.cost != 0.0
-    #     # on recalcule une solution pénalisés plus précise
-    #     solve_to_earliest!(sol)
-    #     lg1() && println("sol non faisable ($(sol.cost))=> on ignore !")
-    #     return sol
-    # end
-
-    # if !isdefined(sol, :solver)
-    #     init_solver(sol)
-    # end
-
-    # if sol.timing_algo_solver != :earliest
-    #     if sol.solver == nothing
-    #         init_solver(sol, sol.timing_algo_solver)
-    #     end
-    #     solve!(sol.solver, sol)
-    #     if do_update_cost
-    #         update_costs!(sol)
-    #     end
-    # else
-    #     solve_to_earliest!(sol, do_update_cost=do_update_cost)
-    # end
-
+function solve!(sol::Solution; do_update_cost::Bool=false)    
     if sol.solver == nothing
         init_solver(sol, sol.timing_algo_solver)
     end
@@ -567,7 +486,6 @@ function solve!(sol::Solution; do_update_cost::Bool=false)
     if do_update_cost
         update_costs!(sol)
     end
-
     return sol
 end
 
@@ -624,8 +542,11 @@ end
 #
 # PRECONDITION : le Vector s.costs est dans le même ordre que s.planes
 #
-function update_costs!(sol::Solution)
-    add_viol_penality = true
+function update_costs!(sol::Solution; add_viol_penality = true )
+    
+    # if !isnothing(x)
+    #     copy!(sol.x, x)
+    # end
 
     # Mise à jour des coûts individuels de chaque avion
     for i in 1:length(sol.planes)
@@ -645,35 +566,8 @@ function update_costs!(sol::Solution)
     if add_viol_penality
         sol.cost += get_viol_penality(sol)
     end
-    # println("xxxxx update_costs! sol.cost= $(sol.cost)")
     return sol
 end
-
-# Met à jour la solution à partir d'informations externes (x[], costs[] et cost).
-# Les informations externes x[] et costs[] sont définies dans l'ordre de
-# l'instance.
-#
-# TODO: rendre les différents paramètres optionnels (en passant ces paramètres
-# par position). Faire ceci avec julia-1.0 qui gère plus efficacement les unions
-# de type (e.g costs::Union{Vector{Float64),Missing} ...)
-#
-function update_from!(sol::Solution,
-                      x::Vector{Int},
-                      costs::Vector{Float64},
-                      cost::Float64)
-    # for i in 1:length(sol.planes)
-    #     p = sol.planes[i]
-    #     sol.x[i] = x[p.id]
-    #     sol.costs[i] = costs[p.id]
-    # end
-    for (i, p) in enumerate(sol.planes)
-        # p = sol.planes[i]
-        sol.x[i] = x[p.id]
-        sol.costs[i] = costs[p.id]
-    end    
-    sol.cost = cost
-end
-
 
 # Met à jour la date d'atterrissage de chaque avion au plus tôt, de façon à
 # respecter les contraintes de précédence au mieux.
@@ -761,14 +655,7 @@ function shift!(sol::Solution, idx1=-1, idx2=-1; do_update=true)
         return swap!(sol, idx1, idx2, do_update=do_update)
     end
     # println("AVANT SHIFT $idx1->$idx2 : ", to_s(sol))
-    # 03/05/2019 : création et exploitation de la méthode array_util.jl shift!
-    #   if idx1<idx2
-    #       # si idx1=2 et idx2=6
-    #       # alors sol.planes[2,3,4,5 , 6] = sol.planes[3,4,5,6 , 2]
-    #       sol.planes[[idx1:idx2-1;idx2]] = sol.planes[[idx1+1:idx2;idx1]]
-    #   else
-    #       sol.planes[[idx2+1:idx1;idx2]] = sol.planes[[idx2:idx1-1;idx1]]
-    #   end
+    # 03/05/2019 : shift! est définie dans le fichier array_util.jl 
     shift!(sol.planes, idx1, idx2)
 
     if do_update
@@ -808,17 +695,6 @@ end
 # TODO: effectuer une mise à jour différencielle du coût
 #
 function permu!(sol::Solution, indices1, indices2; do_update=true)
-    # error("\nSolution#permu! N'EST PAS IMPLÉMENTÉE ! \n")
-    # tmp_planes = Array.new(indices1.size) {|i| @planes[indices1[i]]}
-    # tmp_planes = sol.planes[indices1]
-    # for i in 0...indices2.size
-    #   @planes[indices2[i]] = tmp_planes[i]
-    # end
-    # @show indices1
-    # @show indices2
-    # @show reverse(indices1)
-    # @show to_s(sol)
-
     sol.planes[indices1] = sol.planes[indices2]
     # sol.planes[[indices1...]] = sol.planes[[indices2...]] # avec des tuples iiii
     if do_update
@@ -863,7 +739,7 @@ function initial_sort!(sol::Solution; presort=:ARGS)
     end
 
     # Autre solution pour trier de type d'avions (A GARDER COMME EXEMPLES) :
-    # On passe la fonction qui compare deux éléments
+    # On passe la fonction qui compare deux éléments :
     # Base.sort!(sol.planes, lt=(p1,p2)->p1.lb < p2.lb) # Marche aussi (comparator)
     # Base.sort!(sol.planes, rev=true,lt=(p1,p2)->p1.lb < p2.lb) # ok aussi THE WORST CASE
 
@@ -894,21 +770,13 @@ function write(sol::Solution, filename="")
     end
 end
 
-# Retourne un nom de la forme
-#   alp_13_p500=37065.11.sol
-#   alp_13_p500_g100=6440.8959533.sol
+# Retourne un nom de la forme :
+#   alp_01_p10=700.0.sol              # VERSION SIMPLIFIÉE POUR SEQATA
+#   alp_13_p500_k201=6440.8959533.sol # VERSIOAN ALAP pour 100 segments
+# 
 function  guess_solname(sol::Solution)
-    # la précsion est donné par la valeur par défaut (e.g 5)
-    # pour les coûts en V (2 segments)
-    # Mais elle est incrémentée de 2 pour les fonctions de coût avec "beaucoup"
-    # de segments
-    nbsegs = maximum([nb_segments(p) for p in sol.planes])
     prc = Args.args[:cost_precision]
-    if nbsegs > 2
-        prc += 2
-    end
     cost = round(sol.cost, digits=prc)
-
     return "$(sol.inst.name)=$(cost).sol"
 end
 

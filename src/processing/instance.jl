@@ -3,33 +3,13 @@
 mutable struct Instance
     planes::Array{Plane}
     name::String
-
     nb_kinds::Int
-
     nb_planes::Int
-    n::Int # alias pour nb_planes (car utilisé partout !)
-
     freeze_time::Int
-    # nb_planes n'est pas un attribut, mais une méthode retournant la
-    # taille de la liste planes
-
-    # Coût linéaire
     sep_mat::Matrix{Int} # tableau d'éléments de type Int et de dimension 2
-
-    # # plus grande valeur d'écart entre avions
-    # sep_max::Int
-    #
-    # # date la plus tardive possible
-    # ub_max::Int
-    #
-    # # plus grande valeur de la date ub parmi les avions
-    # etp_max::Float64
-
-    loglevel::Int
 
     function Instance() 
         this = new()
-        this.loglevel = 0 # Doit poivoir fonctionner sans utiliser Args.get("level")
         return this
     end 
 
@@ -41,7 +21,6 @@ mutable struct Instance
     #   - sinon (AUTO) le format est deviné à partir de l'instance
     function Instance(infile::AbstractString; format = "AUTO")
         this = new()
-        this.loglevel = Args.get("level")
         this.name = "NO_NAME"
 
         if !isfile(infile)
@@ -64,65 +43,6 @@ lb_min(inst::Instance) = minimum(p->p.lb, inst.planes)
 
 # Plus grande valeur de pénalité (d'avance ou de retard)
 etp_max(inst::Instance) = maximum(p->max(p.ep, p.tp), inst.planes)
-
-# Retourne le meilleur coût connu pour le nom d'instance donné
-#
-function best_known_cost(name::String)
-    best_costs = Dict(
-        "01_k3" => 700.0,
-        "02_k3" => 1480.0,
-        "03_k3" => 820.0,
-        "04_k3" => 2520.0,
-        "05_k3" => 3100.0,
-        "06_k3" => 24442.0,
-        "07_k3" => 1550.0,
-        # "08_k3" => 1860.0-INVALID-TABOO_FAYE.sol
-        "08_k3"   => 1950.0,
-
-        "09_k3"   => 5611.7,
-        "09_k11"  => 1429.2695872,  # ok 04/11/2018
-        "09_k51"  => 787.9622532,  # ok 04/11/2018
-        "09_k201" => 756.1230078,
-
-        "10_k3"   => 12292.2,
-        "10_k11"  => 3499.8857854,  # ok 04/11/2018
-        "10_k51"  => 2433.2069502,  # ok 04/11/2018
-        "10_k201" => 2384.0274141,
-
-        "11_k3"   => 12418.32,
-        "11_k11"  => 2982.5029145,  # ok 04/10/2018
-        "11_k51"  => 1494.9744707,  # ok 04/10/2018
-        "11_k201" => 1425.637509,
-
-        "12_k3"   => 16122.18,
-        "12_k11"  => 3857.9681494, # 03/10/2018
-        "12_k51"  => 2333.22565,   # 03/11/2018
-        "12_k201" => 2251.0904176,
-
-        # "13_k3"   => 37064.11, # RECORD, MAIS JE VEUX LES SOL VOISINES
-        "13_k3"   => 37300.00, # SEUIL D'ENREGISTREMENT
-        "13_k11"  => 9214.8175394, # 03/11/2018 (new) (old: 9233.694213
-        "13_k51"  => 5713.1255061, # 03/11/2018
-        "13_k201" => 5543.8883451,
-
-        "09b_k3"  => 602387.0,
-    )
-    m = match(r"(\d+).*_k(\d+)", name)
-    # @show name
-    # @show m
-    if m === nothing
-        return 0.0
-    end
-    short_name = "$(m[1])_k$(m[2])"
-    if haskey(best_costs, short_name)
-        return best_costs[short_name]
-    else
-        return typemax(Int32)
-    end
-end
-function best_known_cost(inst::Instance)
-    return best_known_cost(inst.name)
-end
 
 # Version de haut niveau pour accéder au temps de séparation entre avion
 # (les méthodes de bas niveau peuvent accéder directement au tableau inst.sep_mat)
@@ -177,8 +97,6 @@ function to_s_stats(inst::Instance)
                                  inst.planes[end].name, ")")
     println(io, "  nb_kinds: ", inst.nb_kinds)
     println(io, "  freeze_time: ", inst.freeze_time)
-    println(io, "  Nombre total de timecosts :",
-            sum(p->length(p.timecosts), inst.planes))
 
     println(io, "="^70)
     println(io, "Caractéristiques des avions\n")
@@ -196,9 +114,6 @@ function to_s_stats(inst::Instance)
                               maximum(p->p.ep, inst.planes),)
     println(io, "  tp:     ", minimum(p->p.tp, inst.planes), "..",
                               maximum(p->p.tp, inst.planes),)
-    println(io, "Nombre de timecosts :")
-    println(io, "nb_tc:    ", minimum(p->length(p.timecosts), inst.planes), "..",
-                              maximum(p->length(p.timecosts), inst.planes),)
 
     viols = get_inequality_viols(inst)
     println(io, "-"^70)
