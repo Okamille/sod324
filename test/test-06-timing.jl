@@ -68,13 +68,11 @@ print(test_name, "... ")
       Args.set("external_mip_solver", :cplex)
       # Args.set("planes", planes_str) # idem que l'option -p
 
-
       # sol = Solution(inst, update=false, algo=:lp)
       sol = Solution(inst, update=false)   # alpo=:lp par défaut
       @test isa(sol.solver, LpTimingSolver)
 
-      backend_model = JuMP.backend(sol.solver.mip_model).optimizer.model
-      @test typeof(backend_model) ==  CPLEX.Optimizer
+      @test Symbol(lowercase(solver_name(sol.solver.model))) == :cplex
 
       # On mélange les avions puis on met à jour la solution
       # print("Mélange et évaluation de la solution (cos>1000 ?)...")
@@ -103,13 +101,6 @@ lg1(test_name, "... ")
 
       @test isa(sol.solver, LpTimingSolver)
       
-      # CE TEST INTERNE NE FONCTIONNE PLUS AVEC JuMP-0.20.1 => A CORRIGER
-      # backend_model = JuMP.backend(sol.solver.mip_model).optimizer.model
-      # @test typeof(backend_model) ==  Clp.Optimizer
-      # # @test typeof(sol.solver.mip_model.solver) ==
-      # #       GLPKMathProgInterface.GLPKInterfaceLP.GLPKSolverLP
-
-
       shuffle!(sol, do_update=true)
       @test sol.cost > 1000.0  # cost >> 700 si mélange presque surement
 

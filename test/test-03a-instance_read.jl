@@ -7,8 +7,8 @@ inst = Instance("$APPDIR/$relfile")
 @test inst.name == "alp_01_p10"
 alp_alpx_str = to_s_long(inst)
 # println(alp_alpx_str)
-# @test length(alp_alpx_str) == 1164
-@test length(alp_alpx_str) == 1164
+# @test length(alp_alpx_str) == 1164  # FORMAT ALPX (pour alap)
+@test length(alp_alpx_str) == 750     # FORMAT ALP (pour seqata)
 @test alp_alpx_str[29:43] == "name alp_01_p10"
 print(" fait\n")
 
@@ -33,8 +33,6 @@ p1 = inst.planes[1]
 @test p1.ub == 560
 @test p1.ep == 10.0
 @test p1.tp == 10.0
-@test length(p1.timecosts) == 3
-@test p1.timecosts[1] ==  (-26+p1.target, 260.0)
 print(" fait\n")
 
 #./

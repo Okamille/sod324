@@ -26,8 +26,9 @@ Args.set(:level, 0)
 solver = MipDiscretSolver(inst)
 Args.set(:level, TEST_LEVEL)
 
-backend_model = JuMP.backend(solver.mip_model).optimizer.model
-@test typeof(backend_model) == CPLEX.Optimizer
+# backend_model = JuMP.backend(solver.model).optimizer.model
+# @test typeof(backend_model) == CPLEX.Optimizer
+@test Symbol(lowercase(solver_name(solver.model))) == :cplex
 ln1(" fait.")
 
 # ===========
