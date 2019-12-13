@@ -4,7 +4,7 @@ function main_timing(args)
     # @error "main_timing: désolé la méthode main_timing n'est pas implantée"
     # Résolution de l'action
     println("="^70)
-    println("Validation d'une solution pour $(args[:infile])\n")
+    println("Résolution du timing pour $(args[:infile])\n")
     inst = Instance(args[:infile])
     # args.names=[1,6,8,4,12,9,11,3,10,2,19,24,20,7,5,50,15,23,18,14,13,25,17,26,
     #          43,16,44,27,32,28,22,33,29,47,34,48,49,46,38,35,45,39,31,40,36,30,42,41,37,21]

@@ -11,7 +11,7 @@ function main_descent(args)
     # Voir aussi option startsol de la méthode solve
     # duration = Args.get(:duration) # CETTE OPTION N'EXISTE PAS (ou plus ;-)
     # duration = 120 # secondes
-    duration = 10 # secondes
+    duration = 20 # secondes
     itermax = Args.get(:itermax) # existe encore :-)
     solve(sv, durationmax=duration, nb_cons_reject_max=itermax)
 
