@@ -2,10 +2,12 @@
 # (indépendantes de tout projet julia)
 # Modif le 21/11/2019 
 
+"""
+    ms()
 
-# ms(): démarre le chrono si nécessaire (la première fois) et retourne la durée
-# écoulée depuis ce démarrage (à la milli-seconde prêt)
-# 
+démarre le chrono si nécessaire (la première fois) et retourne la durée
+écoulée depuis ce démarrage (à la milli-seconde prêt)
+"""
 function ms()
     global MS_START
     if ! @isdefined MS_START
@@ -19,26 +21,33 @@ function ms_reset()
     global MS_START = time()
 end
 
-# @ms : chronomètre l'exécution d'une commande :
-# - affiche la durée depuis le lancement du programme (peut-être long en
-#   mode interactife !)
-# - affiche le fichier depuis lequel elcette macro est appelée
-# - affiche la commande à exécuter
-# - exécute cette commande
-# - affiche la durée d'exécution sur la ligne suivante
-#
-# Exemple d'affichage en interactif :
-#   @ms sleep(1)
-#   =>
-#   @ms TODO 9349.527s (mode repl):sleep(1) ... 
-#   @ms done 9350.552s (mode repl):sleep(1) en 1.002s
-#
-# Exemples depuis en script :
-#   @ms using JuMP
-#   =>
-#   @ms TODO 0.871s (mode repl):using JuMP ... 
-#   @ms done 2.198s (mode repl):using JuMP en 1.327s
-#
+"""
+    @ms(cmd)
+
+chronomètre l'exécution d'une commande :
+- affiche la durée depuis le lancement du programme (peut-être long en
+  mode interactife !)
+- affiche le fichier depuis lequel elcette macro est appelée
+- affiche la commande à exécuter
+- exécute cette commande
+- affiche la durée d'exécution sur la ligne suivante
+
+Exemple d'affichage en interactif :
+```
+@ms sleep(1)
+=>
+@ms TODO 9349.527s (mode repl):sleep(1) ... 
+@ms done 9350.552s (mode repl):sleep(1) en 1.002s
+```
+
+Exemples depuis en script :
+```
+@ms using JuMP
+=>
+@ms TODO 0.871s (mode repl):using JuMP ... 
+@ms done 2.198s (mode repl):using JuMP en 1.327s
+```
+"""
 macro ms(cmd)
     cmdstr = string(cmd)
     # info sur le fichier qui a appelé cette macro

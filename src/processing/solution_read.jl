@@ -1,49 +1,49 @@
+"""
+    readsol
 
-# readsol
-#
-# Liste des paramètres :
-# - sol: l'objet Solution préconstruit et à mettre jour par cette méthode,
-# - filename: chemin du fichier solution à charger
-#
-# Lit un fichier solution au format alp, et effectue les opérations suivantes :
-# - extrait tous les paramètres possibles du fichier (sauf les commentaires)
-# - met à jour les attributs de l'objet Solution en fonction des informations
-#   présentes dans le fichier
-# Cette méthode **ne vérifie pas** la validité de la solution vis-à-vis des
-# contraintes : seule la cohérence de la solution lue par rapport à son instance
-# est assurée.
-#
-# Les informations suivantes sont lues mais non exploitées :
-# - name (e.g. "alp_01_p10_k3")
-# - timestamp (e.g "2019-07-08T16:57:22.343")
-#
-# L'ordre des avions de la solution est défici de la manière suivante selon que
-# le fichier de solution à lire est plus ou moins complet :
-# 1. Seule la ligne "order" est définie (pas de ligne "landing" dans le fichier)
-#    Dans ce cas seul le champ planes de la solution est mis à jour dans l'ordre
-#    des noms de la ligne "order".
-# 2. Seules les lignes "landing" sont présentes (la ligne "order" est absente)
-#    Dans ce cas l'ordre des avions est donné par l'ordre des ligne "landing".
-# 3. La ligne "order" **et** les lignes landing sont définies.
-#    Dans ce cas l'ordre des avions est défini par la ligne "order" et les lignes
-#    "landing" peuvent être dans un ordre quelconque
-#
-# Les vérifications de cohérence suivantes sont faites
-# - si les informations "order" et/ou "landing" sont présentes, elles doivent
-#   être complètes (i.e couvrir tous les avions de l'instance, et seulement
-#   ceux-ci).
-# - si les informations de date (t) sont fournies pour tous les avions, alors
-#   l'attribut x de la solution sera mis à jour.
-#   Sinon seule les infrmations sur l'ordre des avion est utile, et n'a de sens
-#   que si la ligne "order" est abscente 
-# - si les informations dt et cost sont présentes sur les lignes "landing"
-#   alors elle doivent être correctes.
-# - si l'information globale "costs" est présente, elle doit être correcte.
-#
-# - **ne vérifie pas** la validité de la solution vis-à-vis des contraintes :
-#   seule la cohérence de la solution lue par rapport à son instance est
-#   vérifiée.
-#
+Liste des paramètres :
+- sol: l'objet Solution préconstruit et à mettre jour par cette méthode,
+- filename: chemin du fichier solution à charger
+
+Lit un fichier solution au format alp, et effectue les opérations suivantes :
+- extrait tous les paramètres possibles du fichier (sauf les commentaires)
+- met à jour les attributs de l'objet Solution en fonction des informations
+  présentes dans le fichier
+Cette méthode **ne vérifie pas** la validité de la solution vis-à-vis des
+contraintes : seule la cohérence de la solution lue par rapport à son instance
+est assurée.
+
+Les informations suivantes sont lues mais non exploitées :
+- name (e.g. "alp_01_p10_k3")
+- timestamp (e.g "2019-07-08T16:57:22.343")
+
+L'ordre des avions de la solution est défici de la manière suivante selon que
+le fichier de solution à lire est plus ou moins complet :
+1. Seule la ligne "order" est définie (pas de ligne "landing" dans le fichier)
+   Dans ce cas seul le champ planes de la solution est mis à jour dans l'ordre
+   des noms de la ligne "order".
+2. Seules les lignes "landing" sont présentes (la ligne "order" est absente)
+   Dans ce cas l'ordre des avions est donné par l'ordre des ligne "landing".
+3. La ligne "order" **et** les lignes landing sont définies.
+   Dans ce cas l'ordre des avions est défini par la ligne "order" et les lignes
+   "landing" peuvent être dans un ordre quelconque
+
+Les vérifications de cohérence suivantes sont faites
+- si les informations "order" et/ou "landing" sont présentes, elles doivent
+  être complètes (i.e couvrir tous les avions de l'instance, et seulement
+  ceux-ci).
+- si les informations de date (t) sont fournies pour tous les avions, alors
+  l'attribut x de la solution sera mis à jour.
+  Sinon seule les infrmations sur l'ordre des avion est utile, et n'a de sens
+  que si la ligne "order" est abscente 
+- si les informations dt et cost sont présentes sur les lignes "landing"
+  alors elle doivent être correctes.
+- si l'information globale "costs" est présente, elle doit être correcte.
+
+- **ne vérifie pas** la validité de la solution vis-à-vis des contraintes :
+  seule la cohérence de la solution lue par rapport à son instance est
+  vérifiée.
+"""
 function readsol(sol::Solution, filename::String)
 
     Args.get("level")>=4 && println("readsol BEGIN $filename")
@@ -88,11 +88,15 @@ function readsol(sol::Solution, filename::String)
     sol
 end
 
-# parse_alp_solfile : analyse un fichier représentant une solution au format .alp
-# Retourne une structure contenant les champs suivanmts :
-# inst: objet de l'instance
-# filename: nom du fichier solution
-#
+"""
+    parse_alp_solfile
+
+Analyse un fichier représentant une solution au format .alp
+
+Retourne une structure contenant les champs suivanmts :
+inst: objet de l'instance
+filename: nom du fichier solution
+"""
 function parse_solfile(inst::Instance, filename::String)
 
     Args.get("level")>=4 && println("parse_alpfile BEGIN $filename")

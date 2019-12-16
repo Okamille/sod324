@@ -87,13 +87,14 @@ function read_alp(inst::Instance, filename::AbstractString)
     lg4() && println("read_alp END")
 end
 
-# ajoute un avion à l'instance en construction.
-#
-# str contient des informations suivantes
-#
-#       name  type   at     E     T     L      ep    tp
-# e.g :  "p1    1     1   601   709  2401     1.7  1.9"
-#
+"""
+ajoute un avion à l'instance en construction.
+
+str contient des informations suivantes
+
+      name  type   at     E     T     L      ep    tp
+e.g :  "p1    1     1   601   709  2401     1.7  1.9"
+"""
 function add_plane(inst::Instance, str::AbstractString)
 
     # On s'assure qu'il n'y a pas d'espace sur les bords (pour simplier

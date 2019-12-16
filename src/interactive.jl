@@ -46,23 +46,27 @@ i11=Instance(p11)
 i12=Instance(p12)
 i13=Instance(p13)
 
-# Macro @i pour simplifier les "include" en interactif
-# Exemple d'itilisation :
-#    @i "04" "05"
-# Recherche tous les fichiers correspondant à la gpatternes *04* et *05*
-# puis les recharges par include (dans l'ordre)
-# Recherche d'abord dans le répertoire racine, puis dans src/ puis dans test/
-# 
-# ASTUCE : 
-# Si les arguments sont purement alphanumériques, alors on peut éviter des 
-# guillemets 
-#   @i inst       ok
-#   => charge tous les fichiers contenant "inst" dans src/ ou dans test/
-#   @i  src/inst   KO  
-#   @i "src/inst"  ok
-#   @i  04         KO (car est équivalent à @i "4" qui couvre plus large)
-#   @i "04"        ok
-# 
+"""
+    macro @i(pats...)
+
+Pour simplifier les "include" en interactif
+
+Exemple d'itilisation :
+   @i "04" "05"
+Recherche tous les fichiers correspondant à la gpatternes *04* et *05*
+puis les recharges par include (dans l'ordre)
+Recherche d'abord dans le répertoire racine, puis dans src/ puis dans test/
+
+ASTUCE : 
+Si les arguments sont purement alphanumériques, alors on peut éviter des 
+guillemets 
+  @i inst       ok
+  => charge tous les fichiers contenant "inst" dans src/ ou dans test/
+  @i  src/inst   KO  
+  @i "src/inst"  ok
+  @i  04         KO (car est équivalent à @i "4" qui couvre plus large)
+  @i "04"        ok
+"""
 macro i(pats...)
     files = get_files_from_pats(pats...)
 
@@ -79,8 +83,11 @@ macro i(pats...)
     end
 end
 
-# macro f (find)
-# Affiche les fichiers correspondants aux patternes passées (avec date de modif)
+"""
+    macro f (find)
+
+Affiche les fichiers correspondants aux patternes passées (avec date de modif)
+"""
 macro f(pats...)
     files = get_files_from_pats(pats...)
     wd = pwd(); cd(APPDIR)

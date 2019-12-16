@@ -24,10 +24,11 @@ using Statistics
 
 # using Globals
 
-# Accesseur à un paramètre de la ligne de commande.
-# Sans argument, cette méthode retourne le dict qui peut être modifier par
-# l'appelant
-#
+"""
+Accesseur à un paramètre de la ligne de commande.
+Sans argument, cette méthode retourne le dict qui peut être modifié par
+l'appelant
+"""
 function get(k="")
     global args
     if args == nothing
@@ -44,13 +45,16 @@ function get(k="")
     end
 end
 
-# Permet de modifier dynamiquement un paramètre du programme global.
-# e.g
-#   old_level = Args.get(:level)
-#   Args.set(:level, 4) # on passe en très verbose provisoirement
-#   my_function_to_debug()
-#   Args.set(:level, old_level) # on revient à la verbosité iniiale
-#
+"""
+Permet de modifier dynamiquement un paramètre du programme global.
+e.g
+```
+old_level = Args.get(:level)
+Args.set(:level, 4) # on passe en très verbose provisoirement
+my_function_to_debug()
+Args.set(:level, old_level) # on revient à la verbosité iniiale
+```
+"""
 function set(k, v)
     global args
     if args == nothing
@@ -197,26 +201,27 @@ function show_args()
     show_dict(args)
 end
 
-# réinitialise la seed du générateur aléatoire avec la valeur
-# passée en paramètre.
-# Cette méthode peut (doit) être appelée par exemple avant chaque lancement
-# d'un test de performance multiple pour rendre le résultat déterministe.
-#
-# ATTENTION : si ne paramètre vaut 0, le germe n'est jamais le même.
-# Cette méthode est donc surtout utile si l'on vaut un comportement déterministe
-# à différent endroit du programme.
-#
-# - si seed == -1 => on utilise la valeur de Args.get[:seed]
-# - si seed == 0 => aléatoire (idem si Args.get[:seed] == 0 )
-# - si seed > 0 : impose ce germe au générateur aléatoire
-#
-# Exemple :
-# reset_seed()
-# => réinitialise le germe avec la valeur passé en paramètre de l'application
-#
-# reset_seed(seed=Args.get(:seed)+i)
-# => initialise le germe avec une valeur dépendante de l'itération i
-#
+"""
+réinitialise la seed du générateur aléatoire avec la valeur
+passée en paramètre.
+Cette méthode peut (doit) être appelée par exemple avant chaque lancement
+d'un test de performance multiple pour rendre le résultat déterministe.
+
+ATTENTION : si ne paramètre vaut 0, le germe n'est jamais le même.
+Cette méthode est donc surtout utile si l'on vaut un comportement déterministe
+à différent endroit du programme.
+
+- si seed == -1 => on utilise la valeur de Args.get[:seed]
+- si seed == 0 => aléatoire (idem si Args.get[:seed] == 0 )
+- si seed > 0 : impose ce germe au générateur aléatoire
+
+Exemple :
+```reset_seed()```
+=> réinitialise le germe avec la valeur passé en paramètre de l'application
+
+```reset_seed(seed=Args.get(:seed)+i)```
+=> initialise le germe avec une valeur dépendante de l'itération i
+"""
 function reset_seed(; seed=-1, level=2)
     if seed == -1
         seed = Args.get(:seed)

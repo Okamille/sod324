@@ -2,19 +2,20 @@
 # # Quelques variables globale pour émuler les variables  de class en POO
 # current_plane_id = 0
 
-# Encapsule les données d'un avion
-# - id: numéro interne commençant en 1, Utilisé pour l'indexation des vecteurs
-# - name: nom arbitraire, par exemple le numéro commençant en "p1", "p2", ...
-#   Mais pour l'instant, c'est un entier pour être conforme à ampl
-# - kind: le type de l'avion (car kind est un mot clé réservé en julia !)
-# - lb, target, ub: les heures mini, souhaitées et maxi d'atterrissage
-# - g (et éventuellement h) les coefficients de pénalité unitaires
-#   En cas d'absence du paramètre g, on utilisera h pour affecter g
-#   ATTENTION : g NE SERA PAS ENCORE EXPLOITER DANS L'OPTIMISATION
-#
-# ATTENTION : l'appelant devra mettre à jour les attributs dérivés en appelant : 
-#    update_costs!.(this.planes)
-# 
+"""
+Encapsule les données d'un avion
+- id: numéro interne commençant en 1, Utilisé pour l'indexation des vecteurs
+- name: nom arbitraire, par exemple le numéro commençant en "p1", "p2", ...
+  Mais pour l'instant, c'est un entier pour être conforme à ampl
+- kind: le type de l'avion (car kind est un mot clé réservé en julia !)
+- lb, target, ub: les heures mini, souhaitées et maxi d'atterrissage
+- g (et éventuellement h) les coefficients de pénalité unitaires
+  En cas d'absence du paramètre g, on utilisera h pour affecter g
+  ATTENTION : g NE SERA PAS ENCORE EXPLOITER DANS L'OPTIMISATION
+
+ATTENTION : l'appelant devra mettre à jour les attributs dérivés en appelant : 
+   update_costs!.(this.planes)
+"""
 mutable struct Plane
     id::Int
     name::AbstractString
@@ -45,8 +46,7 @@ mutable struct Plane
     end
 end
 
-# Initialise le tableau interne des coûts
-# VERSION SIMPLIFIÉE POUR SEQATA
+"""Initialise le tableau interne des coûts"""
 function update_costs!(p::Plane)
     # Initialisation d'un Vector [1:p.ub] avec le coût -1.0
     p.costs = fill(-1.0, p.ub)
@@ -97,12 +97,14 @@ function to_s_long(p::Plane)
     print(io, lpad(p.tp, 4), " ")
     String(take!(io))
 end
-# Retourne un commentaire décrivant une ligne au forme alp ou alpx
-# Attention : pour le projet Seqata, seul le format alp existe)
-# soit: #    name  kind   at     E     T     L    ep    tp
-# soit: #    name  kind   at     E     T     L    dt1 cost1   dt2 cost2 ...
-# Il n'y a pas de return final
-#
+
+"""
+Décrit une ligne au forme alp ou alpx
+Attention : pour le projet Seqata, seul le format alp existe)
+soit: #    name  kind   at     E     T     L    ep    tp
+soit: #    name  kind   at     E     T     L    dt1 cost1   dt2 cost2 ...
+Il n'y a pas de return final
+"""
 function to_s_alp_plane_header()
     io = IOBuffer()
     print(io, "#    name  kind   at     E     T     L")
@@ -110,8 +112,7 @@ function to_s_alp_plane_header()
     String(take!(io))
 end
 
-# Affiche les éléments définis ( != -1 ) du tableau costs
-# VERSION SIMPLIFIÉE POUR SEQATA
+"""Affiche les éléments définis ( != -1 ) du tableau costs"""
 function to_s_costs(p::Plane)
     io = IOBuffer()
     print(io, p.name, "=>costs[]= ")

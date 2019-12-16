@@ -1,19 +1,21 @@
 
+"""
+    to_sc(str::AbstractString, color::Symbol=:STABILO)
 
-# EN COURS DE MISE AU POINT : NE PAS UTILISER : voir Pkg AnsiColor
-# http://ascii-table.com/ansi-escape-sequences.php
-# http://misc.flogisoft.com/bash/tip_colors_and_formatting
-# Voir aussi ma commande bash : diam_color.sh
-#
-# Exemple d'utilisation :
-#   println(to_sc("== TEST to_sc pour BLUE_STABILO ==", :BLUE_STABILO))
-#
-# Sur les versions récentes de julia on peut faire par exemple :
-#   printstyled("Solution invalide...", color=:red)
-# Cependant :
-# - julia doit être lancé avec l'option --color=yes
-# - cette commande ne permet pas de créer un chaine pour l'afficher plus tard.
-#
+EN COURS DE MISE AU POINT : NE PAS UTILISER : voir Pkg AnsiColor
+<http://ascii-table.com/ansi-escape-sequences.php>
+<http://misc.flogisoft.com/bash/tip_colors_and_formatting>
+Voir aussi ma commande bash : diam_color.sh
+
+Exemple d'utilisation :
+  println(to_sc("== TEST to_sc pour BLUE_STABILO ==", :BLUE_STABILO))
+
+Sur les versions récentes de julia on peut faire par exemple :
+  printstyled("Solution invalide...", color=:red)
+Cependant :
+- julia doit être lancé avec l'option --color=yes
+- cette commande ne permet pas de créer un chaine pour l'afficher plus tard.
+"""
 function to_sc(str::AbstractString, color::Symbol=:STABILO)
     red="9";    red_l="210";  red_d="1"
     grn="2" ;   grn_l="46";   gre_d="22"
@@ -51,8 +53,10 @@ function prn_c(str::AbstractString, color::Symbol=:STABILO)
     println(to_sc(str, color))
 end
 
-# Return une chaine composée du caractère unicode spécifié par un symbol
-# (perso et non standard)
+"""
+Return une chaine composée du caractère unicode spécifié par un symbol
+(perso et non standard)
+"""
 function get_unicode(sym::Symbol)
 
     SYMS = Dict(

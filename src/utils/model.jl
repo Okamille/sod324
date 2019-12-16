@@ -3,19 +3,21 @@
 # Classe abstraite non utilisé
 # abstract type AbstractLpSolver end
 
-# Création d'un modèle de solver externe (:cplex, :glpk, ...)
-# Options possibles :
-#  solver : symbole :cplex, :glpk, :clp, :cbc
-#     :cbc : permet de faire du MIP
-#     :clp : resteint aux problème LP mais plus efficace de cbc pour les
-#            relaxations.
-#  mode : (:lp ou :mip) utile pour choisir entre :clp ou :cbc
-#  log_level (expérimental) : entier 0 pour silence, sinon 1, 2, ...
-#
-# Autre solver à supporter plus tard Gurobi (concurrent de cplex)
-#
-# DEPENDANCE EXTERNE : module Args (pour Args.get("external_mip_solver"))
-#
+"""
+    new_model([,solver, model, log_level])
+Création d'un modèle de solver externe (:cplex, :glpk, ...)
+Options possibles :
+ solver : symbole :cplex, :glpk, :clp, :cbc
+    :cbc : permet de faire du MIP
+    :clp : resteint aux problème LP mais plus efficace de cbc pour les
+           relaxations.
+ mode : (:lp ou :mip) utile pour choisir entre :clp ou :cbc
+ log_level (expérimental) : entier 0 pour silence, sinon 1, 2, ...
+
+Autre solver à supporter plus tard Gurobi (concurrent de cplex)
+
+DEPENDANCE EXTERNE : module Args (pour Args.get("external_mip_solver"))
+"""
 function new_model(;solver = :auto,
                      mode = :lp,
                      log_level = 0, # EXPLOITATION PARTIELLE

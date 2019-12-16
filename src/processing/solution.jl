@@ -1,13 +1,13 @@
 # BEGIN TYPE Solution
 
-# Un object de classe Solution encapsule les éléments d'une solution
-# - vecteur planes : les avions dans l'ordre de la solution
-# - x et costs : vecteurs des variables de décisions associées à chaque avion
-# - cost : le coût global
-# et les méthodes pour la manipuler
-# - update, to_s, ...
-#
-#
+"""
+Un object de classe Solution encapsule les éléments d'une solution
+- vecteur planes : les avions dans l'ordre de la solution
+- x et costs : vecteurs des variables de décisions associées à chaque avion
+- cost : le coût global
+et les méthodes pour la manipuler
+- update, to_s, ...
+"""
 mutable struct Solution
     inst::Instance
     planes::Vector{Plane}
@@ -90,10 +90,13 @@ function copy!(sol::Solution, other::Solution)
     return sol   # pratique pour enchainer les appels de méthode (en POO !)
 end
 
-# Crée et affecte l'attribut solver pour la résolution des dates d'atterrissage.
-# Le type du solver créée est mémorisé dans l'attribut symbole
-# sol.timing_algo_solver (par exemple :ealiest, :lp, ...)
-#
+"""
+    init_solver(sol::Solution, algo::Symbol)
+
+Crée et affecte l'attribut solver pour la résolution des dates d'atterrissage.
+Le type du solver créée est mémorisé dans l'attribut symbole
+sol.timing_algo_solver (par exemple :ealiest, :lp, ...)
+"""
 function init_solver(sol::Solution, algo::Symbol)
     if algo == :lp
         sol.solver = LpTimingSolver(sol.inst)
@@ -105,10 +108,14 @@ function init_solver(sol::Solution, algo::Symbol)
     end
     sol.timing_algo_solver = algo
 end
-# Return le symbol de l'algo à partir du TimingSolver mémorisé dans la
-# variable sol.solver
-# Si l'objet n'est pas un solver, le symbol :earliest est retourné
-#
+
+"""
+    current_algo_symbol(sol::Solution)
+
+Return le symbol de l'algo à partir du TimingSolver mémorisé dans la
+variable sol.solver
+Si l'objet n'est pas un solver, le symbol :earliest est retourné
+"""
 function current_algo_symbol(sol::Solution)
     if sol.solver != nothing
         return symbol(sol.solver)
@@ -117,12 +124,15 @@ function current_algo_symbol(sol::Solution)
     end
 end
 
-# Calcul du hachage d'une solution.
-# Deux solutions identiques doivent donner le même hachage.
-# Deux solutions sont considérées comme identique ssi elles ont les avions
-# dans le même ordre, et avec les mêmes dates d'atterrissage.
-# HYP: les deux solutions sont à jour (par solve!)
-#
+"""
+    hash(sol::Solution)
+
+Calcul du hachage d'une solution.
+Deux solutions identiques doivent donner le même hachage.
+Deux solutions sont considérées comme identique ssi elles ont les avions
+dans le même ordre, et avec les mêmes dates d'atterrissage.
+HYP: les deux solutions sont à jour (par solve!)
+"""
 function hash(sol::Solution)
     # on construit une chaine de caractères représentative de la solution
     # (ce qui revient plus ou moins à sérialiser l'objet sol)
@@ -141,13 +151,15 @@ function get_names(sol::Solution)
     map(p::Plane->p.name, sol.planes)
 end
 
-# Affecte la solution en fonction de l'ordre des noms d'avion définit
-# en paramètre
-# Exemple
-#    set_from_names!(mysol, [3, 4, 5, 6, 8, 9, 7, 1, 10, 2])
-#
-# ATTENTION : couteux O(n^2), mais pratique pour affichage et tests.
-#
+"""
+Affecte la solution en fonction de l'ordre des noms d'avion définit
+en paramètre
+
+Exemple
+   ```set_from_names!(mysol, [3, 4, 5, 6, 8, 9, 7, 1, 10, 2])```
+
+ATTENTION : couteux O(n^2), mais pratique pour affichage et tests.
+"""
 function set_from_names!(sol::Solution, names)
     if length(names) != length(sol.planes)
         error("\nERREUR : taille de names $(length(names)) incorrecte " *
@@ -161,10 +173,11 @@ function set_from_names!(sol::Solution, names)
     return sol
 end
 
-# Trie les avions de l'objet sol selon leur date d'atterrissage croissante.
-# La solution n'est pas recalculée, mais les vecteurs x et planes sont
-# triés de manière cohérente.
-# .
+"""
+Trie les avions de l'objet sol selon leur date d'atterrissage croissante.
+La solution n'est pas recalculée, mais les vecteurs x et planes sont
+triés de manière cohérente.
+"""
 function sort!(sol::Solution)
     # Pour cela, on récupère l'ordre correspondant au tri des dates d'atterrissage
     # (le résultat est la permutation correspondant au tri à effectuer)
@@ -181,9 +194,10 @@ function Base.show(io::IO, sol::Solution)
     Base.write(io, to_s(sol))
 end
 
-# Convertit une Solution en chaine
-# e.g  "cost=123.456  :[p2,p5,p1,...,p10]"
-#
+"""
+Convertit une Solution en chaine
+e.g  "cost=123.456  :[p2,p5,p1,...,p10]"
+"""
 function to_s(sol::Solution)
     # prc = Args.args[:cost_precision] + 2 # cmt le 30/10/2018 car 7 par défaut
     prc = Args.args[:cost_precision]
@@ -264,22 +278,22 @@ function to_s_long(sol::Solution)
     String(take!(io))
 end
 
+"""
+Vérifie la faisabilité de la solution par rapport aux dates d'atterrissage
+réelle de la solution.
+Retourne un coût de pénalité (nul si solution valide) si des contraintes sont
+violées. Ce coût prend en compte :
+- l'amplitude des viols de la contrainte de séparation,
+- l'amplitude des viols des bornes lb et ub de chaque avion.
 
-# Vérifie la faisabilité de la solution par rapport aux dates d'atterrissage
-# réelle de la solution.
-# Retourne un coût de pénalité (nul si solution valide) si des contraintes sont
-# violées. Ce coût prend en compte :
-# - l'amplitude des viols de la contrainte de séparation,
-# - l'amplitude des viols des bornes lb et ub de chaque avion.
-#
-# Cette méthode suppose que l'information sol.x de la date d'atterrissage
-# réelle de chaque avion est à jour.
-#
-# Les viols sont détectés même si l'inégalité triangulaire n'est pas respectée
-# dans l'instance (instance incorrecte par hypothèse)
-#
-# Si level est suffisant : affiche message si solution non faisable
-#
+Cette méthode suppose que l'information sol.x de la date d'atterrissage
+réelle de chaque avion est à jour.
+
+Les viols sont détectés même si l'inégalité triangulaire n'est pas respectée
+dans l'instance (instance incorrecte par hypothèse)
+
+Si level est suffisant : affiche message si solution non faisable
+"""
 function get_viol_penality(sol::Solution)
     total_penality = 0.0
     unit_penality = 1000.0
@@ -345,20 +359,21 @@ function get_viol_penality(sol::Solution)
     return total_penality
 end
 
-# Vérifie la faisabilité dates d'atterrissage x de la solution par rapport 
-# aux contraintes de l'instance.
-# Si pas de viol, retourne une chaine vide
-# Si viol, retourne un texte avec une ligne par contrainte violée.
-# Les contraintes testés sont les suivante :
-# - la date d'atterissage doit entre dans l'intervale permi pour l'avion
-# - tous les temps de séparation doivent être respertés
-#
-# Cette méthode suppose que l'information sol.x de la date d'atterrissage
-# réelle de chaque avion est à jour.
-#
-# Les viols sont détectés même si l'inégalité triangulaire n'est pas respectée
-# dans l'instance (instance incorrecte par hypothèse)
-#
+"""
+Vérifie la faisabilité dates d'atterrissage x de la solution par rapport 
+aux contraintes de l'instance.
+Si pas de viol, retourne une chaine vide
+Si viol, retourne un texte avec une ligne par contrainte violée.
+Les contraintes testés sont les suivante :
+- la date d'atterissage doit entre dans l'intervale permi pour l'avion
+- tous les temps de séparation doivent être respertés
+
+Cette méthode suppose que l'information sol.x de la date d'atterrissage
+réelle de chaque avion est à jour.
+
+Les viols sont détectés même si l'inégalité triangulaire n'est pas respectée
+dans l'instance (instance incorrecte par hypothèse)
+"""
 function get_viol_description(sol::Solution)
     io = IOBuffer()
 
@@ -406,20 +421,20 @@ function get_viol_description(sol::Solution)
     return (nbviols, violtxt)
 end
 
+"""
+Calcul la faisabilité intrinsèque de la solution en fonction de l'ordre
+imposé pour les avions.
 
-# Calcul la faisabilité intrinsèque de la solution en fonction de l'ordre
-# imposé pour les avions.
-#
-# Ne modifie pas la solution
-#
-# N'utilise pas l'attribut x[i] de la solution associée au placement
-# de chaque avion.
-#
-# Principe :
-# Si on peut placer les avions au plus tôt en respectant les temps de
-# séparation sans violer la borne sup du placement des avions suivants,
-# alors la solution est faisable.
-#
+Ne modifie pas la solution
+
+N'utilise pas l'attribut x[i] de la solution associée au placement
+de chaque avion.
+
+Principe :
+Si on peut placer les avions au plus tôt en respectant les temps de
+séparation sans violer la borne sup du placement des avions suivants,
+alors la solution est faisable.
+"""
 function is_feasable(sol::Solution; param_bidon=nothing)
     # ASSUME_TRINEQ = Args.get(:assume_trineq)
     ASSUME_TRINEQ = false # L'inégalité triangulaire n'est pas présupposée
@@ -464,20 +479,22 @@ function is_feasable(sol::Solution; param_bidon=nothing)
     return true
 end
 
-# Le "!" dans le nom "solve!" est une convention indiquant que l'objet
-# est modifié
-# TODO: prévoir paramètre from_index=1 pour permettre un recalcul partiel.
-#
-# do_update_cost (false par défaut) : si vrai, met à jours les coûts.
-# REMARQUE :
-# - l'option do_update_cost n'est utile que si ce n'est pas déjà fait
-#   par le TimingSolver.
-# - Elle ne semble plus utilisée (sauf par solve_to_earliest!(sol)).
-# - Il est conseillé d'appeler explicitement la méthode update_costs!(sol)
-#   plutot que d'utiliser cette option.
-# - Si aucun TimingSolver n'a été spécifié lors de la création de la solution
-#   alors on utilise la résolution au plus tot.
-#
+"""
+    solve!(sol::Solution; do_update_cost::Bool=false)
+
+TODO: prévoir paramètre from_index=1 pour permettre un recalcul partiel.
+
+do_update_cost (false par défaut) : si vrai, met à jours les coûts.
+
+REMARQUE :
+- l'option do_update_cost n'est utile que si ce n'est pas déjà fait
+  par le TimingSolver.
+- Elle ne semble plus utilisée (sauf par solve_to_earliest!(sol)).
+- Il est conseillé d'appeler explicitement la méthode update_costs!(sol)
+  plutot que d'utiliser cette option.
+- Si aucun TimingSolver n'a été spécifié lors de la création de la solution
+  alors on utilise la résolution au plus tot.
+"""
 function solve!(sol::Solution; do_update_cost::Bool=false)    
     if sol.solver == nothing
         init_solver(sol, sol.timing_algo_solver)
@@ -489,10 +506,12 @@ function solve!(sol::Solution; do_update_cost::Bool=false)
     return sol
 end
 
-# Mélange la solution et mets à jour (par défaut) les timings
-#
-# do_update (true par défaut) : si vrai , résoud le pb de timing
-#     REMARQUE : l'option do_update ne semble plus utilisée
+"""
+Mélange la solution et mets à jour (par défaut) les timings
+
+do_update (true par défaut) : si vrai , résoud le pb de timing
+    REMARQUE : l'option do_update ne semble plus utilisée
+"""
 function shuffle!(sol::Solution; do_update::Bool=true)
     Random.shuffle!(sol.planes)
     if do_update
@@ -501,7 +520,7 @@ function shuffle!(sol::Solution; do_update::Bool=true)
     return sol
 end
 
-# Remue légèrement la solution et mets à jour (par défaut) les timings
+"""Remue légèrement la solution et mets à jour (par défaut) les timings"""
 function disturb!(sol::Solution; 
                   idx_first=1, idx_last=-1, shift_max=1,
                   nb_shift=10, do_update::Bool=true,
@@ -537,11 +556,12 @@ function disturb!(sol::Solution;
     end
 end
 
-# Met à jour les coûts de chaque avion (sol.costs) et le coût global (sol.cost)
-# à partir des dates d'atterrissage supposées connues (sol.x).
-#
-# PRECONDITION : le Vector s.costs est dans le même ordre que s.planes
-#
+"""
+Met à jour les coûts de chaque avion (sol.costs) et le coût global (sol.cost)
+à partir des dates d'atterrissage supposées connues (sol.x).
+
+PRECONDITION : le Vector s.costs est dans le même ordre que s.planes
+"""
 function update_costs!(sol::Solution; add_viol_penality = true )
     
     # if !isnothing(x)
@@ -569,12 +589,13 @@ function update_costs!(sol::Solution; add_viol_penality = true )
     return sol
 end
 
-# Met à jour la date d'atterrissage de chaque avion au plus tôt, de façon à
-# respecter les contraintes de précédence au mieux.
-# Principe :
-#   Les contraintes de séparation sont **toujours respectées**.
-#   Au besoin on viole la borne  d'atterrissage des avions successeurs (p.ub)
-#
+"""
+Met à jour la date d'atterrissage de chaque avion au plus tôt, de façon à
+respecter les contraintes de précédence au mieux.
+Principe :
+  Les contraintes de séparation sont **toujours respectées**.
+  Au besoin on viole la borne  d'atterrissage des avions successeurs (p.ub)
+"""
 function solve_to_earliest!(sol::Solution; do_update_cost=true)
     # println("="^70)
     # println("=== BEGIN solve_to_earliest! pour $(to_s(s))")
@@ -612,12 +633,13 @@ function solve_to_earliest!(sol::Solution; do_update_cost=true)
     return sol
 end
 
-# swap! : Permute deux avions dans la solution
-# idx1, idx2 : les indices des avions à permuter
-#   si un indice n'est pas défini : il est choisi aléatoiremenet.
-#   retourne les indices des avions permutées
-# do_update : recalcule le coût (true par défaut)
-#
+"""
+swap! : Permute deux avions dans la solution
+idx1, idx2 : les indices des avions à permuter
+  si un indice n'est pas défini : il est choisi aléatoiremenet.
+  retourne les indices des avions permutées
+do_update : recalcule le coût (true par défaut)
+"""
 function swap!(sol::Solution, idx1=-1, idx2=-1; do_update=true)
     # RUBY: idx1 = rand(@planes.size)  if not idx1
     if  idx1 == -1
@@ -634,12 +656,13 @@ function swap!(sol::Solution, idx1=-1, idx2=-1; do_update=true)
     return (idx1, idx2)
 end
 
-# shift! : Déplace avions dans la solution
-# idx1, idx2 : les indices origine et cible de l'avion à déplacer
-#   si un indice n'est pas défini : il est choisi aléatoiremenet.
-#   retourne les indices du déplacement effectué.
-# do_update : recalcule le coût (true par défaut).
-#
+"""
+shift! : Déplace avions dans la solution
+idx1, idx2 : les indices origine et cible de l'avion à déplacer
+  si un indice n'est pas défini : il est choisi aléatoiremenet.
+  retourne les indices du déplacement effectué.
+do_update : recalcule le coût (true par défaut).
+"""
 function shift!(sol::Solution, idx1=-1, idx2=-1; do_update=true)
     if  idx1 == -1
         idx1 = rand(1:length(sol.planes))
@@ -665,35 +688,40 @@ function shift!(sol::Solution, idx1=-1, idx2=-1; do_update=true)
     return (idx1, idx2)
 end
 
-# permu! : Permute des avions dans la solution.
-# indices1 : tableau des indices d'avions à permuter
-# indices2 : tableau des nouveaux indices des avions permutés
-# HYPOTHESE : indices2 est une permutation valide de indices1
-#
-# Les avions de la solution ont pour indice 0:nb_planes-1
-# Par exemple, si indices1 vaut [0, 2, 7, 12]
-# et si indices2 vaut [12, 7, 0, 2],
-# L'opération consiste à permuter les avions positionnés en :
-#    0, 2, 7, 12
-# de façon à ce que leur nouvelle position soit en :
-#   12, 7, 0, 2
-#
-# Exemple
-# On veut transformer la liste d'avion :
-#    @plane = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-#               0   1*  2   3   4   5   6*  7*  8    9
-# en :
-#    @plane = [10, 70, 30, 40, 50, 60, 80, 20, 90, 100]
-#               0   1*  2   3   4   5   6*  7*  8    9
-#
-# Pour cela l'appel doit être d ela forme :
-#  mysol.permu! [1, 6, 7], [7, 1, 6]
-#
-# do_update : racalcule le coût (true par défaut)
-#
-# HYPOTHESE :
-# TODO: effectuer une mise à jour différencielle du coût
-#
+"""
+    permu!(sol::Solution, indices1, indices2; do_update=true)
+
+Permute des avions dans la solution.
+
+# Arguments
+- indices1 : tableau des indices d'avions à permuter
+- indices2 : tableau des nouveaux indices des avions permutés
+HYPOTHESE : indices2 est une permutation valide de indices1
+
+Les avions de la solution ont pour indice 0:nb_planes-1
+Par exemple, si indices1 vaut [0, 2, 7, 12]
+et si indices2 vaut [12, 7, 0, 2],
+L'opération consiste à permuter les avions positionnés en :
+   0, 2, 7, 12
+de façon à ce que leur nouvelle position soit en :
+  12, 7, 0, 2
+
+Exemple
+On veut transformer la liste d'avion :
+   @plane = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+              0   1*  2   3   4   5   6*  7*  8    9
+en :
+   @plane = [10, 70, 30, 40, 50, 60, 80, 20, 90, 100]
+              0   1*  2   3   4   5   6*  7*  8    9
+
+Pour cela l'appel doit être de la forme :
+ mysol.permu! [1, 6, 7], [7, 1, 6]
+
+do_update : recalcule le coût (true par défaut)
+
+HYPOTHESE :
+TODO: effectuer une mise à jour différencielle du coût
+"""
 function permu!(sol::Solution, indices1, indices2; do_update=true)
     sol.planes[indices1] = sol.planes[indices2]
     # sol.planes[[indices1...]] = sol.planes[[indices2...]] # avec des tuples iiii
@@ -703,11 +731,12 @@ function permu!(sol::Solution, indices1, indices2; do_update=true)
     return indices2
 end
 
-# Effectue un tri de la solution courante selon le critère passer en paramètre.
-# Si aucun critère presort n'est imposé en argumant, celui spécifié par
-# l'option --presort est utilisé
-# Le timing de la solution estmis à jour.
-#
+"""
+Effectue un tri de la solution courante selon le critère passer en paramètre.
+Si aucun critère presort n'est imposé en argumant, celui spécifié par
+l'option --presort est utilisé
+Le timing de la solution estmis à jour.
+"""
 function initial_sort!(sol::Solution; presort=:ARGS)
 
     # On part de l'instance en triant les avions par ordre de lb croissant
@@ -747,10 +776,11 @@ function initial_sort!(sol::Solution; presort=:ARGS)
     return nothing
 end
 
-# Enregistre la solution dans un fichier.
-# Par défaut, le nom est construit automatiquement à partir des caractéristiques
-# de l'instance et du coût de la solution (arrondi à deux décimales)
-#
+"""
+Enregistre la solution dans un fichier.
+Par défaut, le nom est construit automatiquement à partir des caractéristiques
+de l'instance et du coût de la solution (arrondi à deux décimales)
+"""
 function write(sol::Solution, filename="")
     dir = Args.args[:outdir] # e.g "_tmp"
     if !isdir(dir)
@@ -770,10 +800,11 @@ function write(sol::Solution, filename="")
     end
 end
 
-# Retourne un nom de la forme :
-#   alp_01_p10=700.0.sol              # VERSION SIMPLIFIÉE POUR SEQATA
-#   alp_13_p500_k201=6440.8959533.sol # VERSIOAN ALAP pour 100 segments
-# 
+"""
+Retourne un nom de la forme :
+  alp_01_p10=700.0.sol              # VERSION SIMPLIFIÉE POUR SEQATA
+  alp_13_p500_k201=6440.8959533.sol # VERSIOAN ALAP pour 100 segments
+"""
 function  guess_solname(sol::Solution)
     prc = Args.args[:cost_precision]
     cost = round(sol.cost, digits=prc)
