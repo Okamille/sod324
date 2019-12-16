@@ -10,6 +10,9 @@ Welcome to seqata's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   utils
+   processing
+
 
 
 Indices and tables
