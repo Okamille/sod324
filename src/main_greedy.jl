@@ -5,7 +5,8 @@ function main_greedy(args)
 
     # println("Action greedy non implanté : AU BOULOT :-)")
     # exit(1)
-    error("\n\nAction greedy non implanté : AU BOULOT :-)\n\n")
+    # error("\n\nAction greedy non implanté : AU BOULOT :-)\n\n")
+    println(args)
 
     println("Fin de l'action greedy")
 end
