@@ -40,17 +40,15 @@ function main_greedy(args)
     x[1] = arrivals[1]
 
     for i=2:n
-        x[i] = max(arrivals[i], x[i - 1] + sep[i-1]) #dans l'idéal il faudrait boucler sur TOUS les avions précédant i, car on peut respecter la distance avec i-1 mais pas i-2 par exemple
+        # dans l'idéal il faudrait boucler sur TOUS les avions précédant i,
+        # car on peut respecter la distance avec i-1 mais pas i-2 par exemple
+        x[i] = max(arrivals[i], x[i - 1] + sep[i-1])
     end
 
     solution = Solution(instance, planes, x)
-
-    println(x)
-    println("Fin de l'action greedy")
-
-    println(solution.costs)
-    return solution
+    write(solution)
+    print_sol(solution)
+    println("Fin de l'algorithme glouton")
 end
 
-solution = main_greedy(Args.args)
-write(solution)
+main_greedy(Args.args)
