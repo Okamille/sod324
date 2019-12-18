@@ -55,6 +55,7 @@ mutable struct Solution
         end
         return this
     end
+
     # ATTENTION la référence au timingSolver est copiées superficiellement !
     function Solution(sol::Solution)
         this = new()
@@ -68,6 +69,15 @@ mutable struct Solution
         this.solver = sol.solver
         # solve!(this)  # ceci est en principe inutile
         return this
+    end
+
+    function Solution(instance::Instance, planes::Vector{Plane}, x)
+        solution = new()
+        solution.inst = instance
+        solution.planes = planes
+        solution.x = x
+        update_costs(solution)
+        return solution
     end
 end
 
