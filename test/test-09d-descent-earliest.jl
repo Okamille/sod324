@@ -1,9 +1,9 @@
 
-include("../src/descent_solver.jl")
-# include("../src/faye_timing_solver.jl")
-# include("../src/dynprog_timing_solver.jl")
-include("../src/earliest_timing_solver.jl")
-include("../src/lp_timing_solver.jl")
+include("../src/solvers/descent.jl")
+# include("../src/solvers/faye_timing.jl")
+# include("../src/solvers/dynprog_timing.jl")
+include("../src/solvers/earliest_timing.jl")
+include("../src/solvers/lp_timing.jl")
 
 
 # ===========

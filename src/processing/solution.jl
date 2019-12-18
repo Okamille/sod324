@@ -678,7 +678,7 @@ function shift!(sol::Solution, idx1=-1, idx2=-1; do_update=true)
         return swap!(sol, idx1, idx2, do_update=do_update)
     end
     # println("AVANT SHIFT $idx1->$idx2 : ", to_s(sol))
-    # 03/05/2019 : shift! est définie dans le fichier array_util.jl 
+    # 03/05/2019 : shift! est définie dans le fichier utils/array.jl 
     shift!(sol.planes, idx1, idx2)
 
     if do_update
