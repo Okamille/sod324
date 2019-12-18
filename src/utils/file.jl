@@ -37,6 +37,3 @@ function extract_key_val(line::AbstractString)
         return ("", strip(line))
     end
 end
-
-
-
