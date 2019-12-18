@@ -1,5 +1,3 @@
-# BEGIN TYPE Solution
-
 """
 Un object de classe Solution encapsule les éléments d'une solution
 - vecteur planes : les avions dans l'ordre de la solution
@@ -10,10 +8,10 @@ et les méthodes pour la manipuler
 """
 mutable struct Solution
     inst::Instance
-    planes::Vector{Plane}
-    x::Vector{Int}
-    costs::Vector{Float64}
-    cost::Float64
+    planes::Array{Plane}
+    x
+    costs::Array
+    cost
     timing_algo_solver     # :earliest, :lp, ...
     # lpTimingSolver       # solver lp si c'est :lp qui est choisi
     # earliestTimingSolver # solver dp si c'est :dp qui est choisi
@@ -71,12 +69,10 @@ mutable struct Solution
         return this
     end
 
-    function Solution(instance::Instance, planes::Vector{Plane}, x)
-        solution = new()
-        solution.inst = instance
-        solution.planes = planes
-        solution.x = x
-        update_costs(solution)
+    function Solution(instance::Instance, planes::Array{Plane}, x)
+        solution = new(instance, planes, x, zeros(Int, instance.nb_planes), 0,
+                       "none", "none")
+        update_costs!(solution)
         return solution
     end
 end
