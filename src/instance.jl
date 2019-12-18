@@ -176,5 +176,3 @@ function get_inequality_viols(inst::Instance)
     end
     viols
 end
-
-# END TYPE Instance

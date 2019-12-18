@@ -48,12 +48,12 @@ else
     @ms include("$APPDIR/src/utils/log.jl")
     @ms include("$APPDIR/src/utils/console.jl")
     @ms include("$APPDIR/src/plane.jl")
-    @ms include("$APPDIR/src/processing/instance.jl")
+    @ms include("$APPDIR/src/instance.jl")
     @ms include("$APPDIR/src/processing/instance_generators.jl")
     @ms include("$APPDIR/src/processing/instance_read_alp.jl")
     @ms include("$APPDIR/src/utils/array.jl")
     @ms include("$APPDIR/src/utils/file.jl")
-    @ms include("$APPDIR/src/processing/solution.jl")
+    @ms include("$APPDIR/src/solution.jl")
     @ms include("$APPDIR/src/processing/solution_read.jl")
 
     @ms using JuMP
