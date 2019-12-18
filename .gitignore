@@ -346,9 +346,6 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-_build/
-
 # mypy
-
 .mypy_cache/
 .vscode/
