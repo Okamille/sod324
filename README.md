@@ -345,11 +345,11 @@ write(sv.bestsol)
 
 ### Quelques remarques sur le mode interactif
 
-ATTENTION, si vous modifier le fichier (e.g ```explore_solver.jl```),
+ATTENTION, si vous modifier le fichier (e.g ```solvers/explore.jl```),
 il faut le recharger par :
 
 ```julia
-include("src/explore_solver.jl")
+include("src/solvers/explore.jl")
 ```
 
 (mais il existe un package revise.jl qui le fait automatiquement)
