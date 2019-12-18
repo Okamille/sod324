@@ -1,4 +1,4 @@
-include("../src/processing/solution.jl")
+include("../src/solution.jl")
 include("../src/solvers/explore.jl")
 
 # ===========

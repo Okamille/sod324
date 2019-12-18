@@ -4,11 +4,11 @@
 @ms include("utils/log.jl")
 @ms include("utils/console.jl")
 @ms include("plane.jl")
-@ms include("processing/instance.jl")
+@ms include("instance.jl")
 @ms include("processing/instance_read_alp.jl")
 @ms include("utils/array.jl")
 @ms include("utils/file.jl")
-@ms include("processing/solution.jl")
+@ms include("solution.jl")
 @ms include("processing/solution_read.jl")
 
 @ms using Dates
