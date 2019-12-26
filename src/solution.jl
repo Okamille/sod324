@@ -8,10 +8,10 @@ et les méthodes pour la manipuler
 """
 mutable struct Solution
     inst::Instance
-    planes::Array{Plane}
-    x
-    costs::Array
-    cost
+    planes::Vector{Plane}
+    x::Vector{Int}
+    costs::Vector{Float64}
+    cost::Float64
     timing_algo_solver     # :earliest, :lp, ...
     # lpTimingSolver       # solver lp si c'est :lp qui est choisi
     # earliestTimingSolver # solver dp si c'est :dp qui est choisi
