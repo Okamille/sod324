@@ -1,16 +1,16 @@
-include("instance.jl")
-include("solution.jl")
+# include("../instance.jl")
+# include("../solution.jl")
 
-module LpTiming
+# module LpTiming
 # Déclaration des packages utilisés dans ce fichier
 # certains sont déjà chargés dans le fichier usings.jl
 
-import JuMP
+# import JuMP
 # using .Instance: Instance
 # using .Solution: Solution, solve_to_earliest
 # using .Model: new_model
 
-export LpTimingSolver
+# export LpTimingSolver
 
 """
 Ce solveur résoud le  sous-problème de timing consistant à trouver les dates
@@ -30,15 +30,9 @@ mutable struct LpTimingSolver
     nb_calls::Int  # POUR FAIRE VOS MESURES DE PERFORMANCE !
     nb_infeasable::Int
 
-    # A COMPLETER
-
     # Le constructeur
     function LpTimingSolver(inst::Instance)
-        this=new()
-
-        # A COMPLETER
         model = new_model()
-
         return new(inst, 0, model, zeros(Int, inst.nb_planes),
                    0., zeros(Float64, inst.nb_planes), 0, 0)
     end
@@ -53,23 +47,26 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     sv.nb_calls += 1
     sv.model = new_model()
 
+    n = sv.inst.nb_planes
+
     # 1. Création du modèle spécifiquement pour cet ordre d'avion de cette solution
     @variable(sv.model, x[1:n], Int)
-    @variable(sv.model, z[1:n] .>= 0)
-    @variable(sv.model, y[1:n] .>= 0)
+    @variable(sv.model, z[1:n] >= 0)
+    @variable(sv.model, y[1:n] >= 0)
 
-    @objective(sv.model, sum(plane.ep * y[i] + plane.tp * z[i]
-                             for (i, plane) in enumerate(sv.inst.planes)))
+    @objective(sv.model, Min, sum(plane.ep * y[i] + plane.tp * z[i]
+                                  for (i, plane) in enumerate(sv.inst.planes)))
 
-    @constraint(sv.model, y_linear_cons[i=i:n],
+    @constraint(sv.model, y_linear_cons[i=1:n],
                 y[i] >= sv.inst.planes[i].target - x[i])
-    @constraint(sv.model, z_linear_cons[i=i:n],
+    @constraint(sv.model, z_linear_cons[i=1:n],
                 z[i] >= x[i] - sv.inst.planes[i].target)
     @constraint(sv.model, earliest_land[i=1:n],
                 x[i] >= sv.inst.planes[i].lb)
     # @constraint(sv.model, latest_land[i=1:n], x[i] <= sv.inst.planes[i].hb)
 
     σ = sortperm(sol.x)
+
     @constraint(sv.model, separation[i=1:n-1],
                 x[σ[i]] <= x[σ[i+1]] + sv.inst.sep_mat[σ[i], σ[i+1]])
 
@@ -102,4 +99,4 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     println("END solve(LpTimingSolver, sol)")
 end
 
-end
+# end
