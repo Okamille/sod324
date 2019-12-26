@@ -69,7 +69,7 @@ mutable struct Solution
         return this
     end
 
-    function Solution(instance::Instance, planes::Array{Plane}, x)
+    function Solution(instance::Instance, planes::Vector{Plane}, x)
         solution = new(instance, planes, x, zeros(Int, instance.nb_planes), 0,
                        "none", "none")
         update_costs!(solution)

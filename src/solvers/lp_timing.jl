@@ -1,13 +1,23 @@
+include("instance.jl")
+include("solution.jl")
 
+module LpTiming
 # Déclaration des packages utilisés dans ce fichier
 # certains sont déjà chargés dans le fichier usings.jl
 
+import JuMP
+# using .Instance: Instance
+# using .Solution: Solution, solve_to_earliest
+# using .Model: new_model
 
-# Ce solveur résoud le  sous-problème de timing consistant à trouver les dates
-# optimales d'atterrissage des avions à ordre fixé.
-# Par rapport aux autres solvers (e.g DescentSolver, AnnealingSolver, ...), il
-# ne contient pas d'attribut bestsol 
-#
+export LpTimingSolver
+
+"""
+Ce solveur résoud le  sous-problème de timing consistant à trouver les dates
+optimales d'atterrissage des avions à ordre fixé.
+Par rapport aux autres solvers (e.g DescentSolver, AnnealingSolver, ...), il
+ne contient pas d'attribut bestsol 
+"""
 mutable struct LpTimingSolver
     inst::Instance
     loglevel::Int         # niveau de verbosité
@@ -27,8 +37,10 @@ mutable struct LpTimingSolver
         this=new()
 
         # A COMPLETER
+        model = new_model()
 
-        return this
+        return new(inst, 0, model, zeros(Int, inst.nb_planes),
+                   0., zeros(Float64, inst.nb_planes), 0, 0)
     end
 end
 
@@ -38,46 +50,56 @@ function symbol(sv::LpTimingSolver)
 end
 
 function solve!(sv::LpTimingSolver, sol::Solution)
-
-    error("\n\nMéthode solve(sv::LpTimingSolver, ...) non implanté : AU BOULOT :-)\n\n")
-
     sv.nb_calls += 1
     sv.model = new_model()
 
-    # ...
-    # A COMPLETER
-    # ...
-
-    #
     # 1. Création du modèle spécifiquement pour cet ordre d'avion de cette solution
-    #
+    @variable(sv.model, x[1:n], Int)
+    @variable(sv.model, z[1:n] .>= 0)
+    @variable(sv.model, y[1:n] .>= 0)
+
+    @objective(sv.model, sum(plane.ep * y[i] + plane.tp * z[i]
+                             for (i, plane) in enumerate(sv.inst.planes)))
+
+    @constraint(sv.model, y_linear_cons[i=i:n],
+                y[i] >= sv.inst.planes[i].target - x[i])
+    @constraint(sv.model, z_linear_cons[i=i:n],
+                z[i] >= x[i] - sv.inst.planes[i].target)
+    @constraint(sv.model, earliest_land[i=1:n],
+                x[i] >= sv.inst.planes[i].lb)
+    # @constraint(sv.model, latest_land[i=1:n], x[i] <= sv.inst.planes[i].hb)
+
+    σ = sortperm(sol.x)
+    @constraint(sv.model, separation[i=1:n-1],
+                x[σ[i]] <= x[σ[i+1]] + sv.inst.sep_mat[σ[i], σ[i+1]])
 
     # 2. résolution du problème à permu d'avion fixée
-    #
     # status=JuMP.solve(model, suppress_warnings=true)
-    JuMP.optimize!(model)
+    JuMP.optimize!(sv.model)
 
-    # # 3. Test de la validité du résultat
-    # if  JuMP.termination_status(model) == MOI.OPTIMAL
-    #     # tout va bien, on peut exploiter le résultat
-    #
-    #     # 4. Extraction des valeurs des variables d'atterrissage
-    #     #
-    #     # ATTENTION : les tableaux x et costs sont dans l'ordre de 
-    #     # l'instance et non pas de la solution !
-    #     for (i, p) in enumerate(sol.planes)
-    #         sol.x[i] = round(Int,value(sv.x[p.id]))
-    #         sol.costs[i] = value(sv.costs[p.id])
-    #     end    
-    #     prec = Args.args[:cost_precision]
-    #     sol.cost = round(value(sv.cost), digits=prec)
-    # else
-    #     # La solution du solver est invalide : on utilise le placement au plus
-    #     # tôt de façon à disposer malgré tout d'un coût pénalisé afin de pouvoir
-    #     # continuer la recherche heuristique de solutions.
-    #     sv.nb_infeasable += 1
-    #     solve_to_earliest!(sol)
-    # end
+    # 3. Test de la validité du résultat
+    if  JuMP.termination_status(sv.model) == MOI.OPTIMAL
+        # tout va bien, on peut exploiter le résultat
+    
+        # 4. Extraction des valeurs des variables d'atterrissage
+        #
+        # ATTENTION : les tableaux x et costs sont dans l'ordre de 
+        # l'instance et non pas de la solution !
+        for (i, p) in enumerate(sol.planes)
+            sol.x[i] = round(Int,value(sv.x[p.id]))
+            sol.costs[i] = value(sv.costs[p.id])
+        end
+        prec = Args.args[:cost_precision]
+        sol.cost = round(value(sv.cost), digits=prec)
+    else
+        # La solution du solver est invalide : on utilise le placement au plus
+        # tôt de façon à disposer malgré tout d'un coût pénalisé afin de pouvoir
+        # continuer la recherche heuristique de solutions.
+        sv.nb_infeasable += 1
+        solve_to_earliest!(sol)
+    end
 
-    # println("END solve(LpTimingSolver, sol)")
+    println("END solve(LpTimingSolver, sol)")
+end
+
 end

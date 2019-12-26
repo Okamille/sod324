@@ -1,7 +1,7 @@
 # using Printf
 
 mutable struct Instance
-    planes::Array{Plane}
+    planes::Vector{Plane}
     name::String
     nb_kinds::Int
     nb_planes::Int
