@@ -24,11 +24,11 @@ mutable struct Plane
     lb::Int # lowest bound = lowest time
     target::Int
     ub::Int # upper bound = upper time
-    ep::Float # earliness penalty
-    tp::Float # tardiness penalty
+    ep::Float64 # earliness penalty
+    tp::Float64 # tardiness penalty
 
     # Momoïsation du calul des coûts (de 1 à p.ub)
-    costs::Vector{Float}
+    costs::Vector{Float64}
 
     # Astuce pour créer un méthode utilisable dans le style OOP
     to_s::Function
@@ -61,7 +61,7 @@ function get_cost_basic(p::Plane, t::Int)
     return t < p.target ? p.ep*(p.target-t) : p.tp*(t-p.target)
 end
 
-function get_cost(p::Plane, t::Int; BIG_COST::Float=100_011.0)
+function get_cost(p::Plane, t::Int; BIG_COST::Float64=100_011.0)
     if !(t in p.lb:p.ub)
         return BIG_COST
     elseif p.costs[t] == -1.0

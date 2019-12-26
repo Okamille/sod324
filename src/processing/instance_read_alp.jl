@@ -121,7 +121,7 @@ function add_plane(inst::Instance, str::AbstractString)
     # Pour le projet simplifié SEQATA ces pénalités sont représentés par les
     # deux flottants ep et tp (ou un seul flottant si pénalités symétrique).
     penalwords = split(penalstr, r"\s+")
-    penalnumbers = parse.(Float, penalwords)
+    penalnumbers = parse.(Float64, penalwords)
 
     p.ep = penalnumbers[1]
     # Dans le cas symétrique ou il n'y a qu'une seule valeur présente.

@@ -129,7 +129,7 @@ function solve(sv::MipDiscretSolver)
     # résultat de la résolution MIP
     for (i, p) in enumerate(sv.inst.planes)
         sv.bestsol.planes[i] = p
-        sv.bestsol.x[i] = round(Int, value(sv.x[p]))  # value() retourne Float !
+        sv.bestsol.x[i] = round(Int, value(sv.x[p]))  # value() retourne Float64 !
         sv.bestsol.costs[i] = value(sv.costs[p])
     end    
     sv.bestsol.cost = round(value(sv.cost), digits=Args.args[:cost_precision])

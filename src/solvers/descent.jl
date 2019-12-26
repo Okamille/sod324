@@ -12,9 +12,9 @@ mutable struct DescentSolver
     nb_cons_reject::Int   # Nombre de refus consécutifs
     nb_cons_reject_max::Int # Nombre maxi de refus consécutifs
 
-    duration::Float     # durée réelle (mesurée) de l'exécution
-    durationmax::Float  # durée max de l'exécution (--duration)
-    starttime::Float    # heure de début d'une résolution
+    duration::Float64     # durée réelle (mesurée) de l'exécution
+    durationmax::Float64  # durée max de l'exécution (--duration)
+    starttime::Float64    # heure de début d'une résolution
 
     cursol::Solution      # Solution courante
     bestsol::Solution     # meilleure Solution rencontrée
