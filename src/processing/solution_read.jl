@@ -109,14 +109,14 @@ function parse_solfile(inst::Instance, filename::String)
     # Initialisation des paramètres à lire
     name::String = "UNDEF" # nom de l'instance
     timestamp::String = "UNDEF"
-    cost::Float64 = 0.0
+    cost::Float = 0.0
     order_names::Vector{String} = String[] # tableau vide
 
     # Les paramètres d'atterrissage de chaque avion
     landing_names = String[]   # name: nom de chaque avion (idem Vector{String}())
     landing_times = Int[]      # time: date atterissage (=x dans objet Solution)
     landing_dts = Int[]        # dt: écarts par rapport à la date target
-    landing_costs = Float64[]  # cost: coût de pénalité de l'avions
+    landing_costs = Float[]  # cost: coût de pénalité de l'avions
 
     # PRINCIPE DE L'ANALYSE
     # - on lit chaque ligne séparément
@@ -160,7 +160,7 @@ function parse_solfile(inst::Instance, filename::String)
         end
         if key == "cost"
             # e.g cost 700.0
-            cost = parse(Float64, val)
+            cost = parse(Float, val)
             continue
         end
         if key == "order"
@@ -195,7 +195,7 @@ function parse_solfile(inst::Instance, filename::String)
                 push!(landing_dts, missing)
             end
             if length(words) >= 4
-                push!(landing_costs, parse(Float64, words[4]))
+                push!(landing_costs, parse(Float, words[4]))
             else
                 push!(landing_costs, missing)
             end

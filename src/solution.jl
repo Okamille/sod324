@@ -10,8 +10,8 @@ mutable struct Solution
     inst::Instance
     planes::Vector{Plane}
     x::Vector{Int}
-    costs::Vector{Float64}
-    cost::Float64
+    costs::Vector{Float}
+    cost::Float
     timing_algo_solver     # :earliest, :lp, ...
     # lpTimingSolver       # solver lp si c'est :lp qui est choisi
     # earliestTimingSolver # solver dp si c'est :dp qui est choisi
@@ -31,7 +31,7 @@ mutable struct Solution
         # @show inst.nb_planes
         this.x = zeros(Int, inst.nb_planes)
         this.costs = zeros(inst.nb_planes)
-        this.cost = typemax(Float64) # valeur Inf pour un Float64)
+        this.cost = typemax(Float) # valeur Inf pour un Float)
 
         # @show algo
         # @show Args.t_algos()

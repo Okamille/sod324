@@ -4,10 +4,10 @@ mutable struct AnnealingSolver
     inst::Instance
     opts::Dict
 
-    temp_init::Float64 # température courante
-    temp_mini::Float64 # température mini avant arrêt
-    temp_coef::Float64 # coefficiant de refroidissement
-    temp::Float64      # température courante
+    temp_init::Float # température courante
+    temp_mini::Float # température mini avant arrêt
+    temp_coef::Float # coefficiant de refroidissement
+    temp::Float      # température courante
 
     nb_test::Int     # Nombre total de voisins testés
     nb_move::Int     # Nombre de voisins acceptés (améliorant ou non)
