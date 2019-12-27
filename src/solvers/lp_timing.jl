@@ -68,7 +68,8 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     σ = sortperm(sol.x)
 
     @constraint(sv.model, separation[i=1:n-1],
-                x[σ[i]] <= x[σ[i+1]] + sv.inst.sep_mat[σ[i], σ[i+1]])
+                x[σ[i]] <= x[σ[i+1]] + get_sep(sv.inst, sv.inst.planes[σ[i]],
+                                               sv.inst.planes[σ[i+1]]))
 
     # 2. résolution du problème à permu d'avion fixée
     # status=JuMP.solve(model, suppress_warnings=true)

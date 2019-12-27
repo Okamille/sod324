@@ -598,6 +598,7 @@ end
 """
 Met à jour la date d'atterrissage de chaque avion au plus tôt, de façon à
 respecter les contraintes de précédence au mieux.
+
 Principe :
   Les contraintes de séparation sont **toujours respectées**.
   Au besoin on viole la borne  d'atterrissage des avions successeurs (p.ub)
