@@ -69,7 +69,7 @@ mutable struct Solution
         return this
     end
 
-    function Solution(instance::Instance, planes::Array{Plane}, x)
+    function Solution(instance::Instance, planes::Vector{Plane}, x)
         solution = new(instance, planes, x, zeros(Int, instance.nb_planes), 0,
                        "none", "none")
         update_costs!(solution)
@@ -598,6 +598,7 @@ end
 """
 Met à jour la date d'atterrissage de chaque avion au plus tôt, de façon à
 respecter les contraintes de précédence au mieux.
+
 Principe :
   Les contraintes de séparation sont **toujours respectées**.
   Au besoin on viole la borne  d'atterrissage des avions successeurs (p.ub)

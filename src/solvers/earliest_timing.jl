@@ -37,11 +37,11 @@ function to_s(sv::EarliestTimingSolver)
     String(take!(buf))
 end
 
-
-#= Résoud le sous-problème de timing (dates d'atterrissage) des avions à
- permutation fixée par l'ordre des avions de l'objet sol, puis met à jour
- la solution sol.
-=#
+"""
+Résoud le sous-problème de timing (dates d'atterrissage) des avions à
+permutation fixée par l'ordre des avions de l'objet sol, puis met à jour
+la solution sol.
+"""
 function solve!(sv::EarliestTimingSolver, sol::Solution)
     sv.nb_calls += 1
 
