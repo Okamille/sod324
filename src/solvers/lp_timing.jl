@@ -50,9 +50,9 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     n = sv.inst.nb_planes
 
     # 1. Création du modèle spécifiquement pour cet ordre d'avion de cette solution
-    @variable(sv.model, x[1:n], Int)
-    @variable(sv.model, z[1:n] >= 0)
+    @variable(sv.model, x[1:n] >= 0)
     @variable(sv.model, y[1:n] >= 0)
+    @variable(sv.model, z[1:n] >= 0)
 
     @objective(sv.model, Min, sum(plane.ep * y[i] + plane.tp * z[i]
                                   for (i, plane) in enumerate(sv.inst.planes)))
@@ -63,13 +63,20 @@ function solve!(sv::LpTimingSolver, sol::Solution)
                 z[i] >= x[i] - sv.inst.planes[i].target)
     @constraint(sv.model, earliest_land[i=1:n],
                 x[i] >= sv.inst.planes[i].lb)
-    # @constraint(sv.model, latest_land[i=1:n], x[i] <= sv.inst.planes[i].hb)
+    @constraint(sv.model, latest_land[i=1:n],
+                x[i] <= sv.inst.planes[i].ub)
 
-    σ = sortperm(sol.x)
+    for i in 1:n
+        for j in 1:n
+            if i != j & sol.x[j] >= sol.x[i]
+                @constraint(sv.model,
+                            x[j] >= x[i] + get_sep(sv.inst,
+                                                   sv.inst.planes[i],
+                                                   sv.inst.planes[j]))
+            end
+        end
+    end
 
-    @constraint(sv.model, separation[i=1:n-1],
-                x[σ[i]] <= x[σ[i+1]] + get_sep(sv.inst, sv.inst.planes[σ[i]],
-                                               sv.inst.planes[σ[i+1]]))
 
     # 2. résolution du problème à permu d'avion fixée
     # status=JuMP.solve(model, suppress_warnings=true)
@@ -84,7 +91,7 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         # ATTENTION : les tableaux x et costs sont dans l'ordre de 
         # l'instance et non pas de la solution !
         for (i, p) in enumerate(sol.planes)
-            sol.x[i] = round(Int,value(sv.x[p.id]))
+            sol.x[i] = round(Int, value(sv.x[p.id]))
             sol.costs[i] = value(sv.costs[p.id])
         end
         prec = Args.args[:cost_precision]

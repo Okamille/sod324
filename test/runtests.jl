@@ -40,7 +40,7 @@ include("../src/processing/instance_read_alp.jl")
 include("../src/processing/instance_generators.jl")
 # include("../src/solution.jl")
 
-include("utils/seqata_test.jl")
+include("seqata_test_util.jl")
 
 Args.parse_commandline(["test"])
 
