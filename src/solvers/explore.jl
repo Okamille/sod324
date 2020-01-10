@@ -33,11 +33,11 @@ end
 
 function solve(sv::ExploreSolver, itermax_max::Int)
     ln2("BEGIN solve(ExploreSolver)")
-    itermax = 1 # car on veut faire une seule itération si on passe itermax_max=1
+    iter = 1 # car on veut faire une seule itération si on passe itermax_max=1
 
     lg1("iter <nb_move>=<nb_improve>+<nb_degrade> => <bestcost>")
 
-    while itermax <= itermax_max
+    while iter <= itermax_max
         prevcost = sv.cursol.cost
         swap!(sv.cursol)
         println("APRES SWAP: ", to_s(sv.cursol))
@@ -77,7 +77,7 @@ function solve(sv::ExploreSolver, itermax_max::Int)
                 print(msg)
             end
         end
-        itermax += 1
-    end  # while itermax
+        iter += 1
+    end  # while iter
     ln2("\nEND solve(ExploreSolver)")
 end

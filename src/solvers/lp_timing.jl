@@ -77,7 +77,6 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         end
     end
 
-
     # 2. résolution du problème à permu d'avion fixée
     # status=JuMP.solve(model, suppress_warnings=true)
     JuMP.optimize!(sv.model)
@@ -85,7 +84,7 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     # 3. Test de la validité du résultat
     if  JuMP.termination_status(sv.model) == MOI.OPTIMAL
         # tout va bien, on peut exploiter le résultat
-    
+
         # 4. Extraction des valeurs des variables d'atterrissage
         #
         # ATTENTION : les tableaux x et costs sont dans l'ordre de 
