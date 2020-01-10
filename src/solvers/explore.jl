@@ -40,7 +40,7 @@ function solve(sv::ExploreSolver, itermax_max::Int)
     while itermax <= itermax_max
         prevcost = sv.cursol.cost
         swap!(sv.cursol)
-        # println("APRES SWAP: ", to_s(sv.cursol))
+        println("APRES SWAP: ", to_s(sv.cursol))
         sv.nb_move += 1
         degrad = sv.cursol.cost - prevcost
         ln4("degrad=$(degrad)")

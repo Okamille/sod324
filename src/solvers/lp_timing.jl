@@ -91,11 +91,12 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         # ATTENTION : les tableaux x et costs sont dans l'ordre de 
         # l'instance et non pas de la solution !
         for (i, p) in enumerate(sol.planes)
-            sol.x[i] = round(Int, value(sv.x[p.id]))
-            sol.costs[i] = value(sv.costs[p.id])
+            sol.x[i] = round(Int, value(sv.model[:x][p.id]))
+            sol.costs[i] = p.ep * value(sv.model[:y][p.id]) + p.tp * value(sv.model[:z][p.id])
+            # sol.costs[i] = value(sv.model[:costs][p.id])
         end
         prec = Args.args[:cost_precision]
-        sol.cost = round(value(sv.cost), digits=prec)
+        sol.cost = round(objective_value(sv.model), digits=prec)
     else
         # La solution du solver est invalide : on utilise le placement au plus
         # tôt de façon à disposer malgré tout d'un coût pénalisé afin de pouvoir

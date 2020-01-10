@@ -9,6 +9,7 @@ function main_expore(args)
     itermax_default = 50*inst.nb_planes
     itermax = args[:itermax] == 0 ? itermax_default : args[:itermax]
 
+    println("Starting solving")
     ms_start = ms() # seconde depuis le démarrage avec précision à la ms
     solve(sv, itermax)
     ms_stop = ms()
