@@ -1,4 +1,4 @@
-include("annealing_solver.jl")
+include("solvers/annealing.jl")
 
 function main_annealing(args)
     ln1("="^70)

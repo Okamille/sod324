@@ -1,4 +1,4 @@
-include("explore_solver.jl")
+include("solvers/explore.jl")
 
 function main_expore(args)
     println("="^70)
