@@ -55,24 +55,24 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     @variable(sv.model, z[1:n] >= 0)
 
     @objective(sv.model, Min, sum(plane.ep * y[i] + plane.tp * z[i]
-                                  for (i, plane) in enumerate(sv.inst.planes)))
+                                  for (i, plane) in enumerate(sol.planes)))
 
     @constraint(sv.model, y_linear_cons[i=1:n],
-                y[i] >= sv.inst.planes[i].target - x[i])
+                y[i] >= sol.planes[i].target - x[i])
     @constraint(sv.model, z_linear_cons[i=1:n],
-                z[i] >= x[i] - sv.inst.planes[i].target)
+                z[i] >= x[i] - sol.planes[i].target)
     @constraint(sv.model, earliest_land[i=1:n],
-                x[i] >= sv.inst.planes[i].lb)
+                x[i] >= sol.planes[i].lb)
     @constraint(sv.model, latest_land[i=1:n],
-                x[i] <= sv.inst.planes[i].ub)
+                x[i] <= sol.planes[i].ub)
 
     for i in 1:n
         for j in 1:n
             if i != j & sol.x[j] >= sol.x[i]
                 @constraint(sv.model,
                             x[j] >= x[i] + get_sep(sv.inst,
-                                                   sv.inst.planes[i],
-                                                   sv.inst.planes[j]))
+                                                   sol.planes[i],
+                                                   sol.planes[j]))
             end
         end
     end
@@ -102,6 +102,7 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         # continuer la recherche heuristique de solutions.
         sv.nb_infeasable += 1
         solve_to_earliest!(sol)
+        println("INVALID SOLUTION")
     end
 
     println("END solve(LpTimingSolver, sol)")
