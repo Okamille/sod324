@@ -38,8 +38,8 @@ mutable struct LpTimingSolver
     end
 end
 
+"""Permet de retrouver le nom de notre XxxxTimingSolver à partir de l'objet"""
 function symbol(sv::LpTimingSolver)
-    # Permettre de retrouver le nom de notre XxxxTimingSolver à partir de l'objet 
     return :lp
 end
 
