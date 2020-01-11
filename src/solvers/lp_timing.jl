@@ -38,67 +38,63 @@ mutable struct LpTimingSolver
     end
 end
 
-# Permettre de retrouver le nom de notre XxxxTimingSolver à partir de l'objet 
 function symbol(sv::LpTimingSolver)
+    # Permettre de retrouver le nom de notre XxxxTimingSolver à partir de l'objet 
     return :lp
 end
 
 """
     solve!(sv::LpTimingSolver, sol::Solution)
 
-    Finds the optimal landing times given the landing order defined in a solution.
+Finds the optimal landing times given the ordering defined by the solution `sol`.
+The solution landing times landing and cost are modified in-place.
 
-
+This function relies on solving a linear program. If the program has no solution,
+then earliest landing strategy is applied.
 """
 function solve!(sv::LpTimingSolver, sol::Solution)
     sv.nb_calls += 1
-    sv.model = new_model()
+    model = new_model()
 
     n = sv.inst.nb_planes
 
     # 1. Création du modèle spécifiquement pour cet ordre d'avion de cette solution
-    @variable(sv.model, x[1:n] >= 0)
-    @variable(sv.model, y[1:n] >= 0)
-    @variable(sv.model, z[1:n] >= 0)
+    @variable(model, x[1:n] >= 0)
+    @variable(model, y[1:n] >= 0)
+    @variable(model, z[1:n] >= 0)
 
-    @objective(sv.model, Min, sum(plane.ep * y[i] + plane.tp * z[i]
-                                  for (i, plane) in enumerate(sol.planes)))
+    @objective(model, Min,
+               sum(plane.ep * y[i] + plane.tp * z[i]
+                   for (i, plane) in enumerate(sol.planes)))
 
-    @constraint(sv.model, earliest_land[i=1:n],
-                x[i] >= sol.planes[i].lb)
-    @constraint(sv.model, latest_land[i=1:n],
-                x[i] <= sol.planes[i].ub)
-    @constraint(sv.model, y_linear_cons[i=1:n],
-                y[i] >= sol.planes[i].target - x[i])
-    @constraint(sv.model, z_linear_cons[i=1:n],
-                z[i] >= x[i] - sol.planes[i].target)
-
-    for (i, first_plane) in enumerate(sol.planes)
+    for (i, plane) in enumerate(sol.planes)
+        # Landing time bounds
+        @constraint(model, x[i] >= plane.lb)
+        @constraint(model, x[i] <= plane.ub)
+        # Linearization
+        @constraint(model, y[i] >= plane.target - x[i])
+        @constraint(model, z[i] >= x[i] - plane.target)
+        # Separation with planes landing later
         for (j, second_plane) in enumerate(sol.planes[i+1:end])
-            @constraint(sv.model,
-                        x[i+j] >= x[i] + get_sep(sv.inst, first_plane,
-                                                 second_plane))
+            @constraint(model, x[i+j] >= x[i] + get_sep(sv.inst, plane,
+                                                        second_plane))
         end
     end
 
     # 2. résolution du problème à permu d'avion fixée
-    # status=JuMP.solve(model, suppress_warnings=true)
-    JuMP.optimize!(sv.model)
+    JuMP.optimize!(model)
 
     # 3. Test de la validité du résultat
-    if  JuMP.termination_status(sv.model) == MOI.OPTIMAL
+    if  JuMP.termination_status(model) == MOI.OPTIMAL
         # tout va bien, on peut exploiter le résultat
 
         # 4. Extraction des valeurs des variables d'atterrissage
-        #
-        # ATTENTION : les tableaux x et costs sont dans l'ordre de 
-        # l'instance et non pas de la solution !
         for (i, plane) in enumerate(sol.planes)
             sol.x[i] = round(Int, value(x[i]))
             sol.costs[i] = plane.ep * value(y[i]) + plane.tp * value(z[i])
         end
         prec = Args.args[:cost_precision]
-        sol.cost = round(objective_value(sv.model), digits=prec)
+        sol.cost = round(objective_value(model), digits=prec)
     else
         # La solution du solver est invalide : on utilise le placement au plus
         # tôt de façon à disposer malgré tout d'un coût pénalisé afin de pouvoir
