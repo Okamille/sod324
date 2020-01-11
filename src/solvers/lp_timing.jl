@@ -43,6 +43,13 @@ function symbol(sv::LpTimingSolver)
     return :lp
 end
 
+"""
+    solve!(sv::LpTimingSolver, sol::Solution)
+
+    Finds the optimal landing times given the landing order defined in a solution.
+
+
+"""
 function solve!(sv::LpTimingSolver, sol::Solution)
     sv.nb_calls += 1
     sv.model = new_model()
@@ -66,12 +73,11 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     @constraint(sv.model, z_linear_cons[i=1:n],
                 z[i] >= x[i] - sol.planes[i].target)
 
-    for i in 1:n
-        for j in i+1:n
+    for (i, first_plane) in enumerate(sol.planes)
+        for (j, second_plane) in enumerate(sol.planes[i+1:end])
             @constraint(sv.model,
-                        x[j] >= x[i] + get_sep(sv.inst,
-                                                sol.planes[i],
-                                                sol.planes[j]))
+                        x[i+j] >= x[i] + get_sep(sv.inst, first_plane,
+                                                 second_plane))
         end
     end
 
@@ -90,7 +96,6 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         for (i, plane) in enumerate(sol.planes)
             sol.x[i] = round(Int, value(x[i]))
             sol.costs[i] = plane.ep * value(y[i]) + plane.tp * value(z[i])
-            # sol.costs[i] = value(sv.model[:costs][p.id])
         end
         prec = Args.args[:cost_precision]
         sol.cost = round(objective_value(sv.model), digits=prec)
@@ -100,7 +105,6 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         # continuer la recherche heuristique de solutions.
         sv.nb_infeasable += 1
         solve_to_earliest!(sol)
-        println("INVALID SOLUTION")
     end
 
     println("END solve(LpTimingSolver, sol)")
