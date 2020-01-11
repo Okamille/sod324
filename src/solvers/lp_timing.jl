@@ -57,23 +57,21 @@ function solve!(sv::LpTimingSolver, sol::Solution)
     @objective(sv.model, Min, sum(plane.ep * y[i] + plane.tp * z[i]
                                   for (i, plane) in enumerate(sol.planes)))
 
-    @constraint(sv.model, y_linear_cons[i=1:n],
-                y[i] >= sol.planes[i].target - x[i])
-    @constraint(sv.model, z_linear_cons[i=1:n],
-                z[i] >= x[i] - sol.planes[i].target)
     @constraint(sv.model, earliest_land[i=1:n],
                 x[i] >= sol.planes[i].lb)
     @constraint(sv.model, latest_land[i=1:n],
                 x[i] <= sol.planes[i].ub)
+    @constraint(sv.model, y_linear_cons[i=1:n],
+                y[i] >= sol.planes[i].target - x[i])
+    @constraint(sv.model, z_linear_cons[i=1:n],
+                z[i] >= x[i] - sol.planes[i].target)
 
     for i in 1:n
-        for j in 1:n
-            if i != j & sol.x[j] >= sol.x[i]
-                @constraint(sv.model,
-                            x[j] >= x[i] + get_sep(sv.inst,
-                                                   sol.planes[i],
-                                                   sol.planes[j]))
-            end
+        for j in i+1:n
+            @constraint(sv.model,
+                        x[j] >= x[i] + get_sep(sv.inst,
+                                                sol.planes[i],
+                                                sol.planes[j]))
         end
     end
 
@@ -89,9 +87,9 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         #
         # ATTENTION : les tableaux x et costs sont dans l'ordre de 
         # l'instance et non pas de la solution !
-        for (i, p) in enumerate(sol.planes)
-            sol.x[i] = round(Int, value(sv.model[:x][p.id]))
-            sol.costs[i] = p.ep * value(sv.model[:y][p.id]) + p.tp * value(sv.model[:z][p.id])
+        for (i, plane) in enumerate(sol.planes)
+            sol.x[i] = round(Int, value(x[i]))
+            sol.costs[i] = plane.ep * value(y[i]) + plane.tp * value(z[i])
             # sol.costs[i] = value(sv.model[:costs][p.id])
         end
         prec = Args.args[:cost_precision]
