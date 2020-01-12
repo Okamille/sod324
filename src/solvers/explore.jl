@@ -37,16 +37,17 @@ function solve(sv::ExploreSolver, itermax_max::Int)
 
     ### Début du glouton  ###
     
-    planeslist = instance.planes
+    planeslist = inst.planes
 
-    LOW=zeros(instance.nb_planes)
-    UP=zeros(instance.nb_planes)
+    LOW=zeros(inst.nb_planes)
+    UP=zeros(inst.nb_planes)
     
     for p in planeslist 
         append!(LOW,p.lb)
         append!(UPP,p.ub)
     end
     
+    VEC = zeros(inst.nb_planes)
     VECT = LOW+UPP # pas besoin de diviser par 2 car le tri sera le même 
 
     ordre = sortperm(VECT) # ordre des avions selon la quantité (e_i+l_i)/2
