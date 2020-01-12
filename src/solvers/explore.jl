@@ -36,21 +36,20 @@ function solve(sv::ExploreSolver, itermax_max::Int)
     iter = 1 # car on veut faire une seule itération si on passe itermax_max=1
 
     ### Début du glouton  ###
-    
-    planeslist = inst.planes
 
-    LOW=zeros(inst.nb_planes)
-    UP=zeros(inst.nb_planes)
+    # planes_lb = zeros(Int, inst.nb_planes)
+    # planes_ub = zeros(Int, inst.nb_planes)
+    planes_mean_bound = zeros(inst.nb_planes)
     
-    for p in planeslist 
-        append!(LOW,p.lb)
-        append!(UPP,p.ub)
+    for (i, plane) in enumerate(inst.planes)
+        # planes_lb[i] = plane.lb
+        # planes_ub[i] = plane.ub
+        planes_mean_bound[i] = (plane.lb + plane.ub)
     end
     
-    VEC = zeros(inst.nb_planes)
-    VECT = LOW+UPP # pas besoin de diviser par 2 car le tri sera le même 
+    # VECT = low+planes_ub # pas besoin de diviser par 2 car le tri sera le même 
 
-    ordre = sortperm(VECT) # ordre des avions selon la quantité (e_i+l_i)/2
+    ordre = sortperm(planes_mean_bound) # ordre des avions selon la quantité (e_i+l_i)/2
     sv.cursol=ordre
     solve!(sv)
 
