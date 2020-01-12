@@ -38,6 +38,9 @@ function solve(sv::ExploreSolver, itermax_max::Int)
     ### Début du glouton  ###
     
     planeslist = instance.planes
+
+    LOW=zeros(instance.nb_planes)
+    UP=zeros(instance.nb_planes)
     
     for p in planeslist 
         append!(LOW,p.lb)
