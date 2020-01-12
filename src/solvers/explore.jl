@@ -35,6 +35,18 @@ function solve(sv::ExploreSolver, itermax_max::Int)
     ln2("BEGIN solve(ExploreSolver)")
     iter = 1 # car on veut faire une seule itération si on passe itermax_max=1
 
+    ### Début du glouton  ###
+
+    LOW=sv.inst.lb_min
+    UPP=sv.inst.up_max
+    VECT = LOW+UPP # pas besoin de diviser par 2 car le tri sera le même 
+
+    ordre = sortperm(VECT) # ordre des avions selon la quantité (e_i+l_i)/2
+    sv.cursol=ordre
+    solve!(sv)
+
+    ### Fin du glouton  ###
+
     lg1("iter <nb_move>=<nb_improve>+<nb_degrade> => <bestcost>")
 
     while iter <= itermax_max
