@@ -25,7 +25,6 @@ mutable struct MipSolver
 end
 
 function buildSeqataModel(sv::MipSolver)
-
     # Quelques variables locales, pour abréger l'écriture
     planes = sv.inst.planes
     n = length(planes)

@@ -21,8 +21,7 @@ mutable struct MipDiscretSolver
     end
 end
 
-# Création du modèle discrétisé (plus lent, mais polyvalent)
-#
+"""Création du modèle discrétisé (plus lent, mais polyvalent)"""
 function buildSeqataModel(sv::MipDiscretSolver)
 
     # nb d'avion, pour abréger l'écriture

@@ -1,9 +1,14 @@
 # include("solvers/taboo.jl")
 
-# Cette action est destinée à la mise au point de code (nouveau solveurs,
-# nouveaux voisinages, ...) 
-# Une fois la fonctionnalité opérationnel, il faut en faire en test unitaire
-# (i.e. en créant un nouveau fichier dans tests/text_xxx.jl)
+"""
+    main_test(args)
+
+Cette action est destinée à la mise au point de code (nouveau solveurs,
+nouveaux voisinages, ...) 
+
+Une fois la fonctionnalité opérationnel, il faut en faire en test unitaire
+(i.e. en créant un nouveau fichier dans tests/text_xxx.jl)
+"""
 function main_test(args)
     # p1 = Plane("p2", 1, 100, 150, 200, 1.0, 2.0)
     # p2 = Plane("p22", 1, 100, 150, 200, 1.0)

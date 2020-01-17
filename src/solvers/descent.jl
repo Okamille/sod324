@@ -58,8 +58,7 @@ function DescentSolver(inst::Instance;
     return this
 end
 
-# Retourne true ssi l'état justifie l'arrêt de l'algorithme
-#
+"""Retourne true ssi l'état justifie l'arrêt de l'algorithme"""
 function finished(sv::DescentSolver)
     sv.duration = time_ns()/1_000_000_000 - sv.starttime
     too_long = sv.duration >= sv.durationmax
@@ -133,21 +132,20 @@ function solve(sv::DescentSolver;
     ln2("END solve(DescentSolver)")
 end
 
-# Returne un quadruplet d'indices destiné à affectuer deux shifts relativement
-# proches
-# - ecartmaxin est l'écart maxi au sein d'une paire d'indices
-# - ecartmaxout est l'écart maxi entre deux paires d'indices (cumulables)
-# - ecartmaxin et ecartmaxout sont imposés dans les bornes de l'instance
-# - abs(i2-i1) et abs(i4-i3) sont limités par ecartmaxin
-# - i3 est distant au maximum de ecartmaxout du couple (i1,i2)
+"""
+    sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)
+
+Retourne un quadruplet d'indices destiné à affectuer deux shifts relativement
+proches
+- ecartmaxin est l'écart maxi au sein d'une paire d'indices
+- ecartmaxout est l'écart maxi entre deux paires d'indices (cumulables)
+- ecartmaxin et ecartmaxout sont imposés dans les bornes de l'instance
+- abs(i2-i1) et abs(i4-i3) sont limités par ecartmaxin
+- i3 est distant au maximum de ecartmaxout du couple (i1,i2)
+"""
 function sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)
-
     # Version stupide car trop large !
-    i1 = rand(1:sol.inst.nb_planes)
-    i2 = rand(1:sol.inst.nb_planes)
-    i3 = rand(1:sol.inst.nb_planes)
-    i4 = rand(1:sol.inst.nb_planes)
-
+    i1, i2, i3, i4 = rand(1:sol.inst.nb_planes, 4)
     return (i1, i2, i3, i4)
 end
 
@@ -166,6 +164,7 @@ function record_bestsol(sv::DescentSolver; movemsg="")
         print("$movemsg => bestcost=", sv.cursol.cost)
     end
 end
+
 function get_stats(sv::DescentSolver)
     # txt = <<-EOT.gsub /^ {4}/,''
     txt = """

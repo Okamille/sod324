@@ -112,46 +112,49 @@ function get_stats(sv::AnnealingSolver)
     return replace(txt, r"^ {4}" => "")
 end
 
-# Calcul d'une température initiale de manière à avoir un
-# taux d'acceptation TAUX en démarrage
-#
-# arguments :
-#   - taux_cible : pourcentage représentant le taux d'acceptation cible(e.g. 0.8)
-#   - nb_degrad_max : nbre de degradation à accepter pour le calcul de la moyenne
-#
-# Principe :
-#   On lance une suite de mutations (succession de mouvement systématiquement
-#   acceptés). On relève le nombre et la moyenne des mouvements conduisant à une
-#   dégradation du coût de la solution.
-#
-#   degrad : dégradation moyenne du coût pour deux mutations consécutives de coût
-#       croissant
-#
-#   La probabilité standard d'acceptation d'une mauvaise solution est :
-#       p = e^{ -degrad/T } = 0.8    =>    T = t_init = -degrad / ln(p)
-#
-#   avec :
-#       p = taux_cible = proba(t_init)
-#       degrad = moyenne des dégradations de l'énergie
-#       T = t_init = la température initiale à calculer
-#
-# Exemple :
-#   On va lancer des mutations jusqu'à avoir 1000 dégradations.
-#   Si par exemple le coût des voisins forme une suite de la forme :
-#
-#       990, 1010, 990, 1010, 990,...
-#
-#   On devra faire 2000 mutations pour obtenir 1000 dégradations de valeur 20,
-#   d'où t_init = -degrad / ln(proba)
-#       proba = 0.8   =>  t_init = degrad * 4.5
-#       proba = 0.37  =>  t_init = degrad
-#
-# ATTENTION :
-#  Cette fonction n'est **pas** une méthode de AnnealingSolver.
-#  Elle a juste besoin d'une solution et du type de mouvement à effectuer.
-#  Ici, on suppose que le seul mouvement possible est swap!(sol::Solution)
-#  Mais il faudra pouvoir paramétrer cette méthode pour des voisinages différents.
-#
+"""
+    guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
+
+Calcul d'une température initiale de manière à avoir un
+taux d'acceptation TAUX en démarrage
+
+arguments :
+  - taux_cible : pourcentage représentant le taux d'acceptation cible(e.g. 0.8)
+  - nb_degrad_max : nbre de degradation à accepter pour le calcul de la moyenne
+
+Principe :
+  On lance une suite de mutations (succession de mouvement systématiquement
+  acceptés). On relève le nombre et la moyenne des mouvements conduisant à une
+  dégradation du coût de la solution.
+
+  degrad : dégradation moyenne du coût pour deux mutations consécutives de coût
+      croissant
+
+  La probabilité standard d'acceptation d'une mauvaise solution est :
+      p = e^{ -degrad/T } = 0.8    =>    T = t_init = -degrad / ln(p)
+
+  avec :
+      p = taux_cible = proba(t_init)
+      degrad = moyenne des dégradations de l'énergie
+      T = t_init = la température initiale à calculer
+
+Exemple :
+  On va lancer des mutations jusqu'à avoir 1000 dégradations.
+  Si par exemple le coût des voisins forme une suite de la forme :
+
+      990, 1010, 990, 1010, 990,...
+
+  On devra faire 2000 mutations pour obtenir 1000 dégradations de valeur 20,
+  d'où t_init = -degrad / ln(proba)
+      proba = 0.8   =>  t_init = degrad * 4.5
+      proba = 0.37  =>  t_init = degrad
+
+ATTENTION :
+ Cette fonction n'est **pas** une méthode de AnnealingSolver.
+ Elle a juste besoin d'une solution et du type de mouvement à effectuer.
+ Ici, on suppose que le seul mouvement possible est swap!(sol::Solution)
+ Mais il faudra pouvoir paramétrer cette méthode pour des voisinages différents.
+"""
 function guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
     # A FAIRE EVENTUELLEMENT
     t_init = 0    # stupide : pour faire une descente pure !
