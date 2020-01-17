@@ -36,7 +36,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Recherche" href="search.html" />
-    <link rel="prev" title="Utils" href="utils.html" /> 
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Solution" href="solution.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,8 +87,11 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane.html">Plane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instance.html">Instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solution.html">Solution</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
 </ul>
 
             
@@ -154,36 +158,7 @@
             
   <div class="section" id="processing">
 <h1>Processing<a class="headerlink" href="#processing" title="Lien permanent vers ce titre">¶</a></h1>
-<dl class="class"><dt id=Instance><em class="property">type </em><code class="descname">Instance</code><a class="headerlink" href="#Instance" title="Permalink to thistype">¶</a></dt><dd class="body"><p></p>
-<dl class="function"><dt id="Instance-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">Instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Instance-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="Instance-0dedbb3708ce063082c6c6321ebabea1"><em class="property">function </em><code class="descname">Instance</code><span class="sig-paren">(</span><em>infile</em>::AbstractString; <em>format</em> = <tt>"AUTO"</tt><span class="sig-paren">)</span><a class="headerlink" href="#Instance-0dedbb3708ce063082c6c6321ebabea1" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl></dd></dl><dl class="function"><dt id="sep_max-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">sep_max</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#sep_max-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="ub_max-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">ub_max</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#ub_max-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="lb_min-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">lb_min</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#lb_min-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="etp_max-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">etp_max</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#etp_max-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="get_sep-7110cb7e78e8bde9d3644dd48c89fa21"><em class="property">function </em><code class="descname">get_sep</code><span class="sig-paren">(</span><em>inst</em>::Instance, <em>p1</em>::Plane, <em>p2</em>::Plane<span class="sig-paren">)</span><a class="headerlink" href="#get_sep-7110cb7e78e8bde9d3644dd48c89fa21" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="write-c0a6b32b5853067fcc7ede19d7ae907e"><em class="property">function </em><code class="descname">write</code><span class="sig-paren">(</span><em>inst</em>::Instance, <em>filename</em>::AbstractString; <em>format</em> = <tt>"alpx"</tt><span class="sig-paren">)</span><a class="headerlink" href="#write-c0a6b32b5853067fcc7ede19d7ae907e" title="Permalink to this function">¶</a></dt><dd><p><p>Enregistre l’instance dans un fichier au format demandé</p>
-</p>
-</dd></dl><dl class="function"><dt id="to_s_alp-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">to_s_alp</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#to_s_alp-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="to_s_alpx-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">to_s_alpx</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#to_s_alpx-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="to_s_long-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">to_s_long</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#to_s_long-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p><p>génère une chaine au format demandé (ampl, alp, alpx)</p>
-</p>
-</dd></dl><dl class="function"><dt id="to_s_stats-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">to_s_stats</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#to_s_stats-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p><p>génère une chaine de statistiques sur l’instance</p>
-</p>
-</dd></dl><dl class="function"><dt id="get_plane_from_name-6c180914f35ca9b9afc8cbc8d4304c23"><em class="property">function </em><code class="descname">get_plane_from_name</code><span class="sig-paren">(</span><em>inst</em>::Instance, <em>name</em>::AbstractString<span class="sig-paren">)</span><a class="headerlink" href="#get_plane_from_name-6c180914f35ca9b9afc8cbc8d4304c23" title="Permalink to this function">¶</a></dt><dd><p><p>Retourne l’avion à partir de son nom</p>
-</p>
-</dd></dl><dl class="function"><dt id="get_inequality_viols-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">get_inequality_viols</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#get_inequality_viols-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p><p>Retourne la liste des viols de l’hypothese de l’inégalité triangulaire</p>
-<blockquote>
-<div><p>sep(k1,k3) &gt; sep(k1,k2) + sep(k2,k3)  =&gt; viol existe</p>
-</div></blockquote>
-<p>En effet, l’inégalité triangulaire impose que pour toute paire de types
-d’avions (k1,k3), on ne puisse pas insérer un autre avion de type k2 qui
-permette de raccourcir l’écart des temps d’atterrissage entre un avion de type
-k1 et un avion de type k3.</p>
-<p>Un viol est représenté par un tuple de six entiers
-(k1, k2, k3, sep12, sep23, sep13)</p>
-</p>
-</dd></dl><dl class="function"><dt id="instance_build_mini10-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">instance_build_mini10</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#instance_build_mini10-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p><p>La description d’un avion est de la forme :</p>
+<dl class="function"><dt id="instance_build_mini10-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">instance_build_mini10</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#instance_build_mini10-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p><p>La description d’un avion est de la forme :</p>
 <blockquote>
 <div><p>#    name kind  at   E    T   L    ep    tp
 plane  p1    1  55  130  156 560  10.0  10.0</p>
@@ -202,214 +177,6 @@ plane  p1    1  55  130  156 560  -26 260.0   0 0.0    404 4040.0</p>
 </div></blockquote>
 <p>e.g :  « p1    1     1   601   709  2401     1.7  1.9 »</p>
 </p>
-</dd></dl><dl class="class"><dt id=Solution><em class="property">type </em><code class="descname">Solution</code><a class="headerlink" href="#Solution" title="Permalink to thistype">¶</a></dt><dd class="body"><p><p>Un object de classe Solution encapsule les éléments d’une solution
-- vecteur planes : les avions dans l’ordre de la solution
-- x et costs : vecteurs des variables de décisions associées à chaque avion
-- cost : le coût global
-et les méthodes pour la manipuler
-- update, to_s, …</p>
-</p>
-<dl class="function"><dt id="Solution-5842ceacaeb11d5c5572463115ca54b6"><em class="property">function </em><code class="descname">Solution</code><span class="sig-paren">(</span><em>inst</em>::Instance; <em>update</em>::Bool = <tt>true</tt>, <em>algo</em> = <tt>:ARGS</tt><span class="sig-paren">)</span><a class="headerlink" href="#Solution-5842ceacaeb11d5c5572463115ca54b6" title="Permalink to this function">¶</a></dt><dd><p><p>Un object de classe Solution encapsule les éléments d’une solution
-- vecteur planes : les avions dans l’ordre de la solution
-- x et costs : vecteurs des variables de décisions associées à chaque avion
-- cost : le coût global
-et les méthodes pour la manipuler
-- update, to_s, …</p>
-</p>
-</dd></dl><dl class="function"><dt id="Solution-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">Solution</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#Solution-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Un object de classe Solution encapsule les éléments d’une solution
-- vecteur planes : les avions dans l’ordre de la solution
-- x et costs : vecteurs des variables de décisions associées à chaque avion
-- cost : le coût global
-et les méthodes pour la manipuler
-- update, to_s, …</p>
-</p>
-</dd></dl></dd></dl><dl class="function"><dt id="Solution-d5b21156b450dd1a6167643aac0113a3"><em class="property">function </em><code class="descname">Solution</code><span class="sig-paren">(</span><em>inst</em>::Instance, <em>filename</em>::String; <em>update</em>::Bool = <tt>true</tt>, <em>algo</em> = <tt>:ARGS</tt><span class="sig-paren">)</span><a class="headerlink" href="#Solution-d5b21156b450dd1a6167643aac0113a3" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="copy!-be3c7b4bcce3744d431872f3dcbc4cb4"><em class="property">function </em><code class="descname">copy!</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>other</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#copy!-be3c7b4bcce3744d431872f3dcbc4cb4" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="init_solver-d3cd75c304229db07005f56d6764baab"><em class="property">function </em><code class="descname">init_solver</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>algo</em>::Symbol<span class="sig-paren">)</span><a class="headerlink" href="#init_solver-d3cd75c304229db07005f56d6764baab" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>init_solver(sol::Solution, algo::Symbol)</p>
-</div></blockquote>
-<p>Crée et affecte l’attribut solver pour la résolution des dates d’atterrissage.
-Le type du solver créée est mémorisé dans l’attribut symbole
-sol.timing_algo_solver (par exemple :ealiest, :lp, …)</p>
-</p>
-</dd></dl><dl class="function"><dt id="current_algo_symbol-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">current_algo_symbol</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#current_algo_symbol-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>current_algo_symbol(sol::Solution)</p>
-</div></blockquote>
-<p>Return le symbol de l’algo à partir du TimingSolver mémorisé dans la
-variable sol.solver
-Si l’objet n’est pas un solver, le symbol :earliest est retourné</p>
-</p>
-</dd></dl><dl class="function"><dt id="hash-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">hash</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#hash-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>hash(sol::Solution)</p>
-</div></blockquote>
-<p>Calcul du hachage d’une solution.
-Deux solutions identiques doivent donner le même hachage.
-Deux solutions sont considérées comme identique ssi elles ont les avions
-dans le même ordre, et avec les mêmes dates d’atterrissage.
-HYP: les deux solutions sont à jour (par solve!)</p>
-</p>
-</dd></dl><dl class="function"><dt id="get_names-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">get_names</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#get_names-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="set_from_names!-338353817472425711aa25e21d3aba02"><em class="property">function </em><code class="descname">set_from_names!</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>names</em><span class="sig-paren">)</span><a class="headerlink" href="#set_from_names!-338353817472425711aa25e21d3aba02" title="Permalink to this function">¶</a></dt><dd><p><p>Affecte la solution en fonction de l’ordre des noms d’avion définit
-en paramètre</p>
-<dl class="simple">
-<dt>Exemple</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`set_from_names!(mysol,</span> <span class="pre">[3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">8,</span> <span class="pre">9,</span> <span class="pre">7,</span> <span class="pre">1,</span> <span class="pre">10,</span> <span class="pre">2])`</span></code></p>
-</dd>
-</dl>
-<p>ATTENTION : couteux O(n^2), mais pratique pour affichage et tests.</p>
-</p>
-</dd></dl><dl class="function"><dt id="sort!-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">sort!</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#sort!-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Trie les avions de l’objet sol selon leur date d’atterrissage croissante.
-La solution n’est pas recalculée, mais les vecteurs x et planes sont
-triés de manière cohérente.</p>
-</p>
-</dd></dl><dl class="function"><dt id="show-317bfc26f5ae35d626566502e873a770"><em class="property">function </em><code class="descname">show</code><span class="sig-paren">(</span><em>io</em>::IO, <em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#show-317bfc26f5ae35d626566502e873a770" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="to_s-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">to_s</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#to_s-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Convertit une Solution en chaine
-e.g  « cost=123.456  :[p2,p5,p1,…,p10] »</p>
-</p>
-</dd></dl><dl class="function"><dt id="to_s_long-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">to_s_long</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#to_s_long-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="get_viol_penality-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">get_viol_penality</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#get_viol_penality-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Vérifie la faisabilité de la solution par rapport aux dates d’atterrissage
-réelle de la solution.
-Retourne un coût de pénalité (nul si solution valide) si des contraintes sont
-violées. Ce coût prend en compte :
-- l’amplitude des viols de la contrainte de séparation,
-- l’amplitude des viols des bornes lb et ub de chaque avion.</p>
-<p>Cette méthode suppose que l’information sol.x de la date d’atterrissage
-réelle de chaque avion est à jour.</p>
-<p>Les viols sont détectés même si l’inégalité triangulaire n’est pas respectée
-dans l’instance (instance incorrecte par hypothèse)</p>
-<p>Si level est suffisant : affiche message si solution non faisable</p>
-</p>
-</dd></dl><dl class="function"><dt id="get_viol_description-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">get_viol_description</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#get_viol_description-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Vérifie la faisabilité dates d’atterrissage x de la solution par rapport 
-aux contraintes de l’instance.
-Si pas de viol, retourne une chaine vide
-Si viol, retourne un texte avec une ligne par contrainte violée.
-Les contraintes testés sont les suivante :
-- la date d’atterissage doit entre dans l’intervale permi pour l’avion
-- tous les temps de séparation doivent être respertés</p>
-<p>Cette méthode suppose que l’information sol.x de la date d’atterrissage
-réelle de chaque avion est à jour.</p>
-<p>Les viols sont détectés même si l’inégalité triangulaire n’est pas respectée
-dans l’instance (instance incorrecte par hypothèse)</p>
-</p>
-</dd></dl><dl class="function"><dt id="is_feasable-08c4f525e503ff886978b1563b3432ad"><em class="property">function </em><code class="descname">is_feasable</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>param_bidon</em> = <tt>nothing</tt><span class="sig-paren">)</span><a class="headerlink" href="#is_feasable-08c4f525e503ff886978b1563b3432ad" title="Permalink to this function">¶</a></dt><dd><p><p>Calcul la faisabilité intrinsèque de la solution en fonction de l’ordre
-imposé pour les avions.</p>
-<p>Ne modifie pas la solution</p>
-<p>N’utilise pas l’attribut x[i] de la solution associée au placement
-de chaque avion.</p>
-<p>Principe :
-Si on peut placer les avions au plus tôt en respectant les temps de
-séparation sans violer la borne sup du placement des avions suivants,
-alors la solution est faisable.</p>
-</p>
-</dd></dl><dl class="function"><dt id="solve!-bb941d9a82b7da6732a2dd776b114b5a"><em class="property">function </em><code class="descname">solve!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>do_update_cost</em>::Bool = <tt>false</tt><span class="sig-paren">)</span><a class="headerlink" href="#solve!-bb941d9a82b7da6732a2dd776b114b5a" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>solve!(sol::Solution; do_update_cost::Bool=false)</p>
-</div></blockquote>
-<p>TODO: prévoir paramètre from_index=1 pour permettre un recalcul partiel.</p>
-<p>do_update_cost (false par défaut) : si vrai, met à jours les coûts.</p>
-<p>REMARQUE :
-- l’option do_update_cost n’est utile que si ce n’est pas déjà fait</p>
-<blockquote>
-<div><p>par le TimingSolver.</p>
-</div></blockquote>
-<ul class="simple">
-<li><p>Elle ne semble plus utilisée (sauf par solve_to_earliest!(sol)).</p></li>
-<li><p>Il est conseillé d’appeler explicitement la méthode update_costs!(sol)
-plutot que d’utiliser cette option.</p></li>
-<li><p>Si aucun TimingSolver n’a été spécifié lors de la création de la solution
-alors on utilise la résolution au plus tot.</p></li>
-</ul>
-</p>
-</dd></dl><dl class="function"><dt id="shuffle!-6c27d65315ce709ceeff63a94e8b245c"><em class="property">function </em><code class="descname">shuffle!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>do_update</em>::Bool = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#shuffle!-6c27d65315ce709ceeff63a94e8b245c" title="Permalink to this function">¶</a></dt><dd><p><p>Mélange la solution et mets à jour (par défaut) les timings</p>
-<dl class="simple">
-<dt>do_update (true par défaut)<span class="classifier">si vrai , résoud le pb de timing</span></dt><dd><p>REMARQUE : l’option do_update ne semble plus utilisée</p>
-</dd>
-</dl>
-</p>
-</dd></dl><dl class="function"><dt id="disturb!-6816821a57cfbab8cf5cdb2e1023d4f0"><em class="property">function </em><code class="descname">disturb!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>idx_first</em> = <tt>1</tt>, <em>idx_last</em> = <tt>-1</tt>, <em>shift_max</em> = <tt>1</tt>, <em>nb_shift</em> = <tt>10</tt>, <em>do_update</em>::Bool = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#disturb!-6816821a57cfbab8cf5cdb2e1023d4f0" title="Permalink to this function">¶</a></dt><dd><p><p>Remue légèrement la solution et mets à jour (par défaut) les timings</p>
-</p>
-</dd></dl><dl class="function"><dt id="update_costs!-42d846b55d07a776a0009e3f2f6699c9"><em class="property">function </em><code class="descname">update_costs!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>add_viol_penality</em> = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#update_costs!-42d846b55d07a776a0009e3f2f6699c9" title="Permalink to this function">¶</a></dt><dd><p><p>Met à jour les coûts de chaque avion (sol.costs) et le coût global (sol.cost)
-à partir des dates d’atterrissage supposées connues (sol.x).</p>
-<p>PRECONDITION : le Vector s.costs est dans le même ordre que s.planes</p>
-</p>
-</dd></dl><dl class="function"><dt id="solve_to_earliest!-f8f51d70472ded435f4da5b2cb1ad740"><em class="property">function </em><code class="descname">solve_to_earliest!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>do_update_cost</em> = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#solve_to_earliest!-f8f51d70472ded435f4da5b2cb1ad740" title="Permalink to this function">¶</a></dt><dd><p><p>Met à jour la date d’atterrissage de chaque avion au plus tôt, de façon à
-respecter les contraintes de précédence au mieux.
-Principe :</p>
-<blockquote>
-<div><p>Les contraintes de séparation sont <strong>toujours respectées</strong>.
-Au besoin on viole la borne  d’atterrissage des avions successeurs (p.ub)</p>
-</div></blockquote>
-</p>
-</dd></dl><dl class="function"><dt id="swap!-4802df608969acdeb4981fd266aadd33"><em class="property">function </em><code class="descname">swap!</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>idx1</em> = <tt>-1</tt>, <em>idx2</em> = <tt>-1</tt>; <em>do_update</em> = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#swap!-4802df608969acdeb4981fd266aadd33" title="Permalink to this function">¶</a></dt><dd><p><p>swap! : Permute deux avions dans la solution
-idx1, idx2 : les indices des avions à permuter</p>
-<blockquote>
-<div><p>si un indice n’est pas défini : il est choisi aléatoiremenet.
-retourne les indices des avions permutées</p>
-</div></blockquote>
-<p>do_update : recalcule le coût (true par défaut)</p>
-</p>
-</dd></dl><dl class="function"><dt id="shift!-4802df608969acdeb4981fd266aadd33"><em class="property">function </em><code class="descname">shift!</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>idx1</em> = <tt>-1</tt>, <em>idx2</em> = <tt>-1</tt>; <em>do_update</em> = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#shift!-4802df608969acdeb4981fd266aadd33" title="Permalink to this function">¶</a></dt><dd><p><p>shift! : Déplace avions dans la solution
-idx1, idx2 : les indices origine et cible de l’avion à déplacer</p>
-<blockquote>
-<div><p>si un indice n’est pas défini : il est choisi aléatoiremenet.
-retourne les indices du déplacement effectué.</p>
-</div></blockquote>
-<p>do_update : recalcule le coût (true par défaut).</p>
-</p>
-</dd></dl><dl class="function"><dt id="permu!-29cf6df3f537db91fb919e3ee40200cc"><em class="property">function </em><code class="descname">permu!</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>indices1</em>, <em>indices2</em>; <em>do_update</em> = <tt>true</tt><span class="sig-paren">)</span><a class="headerlink" href="#permu!-29cf6df3f537db91fb919e3ee40200cc" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>permu!(sol::Solution, indices1, indices2; do_update=true)</p>
-</div></blockquote>
-<p>Permute des avions dans la solution.</p>
-<p># Arguments
-- indices1 : tableau des indices d’avions à permuter
-- indices2 : tableau des nouveaux indices des avions permutés
-HYPOTHESE : indices2 est une permutation valide de indices1</p>
-<p>Les avions de la solution ont pour indice 0:nb_planes-1
-Par exemple, si indices1 vaut [0, 2, 7, 12]
-et si indices2 vaut [12, 7, 0, 2],
-L’opération consiste à permuter les avions positionnés en :</p>
-<blockquote>
-<div><p>0, 2, 7, 12</p>
-</div></blockquote>
-<dl class="simple">
-<dt>de façon à ce que leur nouvelle position soit en :</dt><dd><p>12, 7, 0, 2</p>
-</dd>
-</dl>
-<p>Exemple
-On veut transformer la liste d’avion :</p>
-<blockquote>
-<div><dl class="simple">
-<dt>&#64;plane = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]</dt><dd><p>0   1*  2   3   4   5   6*  7*  8    9</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
-<dt>en :</dt><dd><dl class="simple">
-<dt>&#64;plane = [10, 70, 30, 40, 50, 60, 80, 20, 90, 100]</dt><dd><p>0   1*  2   3   4   5   6*  7*  8    9</p>
-</dd>
-</dl>
-</dd>
-<dt>Pour cela l’appel doit être de la forme :</dt><dd><p>mysol.permu! [1, 6, 7], [7, 1, 6]</p>
-</dd>
-</dl>
-<p>do_update : recalcule le coût (true par défaut)</p>
-<p>HYPOTHESE :
-TODO: effectuer une mise à jour différencielle du coût</p>
-</p>
-</dd></dl><dl class="function"><dt id="initial_sort!-6f60f434270586dd2e948311437e2b59"><em class="property">function </em><code class="descname">initial_sort!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>presort</em> = <tt>:ARGS</tt><span class="sig-paren">)</span><a class="headerlink" href="#initial_sort!-6f60f434270586dd2e948311437e2b59" title="Permalink to this function">¶</a></dt><dd><p><p>Effectue un tri de la solution courante selon le critère passer en paramètre.
-Si aucun critère presort n’est imposé en argumant, celui spécifié par
-l’option –presort est utilisé
-Le timing de la solution estmis à jour.</p>
-</p>
-</dd></dl><dl class="function"><dt id="write-701023daf67d8ee1b3a31539b4bfaeaa"><em class="property">function </em><code class="descname">write</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>filename</em> = <tt>""</tt><span class="sig-paren">)</span><a class="headerlink" href="#write-701023daf67d8ee1b3a31539b4bfaeaa" title="Permalink to this function">¶</a></dt><dd><p><p>Enregistre la solution dans un fichier.
-Par défaut, le nom est construit automatiquement à partir des caractéristiques
-de l’instance et du coût de la solution (arrondi à deux décimales)</p>
-</p>
-</dd></dl><dl class="function"><dt id="guess_solname-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">guess_solname</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#guess_solname-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><dl class="simple">
-<dt>Retourne un nom de la forme :</dt><dd><p>alp_01_p10=700.0.sol              # VERSION SIMPLIFIÉE POUR SEQATA
-alp_13_p500_k201=6440.8959533.sol # VERSIOAN ALAP pour 100 segments</p>
-</dd>
-</dl>
-</p>
-</dd></dl><dl class="function"><dt id="print_sol-b73c7ec70be28d2711879eefde32ab90"><em class="property">function </em><code class="descname">print_sol</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>msg</em>::AbstractString = <tt>""</tt><span class="sig-paren">)</span><a class="headerlink" href="#print_sol-b73c7ec70be28d2711879eefde32ab90" title="Permalink to this function">¶</a></dt><dd><p></p>
 </dd></dl><dl class="function"><dt id="readsol-30e5576f32e6202e371422d07ec819f0"><em class="property">function </em><code class="descname">readsol</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>filename</em>::String<span class="sig-paren">)</span><a class="headerlink" href="#readsol-30e5576f32e6202e371422d07ec819f0" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
 <div><p>readsol</p>
 </div></blockquote>
@@ -479,8 +246,10 @@ filename: nom du fichier solution</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="utils.html" class="btn btn-neutral float-left" title="Utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="solution.html" class="btn btn-neutral float-left" title="Solution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
