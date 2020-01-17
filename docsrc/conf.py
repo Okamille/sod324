@@ -167,6 +167,3 @@ texinfo_documents = [
      author, 'seqata', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
