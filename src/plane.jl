@@ -3,18 +3,20 @@
 # current_plane_id = 0
 
 """
-Encapsule les données d'un avion
-- id: numéro interne commençant en 1, Utilisé pour l'indexation des vecteurs
-- name: nom arbitraire, par exemple le numéro commençant en "p1", "p2", ...
-  Mais pour l'instant, c'est un entier pour être conforme à ampl
-- kind: le type de l'avion (car kind est un mot clé réservé en julia !)
-- lb, target, ub: les heures mini, souhaitées et maxi d'atterrissage
-- g (et éventuellement h) les coefficients de pénalité unitaires
-  En cas d'absence du paramètre g, on utilisera h pour affecter g
-  ATTENTION : g NE SERA PAS ENCORE EXPLOITER DANS L'OPTIMISATION
+Encapsule les données d'un avion.
 
-ATTENTION : l'appelant devra mettre à jour les attributs dérivés en appelant : 
-   update_costs!.(this.planes)
+Args:
+    id (Int): numéro interne commençant en 1, Utilisé pour l'indexation des vecteurs
+    name (AbstractString): nom arbitraire, par exemple le numéro commençant en "p1", "p2", ... Mais pour l'instant, c'est un entier pour être conforme à ampl
+    kind (Int): le type de l'avion (car kind est un mot clé réservé en julia !)
+    lb (Int): heure minimale d'atterrissage
+    target (Int): heure souhaitée d'atterrissage
+    ub (Int): heure maximale d'atterrissage
+    ep (Float64): earliness penalty
+    tp (Float64): tardiness penalty
+
+Attention:
+    L'appelant devra mettre à jour les attributs dérivés en appelant :  ``update_costs!.(this.planes)``
 """
 mutable struct Plane
     id::Int
@@ -31,50 +33,58 @@ mutable struct Plane
     costs::Vector{Float64}
 
     # Astuce pour créer un méthode utilisable dans le style OOP
-    to_s::Function
+    # to_s::Function
 
     # Déclaration explicite d'un constructeur totalement vide
     # Plane() = new()
 
-    function Plane()
-        this = new()
+    # function Plane()
+    #     this = new()
 
-        # Astuce pour créer un méthode utilisable dans le style OOP
-        this.to_s = function() to_s(this) end
+    #     # Astuce pour créer un méthode utilisable dans le style OOP FIXME
+    #     this.to_s = function() to_s(this) end
 
-        return this
-    end
+    #     return this
+    # end
 end
 
-"""Initialise le tableau interne des coûts"""
+"""Initialise le tableau interne des coûts."""
 function update_costs!(p::Plane)
     # Initialisation d'un Vector [1:p.ub] avec le coût -1.0
     p.costs = fill(-1.0, p.ub)
 end
 
-# Méthode Julia pour convertir tout objet en string (Merci Matthias)
+"""Méthode Julia pour convertir tout objet en string (merci Matthias)."""
 function Base.show(io::IO, p::Plane)
     Base.write(io,to_s(p))
 end
 
+"""
+Retourne le coût de l'avion en fonction de la data d'atterrissage `t`.
+
+Ne tient pas compt de la fenêtre d'atterrissage de l'avion.
+"""
 function get_cost_basic(p::Plane, t::Int)
     return t < p.target ? p.ep*(p.target-t) : p.tp*(t-p.target)
 end
 
+"""Retourne le coût de l'avion en fonction de la data d'atterrissage `t`."""
 function get_cost(p::Plane, t::Int; BIG_COST::Float64=100_011.0)
-    if !(t in p.lb:p.ub)
+    # if !(t in p.lb:p.ub)
+    if t < p.lb | t > p.ub
         return BIG_COST
     elseif p.costs[t] == -1.0
-        p.costs[t] = t < p.target ? p.ep*(p.target-t) : p.tp*(t-p.target)
+        p.costs[t] = t < p.target ? p.ep * (p.target-t) : p.tp * (t-p.target)
     end
     return p.costs[t]
 end
 
-# return simplement le name. e.g. "p1"
+"""Retourne le nom de l'avion."""
 function to_s(p::Plane)
     p.name
 end
-# return e.g. : "[p1,p2,p3,..,p10]"
+
+"""Retourne les noms des avions du vecteur."""
 function to_s(planes::Vector{Plane})
     # string("[", join( [p.name for p in planes], "," ), "]")
     # string("[", join( (p->p.name).(planes), "," ), "]")
@@ -99,11 +109,15 @@ function to_s_long(p::Plane)
 end
 
 """
-Décrit une ligne au forme alp ou alpx
+Décrit une ligne au forme alp ou alpx.
+
 Attention : pour le projet Seqata, seul le format alp existe)
-soit: #    name  kind   at     E     T     L    ep    tp
-soit: #    name  kind   at     E     T     L    dt1 cost1   dt2 cost2 ...
-Il n'y a pas de return final
+
+    - soit: `name  kind   at     E     T     L    ep    tp`
+
+    - soit: `name  kind   at     E     T     L    dt1 cost1   dt2 cost2 ...`
+
+Il n'y a pas de return final.
 """
 function to_s_alp_plane_header()
     io = IOBuffer()
@@ -112,7 +126,7 @@ function to_s_alp_plane_header()
     String(take!(io))
 end
 
-"""Affiche les éléments définis ( != -1 ) du tableau costs"""
+"""Affiche les éléments définis ( != -1 ) du tableau costs."""
 function to_s_costs(p::Plane)
     io = IOBuffer()
     print(io, p.name, "=>costs[]= ")

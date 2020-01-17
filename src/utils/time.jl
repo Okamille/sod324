@@ -3,10 +3,8 @@
 # Modif le 21/11/2019 
 
 """
-    ms()
-
-démarre le chrono si nécessaire (la première fois) et retourne la durée
-écoulée depuis ce démarrage (à la milli-seconde prêt)
+Démarre le chrono si nécessaire (la première fois) et retourne la durée
+écoulée depuis ce démarrage (à la milli-seconde prêt).
 """
 function ms()
     global MS_START
@@ -22,9 +20,8 @@ function ms_reset()
 end
 
 """
-    @ms(cmd)
+Chronomètre l'exécution d'une commande :
 
-chronomètre l'exécution d'une commande :
 - affiche la durée depuis le lancement du programme (peut-être long en
   mode interactife !)
 - affiche le fichier depuis lequel elcette macro est appelée

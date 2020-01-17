@@ -8,12 +8,12 @@
 """
 La description d'un avion est de la forme :
 
-  #    name kind  at   E    T   L    ep    tp
-  plane  p1    1  55  130  156 560  10.0  10.0
+#    name kind  at   E    T   L    ep    tp
+plane  p1    1  55  130  156 560  10.0  10.0
 
 ou bien
-  #    name kind  at  E     T   L    dt1  c1   dt2 c2    dt3 c3
-  plane  p1    1  55  130  156 560  -26 260.0   0 0.0    404 4040.0
+#    name kind  at  E     T   L    dt1  c1   dt2 c2    dt3 c3
+plane  p1    1  55  130  156 560  -26 260.0   0 0.0    404 4040.0
 """
 function instance_build_mini10()
     inst = Instance()

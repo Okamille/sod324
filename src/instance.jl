@@ -1,5 +1,16 @@
-# using Printf
+"""Définit la structure d'instance et fournit des méthodes associées."""
 
+"""
+Instance du problème.
+
+Args:
+    planes (Vector{Plane}): Vecteur des avions
+    name (String): Nom de l'instance
+    nb_kinds (Int): Nombre de classes d'avions
+    nb_planes (Int): Nombre d'avions
+    freeze_time (Int):
+    sep_mat (Matrix{Int}):
+"""
 mutable struct Instance
     planes::Vector{Plane}
     name::String
@@ -46,13 +57,16 @@ lb_min(inst::Instance) = minimum(p->p.lb, inst.planes)
 # Plus grande valeur de pénalité (d'avance ou de retard)
 etp_max(inst::Instance) = maximum(p->max(p.ep, p.tp), inst.planes)
 
-# Version de haut niveau pour accéder au temps de séparation entre avion
-# (les méthodes de bas niveau peuvent accéder directement au tableau inst.sep_mat)
+"""
+Version de haut niveau pour accéder au temps de séparation entre avion.
+
+*Les méthodes de bas niveau peuvent accéder directement au tableau ``inst.sep_mat``.*
+"""
 function get_sep(inst::Instance, p1::Plane, p2::Plane)
     inst.sep_mat[p1.kind, p2.kind]
 end
 
-"""Enregistre l'instance dans un fichier au format demandé"""
+"""Enregistre l'instance dans un fichier au format demandé."""
 function write(inst::Instance, filename::AbstractString; format="alpx")
     fh = open(filename, "w")
     println(fh, to_s_long(inst))
@@ -63,7 +77,7 @@ end
 to_s_alp(inst::Instance) = to_s_long(inst, format="alp")
 to_s_alpx(inst::Instance) = to_s_long(inst, format="alpx")
 
-"""génère une chaine au format demandé (ampl, alp, alpx)"""
+"""Génère une chaine au format demandé (ampl, alp, alpx)."""
 function to_s_long(inst::Instance)
     io = IOBuffer()
     println(io, "# ALP instance version 1.0")
@@ -88,7 +102,7 @@ function to_s_long(inst::Instance)
 end
 
 
-"""génère une chaine de statistiques sur l'instance"""
+"""Génère une chaine de statistiques sur l'instance."""
 function to_s_stats(inst::Instance)
     io = IOBuffer()
     print(io, "Statistiques sur l'instance\n")
@@ -128,7 +142,7 @@ function to_s_stats(inst::Instance)
     String(take!(io))
 end
 
-"""Retourne l'avion à partir de son nom"""
+"""Retourne l'avion à partir de son nom."""
 function get_plane_from_name(inst::Instance, name::AbstractString)
     # TODO : utiliser plutot une fonction de recherche de Julia
     for plane in inst.planes
@@ -149,7 +163,9 @@ end
 """
 Retourne la liste des viols de l'hypothese de l'inégalité triangulaire
 
-   sep(k1,k3) > sep(k1,k2) + sep(k2,k3)  => viol existe
+```
+sep(k1,k3) > sep(k1,k2) + sep(k2,k3)  => viol existe
+```
 
 En effet, l'inégalité triangulaire impose que pour toute paire de types
 d'avions (k1,k3), on ne puisse pas insérer un autre avion de type k2 qui
@@ -157,7 +173,7 @@ permette de raccourcir l'écart des temps d'atterrissage entre un avion de type
 k1 et un avion de type k3.
 
 Un viol est représenté par un tuple de six entiers
-(k1, k2, k3, sep12, sep23, sep13)
+`(k1, k2, k3, sep12, sep23, sep13)`
 """
 function get_inequality_viols(inst::Instance)
     viols = Vector{Tuple{Int, Int, Int, Int, Int, Int}}()

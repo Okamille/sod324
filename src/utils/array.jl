@@ -1,29 +1,34 @@
 # Quelques méthodes de manipulation de tableau/vecteur
 
 """
-    shift!
-
 Déplacement d'un élément dans un tableau
 
-# Arguments
-- v : vecteur à modifier
-- idx1 : indice de l'élément à décaller
-- idx2 : indice de l'émément après déplacement
+Args:
+    v: vecteur à modifier
+    idx1: indice de l'élément à décaller
+    idx2: indice de l'émément après déplacement
 
-# Résultat
-- modififie le tableau passé en paramètre
-- retourne le tableau complet
+Le tableau passé en paramètre est modifié.
 
-Exemple :
-```
-v = collect(1:7)
-shift!(v, 7, 1)'
-=> 1×7 LinearAlgebra.Adjoint{Int64,Array{Int64,1}}:
+Returns:
+    Le tableau complet
+
+Example:
+    ```
+    v = collect(1:7)
+
+    shift!(v, 7, 1)'
+
+    => 1×7 LinearAlgebra.Adjoint{Int64,Array{Int64,1}}:
+
     7  1  2  3  4  5  6
-```
-Voir aussi les méthodes intégrées au langage julia :
-- permutate()
-- circshift()
+    ```
+
+See Also:
+
+    - permutate()
+    - circshift()
+
 """
 function shift!(v::Vector{T}, idx1::Int, idx2::Int) where {T}
     if idx1<idx2
