@@ -19,6 +19,6 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-github:
+gh-pages:
 	@make html
-	@cp -a _build/html/. ../doctest
+	@cp -a _build/html/. ../docs
