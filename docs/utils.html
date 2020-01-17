@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utils &mdash; Documentation seqata 0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="Processing" href="processing.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> seqata
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plane.html">Plane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instance.html">Instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solution.html">Solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing.html">Processing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">seqata</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utils">
+<h1>Utils<a class="headerlink" href="#utils" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="function"><dt id="abbrevsdict-ee375f151e0e4d16f27ddd25f92e7bfe"><em class="property">function </em><code class="descname">abbrevsdict</code><span class="sig-paren">(</span><em>words</em>::Array{String, 1}, <em>pat</em> = <tt>#= none:40 =# @r_str ".*"</tt><span class="sig-paren">)</span><a class="headerlink" href="#abbrevsdict-ee375f151e0e4d16f27ddd25f92e7bfe" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="test_abbrevsdict-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">test_abbrevsdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#test_abbrevsdict-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="shift!-a92ba2e2eca9d2783b0e3b1a80fae794"><em class="property">function </em><code class="descname">shift!</code><span class="sig-paren">(</span><em>v</em>::Vector{T}, <em>idx1</em>::Int, <em>idx2</em>::Int<span class="sig-paren">)</span> where {T}<a class="headerlink" href="#shift!-a92ba2e2eca9d2783b0e3b1a80fae794" title="Permalink to this function">¶</a></dt><dd><p><p>Déplacement d’un élément dans un tableau</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> – vecteur à modifier</p></li>
+<li><p><strong>idx1</strong> – indice de l’élément à décaller</p></li>
+<li><p><strong>idx2</strong> – indice de l’émément après déplacement</p></li>
+</ul>
+</dd>
+</dl>
+<p>Le tableau passé en paramètre est modifié.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Le tableau complet</p>
+</dd>
+</dl>
+<p class="rubric">Exemple</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+v = collect(1:7)</p>
+<p>shift!(v, 7, 1)”</p>
+<p>=&gt; 1×7 LinearAlgebra.Adjoint{Int64,Array{Int64,1}}:</p>
+<p>7  1  2  3  4  5  6
+<a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<div class="admonition seealso">
+<p class="admonition-title">Voir aussi</p>
+<ul class="simple">
+<li><p>permutate()</p></li>
+<li><p>circshift()</p></li>
+</ul>
+</div>
+</p>
+</dd></dl><dl class="function"><dt id="to_sc-6e651891b3597131e091965efe3af918"><em class="property">function </em><code class="descname">to_sc</code><span class="sig-paren">(</span><em>str</em>::AbstractString, <em>color</em>::Symbol = <tt>:STABILO</tt><span class="sig-paren">)</span><a class="headerlink" href="#to_sc-6e651891b3597131e091965efe3af918" title="Permalink to this function">¶</a></dt><dd><p><div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>EN COURS DE MISE AU POINT : NE PAS UTILISER : voir Pkg AnsiColor
+&lt;<a class="reference external" href="http://ascii-table.com/ansi-escape-sequences.php">http://ascii-table.com/ansi-escape-sequences.php</a>&gt;
+&lt;<a class="reference external" href="http://misc.flogisoft.com/bash/tip_colors_and_formatting">http://misc.flogisoft.com/bash/tip_colors_and_formatting</a>&gt;
+Voir aussi ma commande bash : diam_color.sh</p>
+</div>
+<dl class="simple">
+<dt>Example</dt><dd><p>println(to_sc(« == TEST to_sc pour BLUE_STABILO == », :BLUE_STABILO))</p>
+</dd>
+</dl>
+<p>Sur les versions récentes de julia on peut faire par exemple :
+printstyled(« Solution invalide… », color=:red)</p>
+<p>Cependant :</p>
+<ul class="simple">
+<li><p>julia doit être lancé avec l’option –color=yes</p></li>
+<li><p>cette commande ne permet pas de créer un chaine pour l’afficher plus tard.</p></li>
+</ul>
+</p>
+</dd></dl><dl class="function"><dt id="prt_c-6e651891b3597131e091965efe3af918"><em class="property">function </em><code class="descname">prt_c</code><span class="sig-paren">(</span><em>str</em>::AbstractString, <em>color</em>::Symbol = <tt>:STABILO</tt><span class="sig-paren">)</span><a class="headerlink" href="#prt_c-6e651891b3597131e091965efe3af918" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="prn_c-6e651891b3597131e091965efe3af918"><em class="property">function </em><code class="descname">prn_c</code><span class="sig-paren">(</span><em>str</em>::AbstractString, <em>color</em>::Symbol = <tt>:STABILO</tt><span class="sig-paren">)</span><a class="headerlink" href="#prn_c-6e651891b3597131e091965efe3af918" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="get_unicode-5773d71752f880c8980b788036491476"><em class="property">function </em><code class="descname">get_unicode</code><span class="sig-paren">(</span><em>sym</em>::Symbol<span class="sig-paren">)</span><a class="headerlink" href="#get_unicode-5773d71752f880c8980b788036491476" title="Permalink to this function">¶</a></dt><dd><p><p>Renvoie une chaine composée du caractère unicode spécifié par un symbol
+(perso et non standard)</p>
+</p>
+</dd></dl><dl class="function"><dt id="new_model-15713d415d86ca8fea6c9323eac1f53a"><em class="property">function </em><code class="descname">new_model</code><span class="sig-paren">(</span>; <em>solver</em> = <tt>:auto</tt>, <em>mode</em> = <tt>:lp</tt>, <em>log_level</em> = <tt>0</tt><span class="sig-paren">)</span><a class="headerlink" href="#new_model-15713d415d86ca8fea6c9323eac1f53a" title="Permalink to this function">¶</a></dt><dd><p><p>Création d’un modèle de solver externe (:cplex, :glpk, …)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>solver</strong> – <p>symbole :cplex, :glpk, :clp, :cbc</p>
+<ul>
+<li><p>:cbc : permet de faire du MIP</p></li>
+<li><p>:clp : resteint aux problème LP mais plus efficace de cbc pour les relaxations.</p></li>
+</ul>
+</p></li>
+<li><p><strong>mode</strong> – (:lp ou :mip) utile pour choisir entre :clp ou :cbc</p></li>
+<li><p><strong>log_level</strong> (<em>expérimental</em>) – entier 0 pour silence, sinon 1, 2, …</p></li>
+</ul>
+</dd>
+</dl>
+<p>Autre solver à supporter plus tard Gurobi (concurrent de cplex)</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>DEPENDANCE EXTERNE : module Args (pour Args.get(« external_mip_solver »))</p>
+</div>
+</p>
+</dd></dl><dl class="function"><dt id="ms-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">ms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ms-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p><p>Démarre le chrono si nécessaire (la première fois) et retourne la durée
+écoulée depuis ce démarrage (à la milli-seconde prêt).</p>
+</p>
+</dd></dl><dl class="function"><dt id="ms_reset-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">ms_reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ms_reset-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="processing.html" class="btn btn-neutral float-left" title="Processing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Burthier, Gauthier, Thorey
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
