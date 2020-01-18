@@ -22,41 +22,27 @@ mutable struct Plane
     id::Int
     name::AbstractString
     kind::Int
-    at::Int # appearing time
-    lb::Int # lowest bound = lowest time
+    at::Int
+    lb::Int
     target::Int
-    ub::Int # upper bound = upper time
-    ep::Float64 # earliness penalty
-    tp::Float64 # tardiness penalty
+    ub::Int
+    ep::Float64
+    tp::Float64
 
     # Momoïsation du calul des coûts (de 1 à p.ub)
     costs::Vector{Float64}
-
-    # Astuce pour créer un méthode utilisable dans le style OOP
-    # to_s::Function
-
-    # Déclaration explicite d'un constructeur totalement vide
-    # Plane() = new()
-
-    # function Plane()
-    #     this = new()
-
-    #     # Astuce pour créer un méthode utilisable dans le style OOP FIXME
-    #     this.to_s = function() to_s(this) end
-
-    #     return this
-    # end
 end
 
-"""Initialise le tableau interne des coûts."""
-function update_costs!(p::Plane)
-    # Initialisation d'un Vector [1:p.ub] avec le coût -1.0
-    p.costs = fill(-1.0, p.ub)
+function Plane(id::Int, name, kind::Int, at::Int, lb::Int, target::Int, ub::Int,
+               ep::Float64, tp::Float64)
+    costs = fill(-1.0, ub)
+    return Plane(id, name, kind, at, lb, target, ub, ep, tp, costs)
 end
+
 
 """Méthode Julia pour convertir tout objet en string (merci Matthias)."""
 function Base.show(io::IO, p::Plane)
-    Base.write(io,to_s(p))
+    Base.write(io, to_s(p))
 end
 
 """
@@ -70,8 +56,7 @@ end
 
 """Retourne le coût de l'avion en fonction de la data d'atterrissage `t`."""
 function get_cost(p::Plane, t::Int; BIG_COST::Float64=100_011.0)
-    # if !(t in p.lb:p.ub)
-    if t < p.lb | t > p.ub
+    if !(t in p.lb:p.ub)
         return BIG_COST
     elseif p.costs[t] == -1.0
         p.costs[t] = t < p.target ? p.ep * (p.target-t) : p.tp * (t-p.target)

@@ -23,7 +23,7 @@ mutable struct Solution
     # contenu dans l'attribut timing_algo_solver précédent
     solver # e.g. objet de type LpTimingSolver ou EarliestimingSolver
 
-    # Le constructeur prendre
+    # Le constructeur peut prendre
     # - soit une instance qui sert à initialiser la solution
     # - soit un autre objet solution pour en faire une copie
     #
@@ -79,7 +79,6 @@ mutable struct Solution
         return solution
     end
 end
-
 
 """Retourne la solution """
 function Solution(inst::Instance, filename::String; update::Bool=true, algo=:ARGS)

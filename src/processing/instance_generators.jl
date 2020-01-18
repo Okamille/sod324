@@ -42,8 +42,8 @@ function instance_build_mini10()
     add_plane(inst, "  p9    2    61   136   151   592    30.0 30.0")
     add_plane(inst, " p10    2    86   161   181   658    30.0 30.0")
 
-    # Mise à jour des attributs dérivés de l'avion (juste costs pour l'instant)
-    update_costs!.(inst.planes)
+    # # Mise à jour des attributs dérivés de l'avion (juste costs pour l'instant)
+    # update_costs!.(inst.planes)
 
     return inst
 end

@@ -44,7 +44,7 @@ mutable struct Instance
 
         # Mise à jour des attributs dérivés des avions
         # (seulement costs pour l'instant)
-        update_costs!.(this.planes)
+        # init_costs!.(this.planes)
 
         return this
     end

@@ -103,35 +103,35 @@ function add_plane(inst::Instance, str::AbstractString)
 
     # Le 7ième mot sera traité à part en temps que définition des pénalités
     words = split(str, r"\s+"; limit=7)
-    i = 0
 
-    p = Plane()
-    push!(inst.planes, p)
-    p.id =     length(inst.planes)
-    p.name =   words[i+=1] # on laisse en String
-    p.kind =   parse(Int, words[i+=1])
-    p.at =     parse(Int, words[i+=1])
-    p.lb =     parse(Int, words[i+=1])
-    p.target = parse(Int, words[i+=1])
-    p.ub =     parse(Int, words[i+=1])
+    id = length(inst.planes) + 1
+    name = words[1] # on laisse en String
+    kind = parse(Int, words[2])
+    at = parse(Int, words[3])
+    lb = parse(Int, words[4])
+    target = parse(Int, words[5])
+    ub = parse(Int, words[6])
 
-    # Le contenu de words[i+=1] décrit les pénalités.
-    penalstr = words[i+=1]
+    # Le contenu de words[7] décrit les pénalités.
+    penalstr = words[7]
 
     # Pour le projet simplifié SEQATA ces pénalités sont représentés par les
     # deux flottants ep et tp (ou un seul flottant si pénalités symétrique).
     penalwords = split(penalstr, r"\s+")
     penalnumbers = parse.(Float64, penalwords)
 
-    p.ep = penalnumbers[1]
+    ep = penalnumbers[1]
     # Dans le cas symétrique ou il n'y a qu'une seule valeur présente.
-    # On impose alors à tp la même valeur que ep.
+    # On impose alors à tp la même valeur que ep
     if length(penalnumbers) < 2
-        p.tp = p.ep              # version symétrique 
+        tp = ep              # version symétrique 
     else
-        p.tp = penalnumbers[2]   # version assumétrique standard
+        tp = penalnumbers[2]   # version assumétrique standard
     end
-    
+
+    p = Plane(id, name, kind, at, lb, target, ub, ep, tp)
+    push!(inst.planes, p)
+
     if lg5() println(to_s_long(p)) end
 
 end
