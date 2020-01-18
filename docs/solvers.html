@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="fr" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Solvers &mdash; Documentation seqata 0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Solution" href="solution.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> seqata
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plane.html">Plane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instance.html">Instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solution.html">Solution</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Solvers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#greedy">Greedy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#earliest-timing">Earliest timing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linear-program-timing">Linear program Timing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#explore">Explore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#descent">Descent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annealing">Annealing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">seqata</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Solvers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/solvers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="solvers">
+<h1>Solvers<a class="headerlink" href="#solvers" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="greedy">
+<h2>Greedy<a class="headerlink" href="#greedy" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="function"><dt id="greedy-f71a6604af8b5cc22ac68cde7e6748f8"><em class="property">function </em><code class="descname">greedy</code><span class="sig-paren">(</span><em>instance</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#greedy-f71a6604af8b5cc22ac68cde7e6748f8" title="Permalink to this function">¶</a></dt><dd><p><p>Renvoie un solution triée par ordre d’atterrissage.</p>
+<p>Les contraintes de séparation de deux avions consécutifs sont respectées.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Solution</p>
+</dd>
+</dl>
+</p>
+</dd></dl></div>
+<div class="section" id="earliest-timing">
+<h2>Earliest timing<a class="headerlink" href="#earliest-timing" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="class"><dt id=EarliestTimingSolver><em class="property">type </em><code class="descname">EarliestTimingSolver</code><a class="headerlink" href="#EarliestTimingSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p></p>
+<dl class="function"><dt id="EarliestTimingSolver-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">EarliestTimingSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#EarliestTimingSolver-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></dd></dl><dl class="function"><dt id="symbol-e0248c4ccf5a1147e605cf34c8e59d46"><em class="property">function </em><code class="descname">symbol</code><span class="sig-paren">(</span><em>sv</em>::EarliestTimingSolver<span class="sig-paren">)</span><a class="headerlink" href="#symbol-e0248c4ccf5a1147e605cf34c8e59d46" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="show-046d9972d6d939692086256a329bb2c0"><em class="property">function </em><code class="descname">show</code><span class="sig-paren">(</span><em>io</em>::IO, <em>sv</em>::EarliestTimingSolver<span class="sig-paren">)</span><a class="headerlink" href="#show-046d9972d6d939692086256a329bb2c0" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="to_s-e0248c4ccf5a1147e605cf34c8e59d46"><em class="property">function </em><code class="descname">to_s</code><span class="sig-paren">(</span><em>sv</em>::EarliestTimingSolver<span class="sig-paren">)</span><a class="headerlink" href="#to_s-e0248c4ccf5a1147e605cf34c8e59d46" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="solve!-6c2f403cfb08efa0c6a6552a461e7ec4"><em class="property">function </em><code class="descname">solve!</code><span class="sig-paren">(</span><em>sv</em>::EarliestTimingSolver, <em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#solve!-6c2f403cfb08efa0c6a6552a461e7ec4" title="Permalink to this function">¶</a></dt><dd><p><p>Résoud le sous-problème de timing (dates d’atterrissage) des avions à
+permutation fixée par l’ordre des avions de l’objet sol, puis met à jour
+la solution sol.</p>
+</p>
+</dd></dl></div>
+<div class="section" id="linear-program-timing">
+<h2>Linear program Timing<a class="headerlink" href="#linear-program-timing" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="class"><dt id=LpTimingSolver><em class="property">type </em><code class="descname">LpTimingSolver</code><a class="headerlink" href="#LpTimingSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p><p>Ce solveur résoud le  sous-problème de timing consistant à trouver les dates
+optimales d’atterrissage des avions à ordre fixé.
+Par rapport aux autres solvers (e.g DescentSolver, AnnealingSolver, …), il
+ne contient pas d’attribut bestsol</p>
+</p>
+<dl class="function"><dt id="LpTimingSolver-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">LpTimingSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#LpTimingSolver-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p><p>Ce solveur résoud le  sous-problème de timing consistant à trouver les dates
+optimales d’atterrissage des avions à ordre fixé.
+Par rapport aux autres solvers (e.g DescentSolver, AnnealingSolver, …), il
+ne contient pas d’attribut bestsol</p>
+</p>
+</dd></dl></dd></dl><dl class="function"><dt id="symbol-bb9eea630e88defd3d63b184ec405a19"><em class="property">function </em><code class="descname">symbol</code><span class="sig-paren">(</span><em>sv</em>::LpTimingSolver<span class="sig-paren">)</span><a class="headerlink" href="#symbol-bb9eea630e88defd3d63b184ec405a19" title="Permalink to this function">¶</a></dt><dd><p><p>Permet de retrouver le nom de notre XxxxTimingSolver à partir de l’objet</p>
+</p>
+</dd></dl><dl class="function"><dt id="solve!-e3e66aaf17791bdf41da047f50761ec7"><em class="property">function </em><code class="descname">solve!</code><span class="sig-paren">(</span><em>sv</em>::LpTimingSolver, <em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#solve!-e3e66aaf17791bdf41da047f50761ec7" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
+<div><p>solve!(sv::LpTimingSolver, sol::Solution)</p>
+</div></blockquote>
+<p>Finds the optimal landing times given the ordering defined by the solution <cite>sol</cite>.
+The solution landing times landing and cost are modified in-place.</p>
+<p>This function relies on solving a linear program. If the program has no solution,
+then earliest landing strategy is applied.</p>
+</p>
+</dd></dl></div>
+<div class="section" id="explore">
+<h2>Explore<a class="headerlink" href="#explore" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="class"><dt id=ExploreSolver><em class="property">type </em><code class="descname">ExploreSolver</code><a class="headerlink" href="#ExploreSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p></p>
+<dl class="function"><dt id="ExploreSolver-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">ExploreSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#ExploreSolver-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></dd></dl><dl class="function"><dt id="solve-91b74c05e1035de9104cf7c60708a754"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::ExploreSolver, <em>itermax_max</em>::Int<span class="sig-paren">)</span><a class="headerlink" href="#solve-91b74c05e1035de9104cf7c60708a754" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></div>
+<div class="section" id="descent">
+<h2>Descent<a class="headerlink" href="#descent" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="class"><dt id=DescentSolver><em class="property">type </em><code class="descname">DescentSolver</code><a class="headerlink" href="#DescentSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p></p>
+<dl class="function"><dt id="DescentSolver-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">DescentSolver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DescentSolver-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></dd></dl><dl class="function"><dt id="DescentSolver-0ee7bcbd435fe69c00c74941b228840e"><em class="property">function </em><code class="descname">DescentSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance; <em>startsol</em>::Union{Nothing, Solution} = <tt>nothing</tt><span class="sig-paren">)</span><a class="headerlink" href="#DescentSolver-0ee7bcbd435fe69c00c74941b228840e" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="finished-c14eadb433b1e0faab58b9cf24a604ed"><em class="property">function </em><code class="descname">finished</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver<span class="sig-paren">)</span><a class="headerlink" href="#finished-c14eadb433b1e0faab58b9cf24a604ed" title="Permalink to this function">¶</a></dt><dd><p><p>Retourne true ssi l’état justifie l’arrêt de l’algorithme</p>
+</p>
+</dd></dl><dl class="function"><dt id="solve-75752287487832b87bfca6147819d381"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver; <em>nb_cons_reject_max</em>::Int = <tt>0</tt>, <em>startsol</em>::Union{Nothing, Solution} = <tt>nothing</tt>, <em>durationmax</em>::Int = <tt>0</tt><span class="sig-paren">)</span><a class="headerlink" href="#solve-75752287487832b87bfca6147819d381" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="sample_two_shifts-d56fc2f2c18b899bae1b8757ce164d34"><em class="property">function </em><code class="descname">sample_two_shifts</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>ecartmaxin</em>::Int = <tt>10</tt>, <em>ecartmaxout</em>::Int = <tt>-1</tt><span class="sig-paren">)</span><a class="headerlink" href="#sample_two_shifts-d56fc2f2c18b899bae1b8757ce164d34" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
+<div><p>sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)</p>
+</div></blockquote>
+<p>Retourne un quadruplet d’indices destiné à affectuer deux shifts relativement
+proches
+- ecartmaxin est l’écart maxi au sein d’une paire d’indices
+- ecartmaxout est l’écart maxi entre deux paires d’indices (cumulables)
+- ecartmaxin et ecartmaxout sont imposés dans les bornes de l’instance
+- abs(i2-i1) et abs(i4-i3) sont limités par ecartmaxin
+- i3 est distant au maximum de ecartmaxout du couple (i1,i2)</p>
+</p>
+</dd></dl><dl class="function"><dt id="record_bestsol-cc401a122d8856f5c12b99dd7865a079"><em class="property">function </em><code class="descname">record_bestsol</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver; <em>movemsg</em> = <tt>""</tt><span class="sig-paren">)</span><a class="headerlink" href="#record_bestsol-cc401a122d8856f5c12b99dd7865a079" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="get_stats-c14eadb433b1e0faab58b9cf24a604ed"><em class="property">function </em><code class="descname">get_stats</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver<span class="sig-paren">)</span><a class="headerlink" href="#get_stats-c14eadb433b1e0faab58b9cf24a604ed" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></div>
+<div class="section" id="annealing">
+<h2>Annealing<a class="headerlink" href="#annealing" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="class"><dt id=AnnealingSolver><em class="property">type </em><code class="descname">AnnealingSolver</code><a class="headerlink" href="#AnnealingSolver" title="Permalink to thistype">¶</a></dt><dd class="body"></dd></dl></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="solution.html" class="btn btn-neutral float-left" title="Solution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Burthier, Gauthier, Thorey
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

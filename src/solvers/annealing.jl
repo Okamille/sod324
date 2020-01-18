@@ -1,15 +1,14 @@
 
-# BEGIN TYPE DescentSolver
+
 """Annealing solver
 
 Attributes:
-    inst (Instance):
-    opts (Dict):
+    inst (Instance): instance
 
     temp_init (Float64): température courante
     temp_mini (Float64): température mini avant arrêt
     temp_coef (Float64): coefficiant de refroidissement
-    temp (Float64):      température courante
+    temp (Float64): température courante
 
     nb_test (Int): Nombre total de voisins testés
     nb_move (Int): Nombre de voisins acceptés (améliorant ou non)
@@ -60,7 +59,7 @@ function AnnealingSolver(inst::Instance;
                          temp_coef=0.999_95, step_size=1,
                          n_cons_reject_max=1_000_000_000,
                          nb_cons_no_improv_max=nothing,
-                         startsol=nothing,)
+                         startsol=nothing)
 
     if nb_cons_no_improv_max === nothing
         nb_cons_no_improv_max = 5000 inst.nb_planes
@@ -142,7 +141,7 @@ function get_stats(sv::AnnealingSolver)
 end
 
 """
-Calcul d'une température initiale de manière à avoir un taux d'acceptation $\tau$ en démarrage
+Calcul d'une température initiale de manière à avoir un taux d'acceptation τ en démarrage
 
 Args:
     taux_cible: pourcentage représentant le taux d'acceptation cible(e.g. 0.8)
@@ -179,6 +178,7 @@ Attention:
     Elle a juste besoin d'une solution et du type de mouvement à effectuer.
     Ici, on suppose que le seul mouvement possible est swap!(sol::Solution)
     Mais il faudra pouvoir paramétrer cette méthode pour des voisinages différents.
+
 """
 function guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
     # A FAIRE EVENTUELLEMENT

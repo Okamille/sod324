@@ -13,7 +13,7 @@ Welcome to seqata's documentation!
    plane
    instance
    solution
-   processing
+   solvers
    utils
 
 

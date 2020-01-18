@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Recherche" href="search.html" />
-    <link rel="next" title="Processing" href="processing.html" />
+    <link rel="next" title="Solvers" href="solvers.html" />
     <link rel="prev" title="Instance" href="instance.html" /> 
 </head>
 
@@ -89,8 +89,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="plane.html">Plane</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instance.html">Instance</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Solution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processing.html">Processing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Solution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing">Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="solvers.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
 </ul>
 
@@ -158,6 +162,8 @@
             
   <div class="section" id="solution">
 <h1>Solution<a class="headerlink" href="#solution" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Lien permanent vers ce titre">¶</a></h2>
 <dl class="class"><dt id=Solution><em class="property">type </em><code class="descname">Solution</code><a class="headerlink" href="#Solution" title="Permalink to thistype">¶</a></dt><dd class="body"><p><p>Un object de classe Solution encapsule les éléments d’une solution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Paramètres</dt>
@@ -424,6 +430,72 @@ de l’instance et du coût de la solution (arrondi à deux décimales)</p>
 </dd></dl><dl class="function"><dt id="print_sol-b73c7ec70be28d2711879eefde32ab90"><em class="property">function </em><code class="descname">print_sol</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>msg</em>::AbstractString = <tt>""</tt><span class="sig-paren">)</span><a class="headerlink" href="#print_sol-b73c7ec70be28d2711879eefde32ab90" title="Permalink to this function">¶</a></dt><dd><p><p>Fonction d’impression de haut niveau.</p>
 </p>
 </dd></dl></div>
+<div class="section" id="processing">
+<h2>Processing<a class="headerlink" href="#processing" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="function"><dt id="readsol-30e5576f32e6202e371422d07ec819f0"><em class="property">function </em><code class="descname">readsol</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>filename</em>::String<span class="sig-paren">)</span><a class="headerlink" href="#readsol-30e5576f32e6202e371422d07ec819f0" title="Permalink to this function">¶</a></dt><dd><p><p>Liste des paramètres :</p>
+<ul class="simple">
+<li><p>sol: l’objet Solution préconstruit et à mettre jour par cette méthode,</p></li>
+<li><p>filename: chemin du fichier solution à charger</p></li>
+</ul>
+<p>Lit un fichier solution au format alp, et effectue les opérations suivantes :</p>
+<ul class="simple">
+<li><p>extrait tous les paramètres possibles du fichier (sauf les commentaires)</p></li>
+<li><p>met à jour les attributs de l’objet Solution en fonction des informations
+présentes dans le fichier</p></li>
+</ul>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Cette méthode <strong>ne vérifie pas</strong> la validité de la solution vis-à-vis des
+contraintes : seule la cohérence de la solution lue par rapport à son instance
+est assurée.</p>
+</div>
+<p>Les informations suivantes sont lues mais non exploitées :</p>
+<ul class="simple">
+<li><p>name (e.g. « alp_01_p10_k3 »)</p></li>
+<li><p>timestamp (e.g « 2019-07-08T16:57:22.343 »)</p></li>
+</ul>
+<p>L’ordre des avions de la solution est défini de la manière suivante selon que
+le fichier de solution à lire est plus ou moins complet :</p>
+<ol class="arabic simple">
+<li><p>Seule la ligne « order » est définie (pas de ligne « landing » dans le fichier)
+Dans ce cas seul le champ planes de la solution est mis à jour dans l’ordre
+des noms de la ligne « order ».</p></li>
+<li><p>Seules les lignes « landing » sont présentes (la ligne « order » est absente)
+Dans ce cas l’ordre des avions est donné par l’ordre des ligne « landing ».</p></li>
+<li><p>La ligne « order » <strong>et</strong> les lignes landing sont définies.
+Dans ce cas l’ordre des avions est défini par la ligne « order » et les lignes
+« landing » peuvent être dans un ordre quelconque</p></li>
+</ol>
+<p>Les vérifications de cohérence suivantes sont faites</p>
+<ul class="simple">
+<li><p>si les informations « order » et/ou « landing » sont présentes, elles doivent
+être complètes (i.e couvrir tous les avions de l’instance, et seulement
+ceux-ci).</p></li>
+<li><p>si les informations de date (t) sont fournies pour tous les avions, alors
+l’attribut x de la solution sera mis à jour.
+Sinon seule les infrmations sur l’ordre des avion est utile, et n’a de sens
+que si la ligne « order » est abscente</p></li>
+<li><p>si les informations dt et cost sont présentes sur les lignes « landing »
+alors elle doivent être correctes.</p></li>
+<li><p>si l’information globale « costs » est présente, elle doit être correcte.</p></li>
+</ul>
+</p>
+</dd></dl><dl class="function"><dt id="parse_solfile-13884c7b5f4e4c9ce946e3e0aefbce2a"><em class="property">function </em><code class="descname">parse_solfile</code><span class="sig-paren">(</span><em>inst</em>::Instance, <em>filename</em>::String<span class="sig-paren">)</span><a class="headerlink" href="#parse_solfile-13884c7b5f4e4c9ce946e3e0aefbce2a" title="Permalink to this function">¶</a></dt><dd><p><p>Analyse un fichier représentant une solution au format .alp</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>inst: objet de l’instance</p></li>
+<li><p>filename: nom du fichier solution</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>Structure contenant les champs suivants</p>
+</dd>
+</dl>
+</p>
+</dd></dl></div>
+</div>
 
 
            </div>
@@ -433,7 +505,7 @@ de l’instance et du coût de la solution (arrondi à deux décimales)</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="processing.html" class="btn btn-neutral float-right" title="Processing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="solvers.html" class="btn btn-neutral float-right" title="Solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="instance.html" class="btn btn-neutral float-left" title="Instance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
