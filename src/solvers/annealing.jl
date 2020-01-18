@@ -62,7 +62,7 @@ function AnnealingSolver(inst::Instance;
                          startsol=nothing)
 
     if nb_cons_no_improv_max === nothing
-        nb_cons_no_improv_max = 5000 inst.nb_planes
+        nb_cons_no_improv_max = 5000 * inst.nb_planes
     end
 
     cursol = startsol === nothing ? Solution(inst) : startsol
@@ -86,24 +86,39 @@ function AnnealingSolver(inst::Instance;
     return solver
 end
 
-function solve(sv::AnnealingSolver)
+function solve(sv::AnnealingSolver, neighbour_operator!)
     println("BEGIN solve(AnnealingSolver)")
 
     while ! finished(sv)
-       for _ in 1:sv.nb_steps
-            sv.testsol = voisinage(sv.cursol)
-            if rand() < min(1, exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
+    #    for _ in 1:sv.nb_steps
+            neighbour_operator!(sv)
+            # println(exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
+            # println(sv.testsol.cost)
+            # println(sv.cursol.cost)
+            # println()
+            if rand() < exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp)
                 copy!(sv.cursol, sv.testsol)
+                sv.nb_move += 1
+                println(sv.testsol.cost)
+            else
+                sv.nb_reject += 1
+                sv.nb_cons_no_improv += 1
             end
             if sv.testsol.cost < sv.bestsol.cost
                 copy!(sv.bestsol, sv.testsol)
             end
-        end
+        # end
         sv.temp = min(sv.temp_coef * sv.temp, sv.temp_mini)
     end
-    
+
     lg2() && println(get_stats(sv))
     println("END solve(AnnealingSolver)")
+end
+
+function swap_operator!(sv::AnnealingSolver)
+    sv.nb_test += 1
+    copy!(sv.testsol, sv.cursol)
+    swap!(sv.testsol)
 end
 
 """
@@ -120,7 +135,6 @@ function get_stats(sv::AnnealingSolver)
     Paramètres de l'objet AnnealingSolver :
     step_size=         $(sv.step_size)
     temp_init=         $(sv.temp_init)
-    temp_init_rate=    $(sv.temp_init_rate)
     temp_mini=         $(sv.temp_mini)
     temp_coef=         $(sv.temp_coef)
     nb_cons_reject_max=$(sv.nb_cons_reject_max)
@@ -137,6 +151,7 @@ function get_stats(sv::AnnealingSolver)
     bestsol.cost=$(sv.bestsol.cost)
     sv.testsol.solver.nb_infeasable=$(sv.testsol.solver.nb_infeasable)
     "
+    # temp_init_rate=    $(sv.temp_init_rate)"
     return replace(txt, r"^ {4}" => "")
 end
 
