@@ -115,7 +115,37 @@ function solve(sv::DescentSolver;
     while !finished(sv)
         sv.nb_test += 1
 
-        error("\n\nMéthode solve(DescentSolve, ...) non implanté : AU BOULOT :-)\n\n")
+        copy!(sv.testsol, sv.cursol)
+        swap!(sv.testsol)
+        sv.nb_test += 1
+
+        degrad = sv.testsol.cost - sv.cursol.cost
+
+        ln4("degrad=$(degrad)")
+        if degrad < 0
+            println("degrad=$(degrad)")
+            sv.nb_cons_reject = 0
+            sv.nb_move += 1
+            copy!(sv.cursol, sv.testsol)
+            if sv.cursol.cost < sv.bestsol.cost
+                copy!(sv.bestsol, sv.cursol)
+                if lg1()
+                    msg = string("\niter ", sv.nb_test, "=", sv.nb_reject, "+",
+                                 sv.nb_move)
+                    if lg2()
+                        # affiche coût + ordre des avions
+                        msg *= string(" => ", to_s(sv.bestsol))
+                    else
+                        # affiche seulement le coût
+                        msg *= string(" => ", sv.bestsol.cost)
+                    end
+                    print(msg)
+                end
+            end
+        else
+            sv.nb_reject += 1
+            sv.nb_cons_reject += 1
+        end
 
         # On peut ici tirer aléatoirement des voisinages différents plus ou 
         # moins large (exemple un swap simple ou deux swaps proches, ...)
