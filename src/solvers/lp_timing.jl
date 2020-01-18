@@ -102,8 +102,6 @@ function solve!(sv::LpTimingSolver, sol::Solution)
         sv.nb_infeasable += 1
         solve_to_earliest!(sol)
     end
-
-    println("END solve(LpTimingSolver, sol)")
 end
 
 # end

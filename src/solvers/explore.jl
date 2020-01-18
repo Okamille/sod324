@@ -35,7 +35,7 @@ function solve(sv::ExploreSolver, itermax_max::Int)
     ln2("BEGIN solve(ExploreSolver)")
     iter = 1 # car on veut faire une seule itération si on passe itermax_max=1
 
-    ### Début du glouton  ###
+    ### Début du glouton  ### FIXME
 
     # planes_lb = zeros(Int, inst.nb_planes)
     # planes_ub = zeros(Int, inst.nb_planes)
@@ -52,8 +52,7 @@ function solve(sv::ExploreSolver, itermax_max::Int)
 
     # ordre des avions selon la quantité (e_i+l_i)/2
     order = sortperm(planes_mean_bound)
-    sv.cursol = order
-    solve!(sv)
+    permu!(sv.cursol, 1:inst.nb_planes, order)
 
     ### Fin du glouton  ###
 
@@ -62,7 +61,6 @@ function solve(sv::ExploreSolver, itermax_max::Int)
     while iter <= itermax_max
         prevcost = sv.cursol.cost
         swap!(sv.cursol)
-        println("APRES SWAP: ", to_s(sv.cursol))
         sv.nb_move += 1
         degrad = sv.cursol.cost - prevcost
         ln4("degrad=$(degrad)")
