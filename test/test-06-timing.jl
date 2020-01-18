@@ -1,8 +1,8 @@
-using CPLEX
-using GLPK
-using Cbc
-using Clp
-using JuMP
+# using CPLEX
+# using GLPK
+# using Cbc
+# using Clp
+# using JuMP
 
 include("../src/utils/model.jl")
 # include("../src/solvers/mip.jl")
@@ -65,14 +65,14 @@ print(test_name, "... ")
 @testset "$test_name" begin
 
       Args.set("timing_algo_solver", :lp)
-      Args.set("external_mip_solver", :cplex)
+      # Args.set("external_mip_solver", :clp)
       # Args.set("planes", planes_str) # idem que l'option -p
 
       # sol = Solution(inst, update=false, algo=:lp)
       sol = Solution(inst, update=false)   # alpo=:lp par défaut
       @test isa(sol.solver, LpTimingSolver)
 
-      @test Symbol(lowercase(solver_name(sol.solver.model))) == :cplex
+      # @test Symbol(lowercase(solver_name(sol.solver.model))) == :clp
 
       # On mélange les avions puis on met à jour la solution
       # print("Mélange et évaluation de la solution (cos>1000 ?)...")
@@ -93,10 +93,10 @@ ln1(" fait.")
 
 
 # ====================================================================
-test_name = "Création et résolution du timing d'une solution pour algo :lp avec :clp"
+# test_name = "Création et résolution du timing d'une solution pour algo :lp avec :clp"
 lg1(test_name, "... ")
 @testset "$test_name" begin
-      Args.set("external_mip_solver", :clp)
+      # Args.set("external_mip_solver", :clp)
       sol = Solution(inst, update=false, algo=:lp)
 
       @test isa(sol.solver, LpTimingSolver)
