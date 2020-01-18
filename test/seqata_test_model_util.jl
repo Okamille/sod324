@@ -1,9 +1,6 @@
 include("../src/utils/model.jl")
 include("../src/solvers/descent.jl")
 include("../src/solvers/lp_timing.jl")
-# include("../src/solvers/lp2_timing.jl")
-# include("../src/solvers/lp3_timing.jl")
-# include("../src/solvers/lp4_timing.jl")
 
 # Création d'une struct encapsulant la spécification d'un test LP
 struct LpSolverSpec

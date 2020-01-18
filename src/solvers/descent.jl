@@ -4,6 +4,34 @@
 # - revoir la gestion des options du solver (utiliser les params par clé-valeur)
 # - plus besoin de gérer cursol (car ici, bestsol suffit contrainrement au
 #   ExploreSolver)
+"""Descent Solver
+
+Args:
+    inst (Instance)
+    nb_test (Int): Nombre total de voisins testé
+    nb_move (Int): nombre de voisins acceptés (améliorant ou non)
+    nb_reject (Int): nombre de voisins refusés
+    nb_cons_reject (Int): Nombre de refus consécutifs
+    nb_cons_reject_max (Int): Nombre maxi de refus consécutifs
+
+    duration (Float64): Durée réelle (mesurée) de l'exécution
+    durationmax (Float64): Durée max de l'exécution (--duration)
+    starttime (Float64): Heure de début d'une résolution
+
+    cursol (Solution): Solution courante
+    bestsol (Solution): Meilleure Solution rencontrée
+    testsol (Solution): Nouvelle solution potentielle
+
+    bestiter (Int)
+    do_save_bestsol (Bool)
+
+Notes:
+    Amélioriations possibles:
+
+        - revoir la gestion des options du solver (utiliser les params par clé-valeur)
+        - plus besoin de gérer cursol (car ici, bestsol suffit contrainrement au ExploreSolver) 
+
+"""
 mutable struct DescentSolver
     inst::Instance
     nb_test::Int          # Nombre total de voisins testé
@@ -22,40 +50,41 @@ mutable struct DescentSolver
 
     bestiter::Int
     do_save_bestsol::Bool
-    DescentSolver() = new() # Constructeur par défaut
 end
 
 function DescentSolver(inst::Instance;
                        startsol::Union{Nothing,Solution} = nothing)
-    this = DescentSolver()
-    this.inst = inst
-    this.nb_test = 0
-    this.nb_move = 0
-    this.nb_reject = 0
-    this.nb_cons_reject = 0
-    this.nb_cons_reject_max = 10_000_000_000 # infini
+    nb_test = 0
+    nb_move = 0
+    nb_reject = 0
+    nb_cons_reject = 0
+    nb_cons_reject_max = 10_000_000_000 # infini
 
-    this.bestiter = 0
+    bestiter = 0
 
-    this.durationmax = 366*24*3600 # 1 année par défaut !
-    this.duration = 0.0 # juste pour initialisation
-    this.starttime = 0.0 # juste pour initialisation
+    durationmax = 366*24*3600 # 1 année par défaut !
+    duration = 0.0 # juste pour initialisation
+    starttime = 0.0 # juste pour initialisation
 
-    if startsol == nothing
+    if startsol === nothing
         # Pas de solution initiale => on en crée une
-        this.cursol = Solution(inst)
+        cursol = Solution(inst)
     else
-        this.cursol = startsol
+        cursol = startsol
         if lg2()
-            println("Dans DescentSolver : this.cursol = this.opts[:startsol] ")
-            println("this.cursol", to_s(this.cursol))
+            println("Dans DescentSolver : cursol = opts[:startsol] ")
+            println("cursol", to_s(cursol))
         end
     end
 
-    this.bestsol = Solution(this.cursol)
-    this.testsol = Solution(this.cursol)
-    this.do_save_bestsol = true
-    return this
+    bestsol = Solution(cursol)
+    testsol = Solution(cursol)
+    do_save_bestsol = true
+    descent_solver = DescentSolver(inst, nb_test, nb_move, nb_reject,
+                                    nb_cons_reject, nb_cons_reject_max, duration,
+                                    durationmax, starttime, cursol, bestsol,
+                                    testsol, bestiter, do_save_bestsol)
+    return descent_solver
 end
 
 """Retourne true ssi l'état justifie l'arrêt de l'algorithme"""
