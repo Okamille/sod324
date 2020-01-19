@@ -123,7 +123,6 @@ function solve(sv::DescentSolver;
 
         ln4("degrad=$(degrad)")
         if degrad < 0
-            println("degrad=$(degrad)")
             sv.nb_cons_reject = 0
             sv.nb_move += 1
             copy!(sv.cursol, sv.testsol)

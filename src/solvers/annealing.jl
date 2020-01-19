@@ -62,7 +62,7 @@ function AnnealingSolver(inst::Instance;
                          startsol=nothing)
 
     if nb_cons_no_improv_max === nothing
-        nb_cons_no_improv_max = 5000 inst.nb_planes
+        nb_cons_no_improv_max = 5000*inst.nb_planes
     end
 
     cursol = startsol === nothing ? Solution(inst) : startsol
@@ -91,7 +91,9 @@ function solve(sv::AnnealingSolver)
 
     while ! finished(sv)
        for _ in 1:sv.nb_steps
-            sv.testsol = voisinage(sv.cursol)
+            copy!(sv.testsol, sv.cursol)
+            swap!(sv.testsol)
+            # sv.testsol = voisinage(sv.cursol)
             if rand() < min(1, exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
                 copy!(sv.cursol, sv.testsol)
             end
@@ -116,11 +118,11 @@ function finished(sv::AnnealingSolver)
 end
 
 function get_stats(sv::AnnealingSolver)
+    # temp_init_rate=    $(sv.temp_init_rate)
     txt = "
     Paramètres de l'objet AnnealingSolver :
     step_size=         $(sv.step_size)
     temp_init=         $(sv.temp_init)
-    temp_init_rate=    $(sv.temp_init_rate)
     temp_mini=         $(sv.temp_mini)
     temp_coef=         $(sv.temp_coef)
     nb_cons_reject_max=$(sv.nb_cons_reject_max)
