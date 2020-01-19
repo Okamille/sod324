@@ -24,7 +24,7 @@ function main_annealing(args)
     ln1(get_stats(sv))
 
     ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
-    solve(sv)
+    solve(sv, swap_operator!)
     ms_stop = ms()
 
     bestsol = sv.bestsol

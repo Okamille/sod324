@@ -16,7 +16,7 @@ Ce prototype est opérationnel et intègre les fonctionnalités suivantes :
 - gestion de nombreuses options dont le premier argument est une action
   (à la git) pour le choix de la méthode de résolution du problème complet,
   ou de l'algorithme du résolution du sous-problème de timing,
-- choix par une option du solveur linéair externe quand un tel solveur
+- choix par une option du solveur linéaire externe quand un tel solveur
   est nécessaire (e.g cplex, glpk, clp, ...)
 
 La liste des options disponibles peut-être obtenue par :

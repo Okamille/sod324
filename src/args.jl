@@ -65,7 +65,7 @@ function set(k, v)
 end
 
 function actions_desc()
-    OrderedDict{String,String}(
+    OrderedDict{String, String}(
         "annealing" => "résolution par recuit simulé (sim. annealing)",
         "recuit"    => "résolution par recuit simulé (sim. annealing)",
 
