@@ -89,6 +89,7 @@ end
 function solve(sv::AnnealingSolver, neighbour_operator!)
     println("BEGIN solve(AnnealingSolver)")
 
+    current_costs = Vector{Float64}(undef, 10_000_000)
     while ! finished(sv)
     #    for _ in 1:sv.nb_steps
             neighbour_operator!(sv)
@@ -107,12 +108,14 @@ function solve(sv::AnnealingSolver, neighbour_operator!)
             if sv.testsol.cost < sv.bestsol.cost
                 copy!(sv.bestsol, sv.testsol)
             end
+            current_costs[sv.nb_test] = sv.cursol.cost
         # end
         sv.temp = min(sv.temp_coef * sv.temp, sv.temp_mini)
     end
 
     lg2() && println(get_stats(sv))
     println("END solve(AnnealingSolver)")
+    return current_costs[1:sv.nb_test]
 end
 
 function swap_operator!(sv::AnnealingSolver)

@@ -37,7 +37,6 @@ function main_carlo(args)
             shuffle!(cursol, do_update=false)
         end
 
-        
         # Puis on lance l'algo de timing (presélectionné selon l'option --algo)
         # en fonction de l'ordre des avions ainsi contruit.
         solve!(cursol) 
@@ -77,5 +76,3 @@ function main_carlo(args)
 
     println("Fin de l'action carlo")
 end
-
-main_carlo(Args.args)

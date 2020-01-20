@@ -58,7 +58,7 @@ function DescentSolver(inst::Instance;
     nb_move = 0
     nb_reject = 0
     nb_cons_reject = 0
-    nb_cons_reject_max = 10_000_000_000 # infini
+    nb_cons_reject_max = 10_000_000 # infini de physicien
 
     bestiter = 0
 
@@ -87,38 +87,18 @@ function DescentSolver(inst::Instance;
     return descent_solver
 end
 
-"""Retourne true ssi l'état justifie l'arrêt de l'algorithme"""
-function finished(sv::DescentSolver)
-    sv.duration = time_ns()/1_000_000_000 - sv.starttime
-    too_long = sv.duration >= sv.durationmax
-    too_many_reject = (sv.nb_cons_reject >= sv.nb_cons_reject_max)
-    stop = too_long || too_many_reject
-    if stop
-        if lg1()
-            println("\nSTOP car :")
-            println("     sv.nb_cons_reject=$(sv.nb_cons_reject)")
-            println("     sv.nb_cons_reject_max=$(sv.nb_cons_reject_max)")
-            println("     sv.duration=$(sv.duration)")
-            println("     sv.durationmax=$(sv.durationmax)")
-            println(get_stats(sv))
-        end
-        return true
-    else
-        return false
-    end
-end
-
 function solve(sv::DescentSolver;
                nb_cons_reject_max::Int = 0,
-               startsol::Union{Nothing,Solution} = nothing,
-               durationmax::Int = 0
+               startsol::Union{Nothing, Solution} = nothing,
+               durationmax::Int = 0,
+               record_cost=false
                )
     ln2("BEGIN solve(DescentSolver)")
     if durationmax != 0
         sv.durationmax = durationmax
     end
 
-    if startsol != nothing
+    if startsol !== nothing
         sv.cursol = startsol
         if sv.cursol.cost < sv.bestsol.cost
             copy!(sv.bestsol, sv.cursol) # cursol peut avoir été meilleure !
@@ -141,12 +121,14 @@ function solve(sv::DescentSolver;
         println("Début de solve : get_stats(sv)=\n", get_stats(sv))
     end
 
+    current_costs = Vector{Float64}(undef, 10_000_000)
     while !finished(sv)
-        sv.nb_test += 1
 
         copy!(sv.testsol, sv.cursol)
         swap!(sv.testsol)
         sv.nb_test += 1
+
+        current_costs[sv.nb_test] = sv.testsol.cost
 
         degrad = sv.testsol.cost - sv.cursol.cost
 
@@ -188,6 +170,28 @@ function solve(sv::DescentSolver;
 
     end # fin while !finished
     ln2("END solve(DescentSolver)")
+    return current_costs[1:sv.nb_test]
+end
+
+"""Retourne true ssi l'état justifie l'arrêt de l'algorithme"""
+function finished(sv::DescentSolver)
+    sv.duration = time_ns()/1_000_000_000 - sv.starttime
+    too_long = sv.duration >= sv.durationmax
+    too_many_reject = (sv.nb_cons_reject >= sv.nb_cons_reject_max)
+    stop = too_long || too_many_reject
+    if stop
+        if lg1()
+            println("\nSTOP car :")
+            println("     sv.nb_cons_reject=$(sv.nb_cons_reject)")
+            println("     sv.nb_cons_reject_max=$(sv.nb_cons_reject_max)")
+            println("     sv.duration=$(sv.duration)")
+            println("     sv.durationmax=$(sv.durationmax)")
+            println(get_stats(sv))
+        end
+        return true
+    else
+        return false
+    end
 end
 
 """
