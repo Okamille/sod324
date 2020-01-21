@@ -4,6 +4,7 @@ function main_expore(args)
     println("="^70)
     println("Début de l'action explore")
     inst = Instance(args[:infile])
+    args[:plot] = false
 
     sv = ExploreSolver(inst)
     itermax_default = 50*inst.nb_planes
@@ -11,7 +12,7 @@ function main_expore(args)
 
     println("Starting solving")
     ms_start = ms() # seconde depuis le démarrage avec précision à la ms
-    solve(sv, itermax)
+    costs = solve(sv, itermax)
     ms_stop = ms()
 
     bestsol = sv.bestsol
@@ -28,6 +29,14 @@ function main_expore(args)
     println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
 
     println("Fin de l'action explore")
+    return costs
 end
 
-main_expore(Args.args)
+function loop_explore(args, instances::Vector{Instance})
+    costs = []
+    for instance in instances
+        args[:infile] = "data/$instance"
+        push!(costs, main_expore(args))
+    end
+    return costs
+end

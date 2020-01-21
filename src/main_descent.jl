@@ -15,7 +15,7 @@ function main_descent(args)
     duration = 300 # secondes
     itermax = Args.get(:itermax) # existe encore :-)
     ms_start = ms() # seconde depuis le démarrage avec précision à la ms
-    solve(sv, durationmax=duration, nb_cons_reject_max=itermax)
+    costs = solve(sv, durationmax=duration, nb_cons_reject_max=itermax)
     ms_stop = ms()
 
     bestsol = sv.bestsol
@@ -33,6 +33,5 @@ function main_descent(args)
     println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
 
     println("Fin de la méthode de descente")
+    return costs
 end
-
-main_descent(Args.args)

@@ -125,7 +125,7 @@ variable sol.solver
 Si l'objet n'est pas un solver, le symbol :earliest est retourné
 """
 function current_algo_symbol(sol::Solution)
-    if sol.solver != nothing
+    if sol.solver !== nothing
         return symbol(sol.solver)
     else
         return :earliest
@@ -512,7 +512,7 @@ Notes:
       alors on utilise la résolution au plus tot.
 """
 function solve!(sol::Solution; do_update_cost::Bool=false)    
-    if sol.solver == nothing
+    if sol.solver === nothing
         init_solver(sol, sol.timing_algo_solver)
     end
     solve!(sol.solver, sol)

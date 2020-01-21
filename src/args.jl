@@ -31,7 +31,7 @@ l'appelant
 """
 function get(k="")
     global args
-    if args == nothing
+    if args === nothing
         error("Dans args.jl/get : args n'est pas encore défini !")
     end
     # # On s'assure que k est une String, même si un symbole était fourni.
@@ -57,7 +57,7 @@ Args.set(:level, old_level) # on revient à la verbosité iniiale
 """
 function set(k, v)
     global args
-    if args == nothing
+    if args === nothing
         error("Dans args.jl/set : args n'est pas encore défini !")
     end
     k = Symbol(k)
@@ -182,7 +182,7 @@ function to_s_dict(args)
         else
             # println("$k => $v")
             # @show k, v
-            if v == nothing
+            if v === nothing
                 println(io, " $(rpad(k, 10))  =>  nothing")
             else
                 println(io, " $(rpad(k, 10))  =>  $v")
@@ -332,6 +332,14 @@ function parse_commandline(inargs= ["test"])
         help = "Mode test (pour mise au point d'une variante du code)"
         action = :store_true
 
+        "--plot"
+        help = "Plot current solution cost over time"
+        action = :store_true
+
+        "--save-costs"
+        help = "Saves solution cost over time"
+        action = :store_true
+
         "--seed"
         help = "Graine pour le générateur aléatoire"
         arg_type = Int
@@ -341,7 +349,7 @@ function parse_commandline(inargs= ["test"])
                 println("\n\nLe germe aléatoire doit être positif ou nul\n")
                 return false
             end
-            return true
+        return true
         end
 
         "files"

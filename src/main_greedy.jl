@@ -12,5 +12,3 @@ function main_greedy(args)
     print_sol(solution)
     println("Fin de l'algorithme glouton")
 end
-
-main_greedy(Args.args)

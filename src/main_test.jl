@@ -31,10 +31,3 @@ function main_test(args)
 
     println("Fin de l'action test")
 end
-
-try
-    main_test(Args.args)
-catch e
-    println(join(stacktrace(), "\n\n"))
-    println("\nERREUR: relancer main_test")
-end
