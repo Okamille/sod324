@@ -43,7 +43,7 @@ mutable struct AnnealingSolver
     iter_in_step::Int
 
     nb_cons_reject::Int
-    nb_cons_reject_max::Int
+    nb_cons_reject_max::Float64
 
     nb_cons_no_improv::Int
     nb_cons_no_improv_max::Int
@@ -56,8 +56,8 @@ end
 """Annealing solver outer constructor"""
 function AnnealingSolver(inst::Instance; 
                          temp_init=nothing, temp_init_rate=0.75, temp_mini=1e-6,
-                         temp_coef=0.999_95, step_size=1,
-                         n_cons_reject_max=1_000_000_000,
+                         temp_coef=0.999_999_9, step_size=1,
+                         n_cons_reject_max=0.001,
                          nb_cons_no_improv_max=nothing,
                          startsol=nothing)
 
@@ -92,25 +92,34 @@ function solve(sv::AnnealingSolver, neighbour_operator!)
     current_costs = Vector{Float64}(undef, 10_000_000)
     while ! finished(sv)
     #    for _ in 1:sv.nb_steps
-            neighbour_operator!(sv)
+            copy!(sv.testsol, sv.cursol)
+            neighbour_operator!(sv.testsol)
             # println(exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
             # println(sv.testsol.cost)
             # println(sv.cursol.cost)
             # println()
-            if rand() < exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp)
+            # println("Ratio : ", sv.nb_move / sv.nb_steps)
+            # println("Temperature : ", sv.temp)
+            # println("Degradation : ", sv.testsol.cost - sv.cursol.cost)
+            # println("Acceptation proba : ", exp(-(max(sv.testsol.cost - sv.cursol.cost, 0)) / sv.temp))
+            sv.nb_steps += 1
+            if rand() < exp(-(max(sv.testsol.cost - sv.cursol.cost, 0)) / sv.temp)
                 copy!(sv.cursol, sv.testsol)
+                sv.nb_cons_reject = 0
                 sv.nb_move += 1
-                println(sv.testsol.cost)
+                # println(sv.testsol.cost)
             else
+                sv.nb_cons_reject += 1
                 sv.nb_reject += 1
                 sv.nb_cons_no_improv += 1
             end
             if sv.testsol.cost < sv.bestsol.cost
+                println("Accepted solution with improvement : ", sv.bestsol.cost - sv.testsol.cost)
                 copy!(sv.bestsol, sv.testsol)
             end
             current_costs[sv.nb_test] = sv.cursol.cost
         # end
-        sv.temp = min(sv.temp_coef * sv.temp, sv.temp_mini)
+        sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
 
     lg2() && println(get_stats(sv))
@@ -118,10 +127,8 @@ function solve(sv::AnnealingSolver, neighbour_operator!)
     return current_costs[1:sv.nb_test]
 end
 
-function swap_operator!(sv::AnnealingSolver)
-    sv.nb_test += 1
-    copy!(sv.testsol, sv.cursol)
-    swap!(sv.testsol)
+function swap_operator!(sol::Solution)
+    swap!(sol)
 end
 
 """
@@ -130,7 +137,9 @@ Retourne true ssi l'état justifie l'arrêt de l'algorithme.
 On pourra utiliser d'autres critères sans toucher au programme principal
 """
 function finished(sv::AnnealingSolver)
-    return sv.nb_cons_reject >= sv.nb_cons_reject_max
+    # return sv.nb_cons_reject >= sv.nb_cons_reject_max
+    ratio = sv.nb_move / sv.nb_steps
+    return ratio < sv.nb_cons_reject_max
 end
 
 function get_stats(sv::AnnealingSolver)
@@ -200,8 +209,29 @@ Attention:
 
 """
 function guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
-    # A FAIRE EVENTUELLEMENT
-    t_init = 0    # stupide : pour faire une descente pure !
+    # we apply the formula : exp(-delta_h/T_0) = taux_cible
+    # from the formula we get -delta_h / ln(taux_cible) = T_0
+    #t_init = 0    # stupide : pour faire une descente pure !
     # Initialisations diverses
+    
+    nb_degrad = 0
+    last_cost = sol.cost
+    degrads = []
+    cursol = Solution(sol)
+    while nb_degrad < nb_degrad_max
+        # We go back from initial solution
+        swap!(cursol)
+        degrad = last_cost - cursol.cost
+        last_cost = cursol.cost
+        if degrad > 0
+            nb_degrad += 1
+            push!(degrads, degrad)
+        end
+    end
+
+    delta = mean(degrads)
+
+    t_init = - delta / log(taux_cible)
+    ln2("Temp init : ", t_init)
     return t_init
 end

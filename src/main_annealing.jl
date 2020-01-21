@@ -20,6 +20,7 @@ function main_annealing(args)
         temp_init_rate=0.3,
         step_size=inst.nb_planes,
         startsol=sol,
+        temp_coef=0.999_95
     )
     ln1(get_stats(sv))
 

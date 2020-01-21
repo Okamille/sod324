@@ -12,6 +12,7 @@
 @ms include("processing/solution_read.jl")
 
 @ms using Dates
+@ms using Statistics
 
 @ms include("utils/PlotUtils.jl")
 @ms using .PlotUtils: plot_save_costs
