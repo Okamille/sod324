@@ -12,6 +12,7 @@
 @ms include("processing/solution_read.jl")
 
 @ms using Dates
+@ms using Statistics
 
 # Les autres fichiers sont inclue seulement si nécessaire
 # Dans les solveurs spécifiques ou dans le fichier usings.jl
