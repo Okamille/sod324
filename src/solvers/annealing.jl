@@ -117,14 +117,14 @@ function solve(sv::AnnealingSolver, neighbour_operator!)
                 println("Accepted solution with improvement : ", sv.bestsol.cost - sv.testsol.cost)
                 copy!(sv.bestsol, sv.testsol)
             end
-            current_costs[sv.nb_test] = sv.cursol.cost
+            current_costs[sv.nb_steps] = sv.cursol.cost
         # end
         sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
 
     lg2() && println(get_stats(sv))
     println("END solve(AnnealingSolver)")
-    return current_costs[1:sv.nb_test]
+    return current_costs[1:sv.nb_steps]
 end
 
 function swap_operator!(sol::Solution)
