@@ -11,10 +11,15 @@ function swap_operator!(sol::Solution)
 end
 
 function permutation_operator!(sol::Solution; permuted_ratio=0.1)
-    n_permuted_planes = Int(round(permuted_ratio * sol.nb_planes))
-    permuted_planes = sample(1:sol.nb_planes, n_permuted_planes,
-                             replace=false)
-    permu!(sol, permuted_planes, randperm(permuted_planes))
+    n_permuted_planes = Int(round(permuted_ratio * sol.inst.nb_planes))
+    if n_permuted_planes <= 2
+        swap!(sol)
+    else
+        permuted_planes = sample(1:sol.inst.nb_planes, n_permuted_planes,
+                                replace=false)
+        permu!(sol, permuted_planes,
+               permuted_planes[randperm(length(permuted_planes))])
+    end
 end
 
 # end

@@ -4,6 +4,9 @@ include("../src/solvers/descent.jl")
 # include("../src/solvers/dynprog_timing.jl")
 include("../src/solvers/earliest_timing.jl")
 include("../src/solvers/lp_timing.jl")
+
+using Random: randperm
+using StatsBase: sample
 include("../src/solvers/neighbour_operators.jl")
 
 
@@ -91,7 +94,7 @@ sv.durationmax = 1
 # Args.set(:level, 3)
 
 Args.set(:level, 0)
-solve(sv, swap_operator!, startsol=sol, nb_cons_reject_max=300, durationmax=3)
+solve(sv, permutation_operator!, startsol=sol, nb_cons_reject_max=300, durationmax=3)
 Args.set(:level, TEST_LEVEL)
 
 @test sv.durationmax == 3
