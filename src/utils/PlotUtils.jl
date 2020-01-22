@@ -6,6 +6,7 @@ using DelimitedFiles: writedlm
 
 export plot_save_costs, plot_costs, save_costs
 
+"""Plots and saves a costs vector."""
 function plot_save_costs(costs, path::String; plot=false, save=false)
     if plot
         plot_costs(costs, path)
@@ -15,6 +16,17 @@ function plot_save_costs(costs, path::String; plot=false, save=false)
     end
 end
 
+"""Plots and saves a costs vector."""
+function plot_save_costs(costs, steps, path::String; plot=false, save=false)
+    if plot
+        plot_costs(costs, steps, path)
+    end
+    if save
+        save_costs(costs, steps, path)
+    end
+end
+
+"""Plots a cost vector."""
 function plot_costs(costs, path::String)
     println(path)
     plt.plot(costs)
@@ -24,9 +36,26 @@ function plot_costs(costs, path::String)
     plt.close()
 end
 
+function plot_costs(costs, steps, path::String)
+    println(path)
+    plt.plot(steps, costs)
+    plt.xlabel("Iteration")
+    plt.ylabel("Cost")
+    plt.savefig("$path.pdf", bbox_inches="tight")
+    plt.close()
+end
+
+"""Saves a cost vector as txt."""
 function save_costs(costs, path::String)
     open("$path.txt", "w") do io
         writedlm(io, costs)
+    end
+end
+
+function save_costs(costs, steps, path::String)
+    open("$path.txt", "w") do io
+        writedlm(io, costs)
+        writedlm(io, steps)  # FIXME: save array
     end
 end
 

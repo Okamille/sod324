@@ -26,3 +26,5 @@ function main_validate(args)
     ln1("main_validate: END")
     ln2("="^70)
 end
+
+main_validate(Args.args)

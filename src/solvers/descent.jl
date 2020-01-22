@@ -121,14 +121,15 @@ function solve(sv::DescentSolver;
         println("Début de solve : get_stats(sv)=\n", get_stats(sv))
     end
 
-    current_costs = Vector{Float64}(undef, 10_000_000)
+    improvement_costs = [sv.bestsol.cost]
+    improvement_steps = [0]
     while !finished(sv)
 
         copy!(sv.testsol, sv.cursol)
         swap!(sv.testsol)
         sv.nb_test += 1
 
-        current_costs[sv.nb_test] = sv.testsol.cost
+        # current_costs[sv.nb_test] = sv.testsol.cost
 
         degrad = sv.testsol.cost - sv.cursol.cost
 
@@ -139,6 +140,8 @@ function solve(sv::DescentSolver;
             copy!(sv.cursol, sv.testsol)
             if sv.cursol.cost < sv.bestsol.cost
                 copy!(sv.bestsol, sv.cursol)
+                push!(improvement_costs, sv.bestsol.cost)
+                push!(improvement_steps, sv.nb_test)
                 if lg1()
                     msg = string("\niter ", sv.nb_test, "=", sv.nb_reject, "+",
                                  sv.nb_move)
@@ -170,7 +173,7 @@ function solve(sv::DescentSolver;
 
     end # fin while !finished
     ln2("END solve(DescentSolver)")
-    return current_costs[1:sv.nb_test]
+    return improvement_costs, improvement_steps
 end
 
 """Retourne true ssi l'état justifie l'arrêt de l'algorithme"""

@@ -28,3 +28,5 @@ function main_timing(args)
 
     println("Fin de l'action timing")
 end
+
+main_timing(Args.args)

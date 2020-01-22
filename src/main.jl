@@ -41,39 +41,30 @@ function main()
     # date1= now() # en secondes entières
     time1= time() # secondes précision microsecondes
     action = args[:action]
+
     if action == :validate
         include("$APPDIR/src/main_validate.jl")
-        main_validate(Args.args)
     elseif action == :timing
         include("$APPDIR/src/main_timing.jl")
-        main_timing(Args.args)
     elseif action == :carlo
         include("$APPDIR/src/main_carlo.jl")
-        main_carlo(Args.args)
     elseif action == :explore
         include("$APPDIR/src/main_explore.jl")
-        costs = main_explore(Args.args)
     elseif action == :descent
         include("$APPDIR/src/main_descent.jl")
-        costs = main_descent(Args.args)
     elseif action == :greedy
         include("$APPDIR/src/main_greedy.jl")
-        main_greedy(Args.args)
     elseif action == :annealing
         include("$APPDIR/src/main_annealing.jl")
-        costs = main_annealing(Args.args)
-    # elseif action == :mip
-    #     include("$APPDIR/src/main_mip.jl")
-    #     main_mip(Args.args)
+    elseif action == :mip
+        include("$APPDIR/src/main_mip.jl")
+        main_mip(Args.args)
     elseif action == :dmip
         include("$APPDIR/src/main_dmip.jl")
-        main_dmip(Args.args)
     elseif action == :stats
         include("$APPDIR/src/main_stats.jl")
-        main_stats(Args.args)
     elseif action == :test
         include("$APPDIR/src/main_test.jl")
-        main_test(Args.args)
     elseif action == :none
         println("Aucune action indiquée")
         println(Args.get_syntaxe())
@@ -84,11 +75,13 @@ function main()
         exit(1)
     end
 
-    if costs !== nothing
-        inst_name, _ = splitext(basename(args[:infile]))
-        save_path = "$APPDIR/_tmp/figures/$(inst_name)_$(action)_$(args[:itermax])"
-        plot_save_costs(costs, save_path, plot=args[:plot], save=args[:plot])
-    end
+    # if costs !== nothing
+    #     inst_name, _ = splitext(basename(args[:infile]))
+    #     save_path = "$APPDIR/_tmp/figures/$(inst_name)_$(action)_$(args[:itermax])"
+    #     plot_save_costs(costs, save_path, plot=args[:plot], save=args[:plot])
+    # else
+    #     println("No costs recorded.")
+    # end
 
     # heure de fin du traitement
     time2= time()

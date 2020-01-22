@@ -15,3 +15,5 @@ function main_dmip(args)
 
     println("Fin de l'action dmip")
 end
+
+main_dmip(Args.args)

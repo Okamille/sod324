@@ -76,3 +76,5 @@ function main_carlo(args)
 
     println("Fin de l'action carlo")
 end
+
+main_carlo(Args.args)

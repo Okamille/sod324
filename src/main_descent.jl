@@ -15,7 +15,7 @@ function main_descent(args)
     duration = 300 # secondes
     itermax = Args.get(:itermax) # existe encore :-)
     ms_start = ms() # seconde depuis le démarrage avec précision à la ms
-    costs = solve(sv, durationmax=duration, nb_cons_reject_max=itermax)
+    costs, steps = solve(sv, durationmax=duration, nb_cons_reject_max=itermax)
     ms_stop = ms()
 
     bestsol = sv.bestsol
@@ -33,5 +33,13 @@ function main_descent(args)
     println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
 
     println("Fin de la méthode de descente")
-    return costs
+    inst_name, _ = splitext(basename(args[:infile]))
+    save_path = "$APPDIR/_tmp/figures/$(inst.name)_descent_$itermax"
+    plot_save_costs(costs, steps, save_path,
+                    plot=args[:plot], save=false)
+    println(costs)
+    println(steps)
 end
+
+costs = main_descent(Args.args)
+# println(costs)

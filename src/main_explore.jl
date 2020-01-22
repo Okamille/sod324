@@ -1,10 +1,9 @@
 include("solvers/explore.jl")
 
-function main_expore(args)
+function main_explore(args)
     println("="^70)
     println("Début de l'action explore")
     inst = Instance(args[:infile])
-    args[:plot] = false
 
     sv = ExploreSolver(inst)
     itermax_default = 50*inst.nb_planes
@@ -36,7 +35,9 @@ function loop_explore(args, instances::Vector{Instance})
     costs = []
     for instance in instances
         args[:infile] = "data/$instance"
-        push!(costs, main_expore(args))
+        push!(costs, main_explore(args))
     end
     return costs
 end
+
+costs = main_explore(Args.args)

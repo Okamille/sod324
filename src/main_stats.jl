@@ -25,3 +25,5 @@ function main_stats(args)
 
     println("Fin de l'action stats")
 end
+
+main_stats(Args.args)

@@ -44,3 +44,5 @@ function main_annealing(args)
     ln1("Fin de l'action annealing")
     return costs
 end
+
+costs = main_annealing(Args.args)

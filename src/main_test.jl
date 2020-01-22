@@ -31,3 +31,5 @@ function main_test(args)
 
     println("Fin de l'action test")
 end
+
+main_test(Args.args)
