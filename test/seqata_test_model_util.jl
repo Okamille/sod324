@@ -2,6 +2,7 @@ include("../src/utils/model.jl")
 include("../src/solvers/descent.jl")
 include("../src/solvers/annealing.jl")
 include("../src/solvers/lp_timing.jl")
+include("../src/solvers/neighbour_operators.jl")
 
 # Création d'une struct encapsulant la spécification d'un test LP
 struct LpSolverSpec
@@ -20,13 +21,11 @@ function test_one_lp_descent(spec)
     model = sol.solver.model
     initial_sort!(sol, presort=:shuffle)
 
-
     @test isa(sol.solver, spec.lp_timing_solver)
     # On vérifie par exemple que le nom du solver externe "Clp" effectif 
     # correspondant bien au symbole :clp du solveur demandé
     @test Symbol(lowercase(solver_name(model))) == spec.external_mip_solver
     lg2("ok (avec sol.cost=$(sol.cost))\n")
-
 
     # ===========
     lg2("Création DescentSolver nb_cons_reject_max=$(Args.get(:itermax))")
@@ -38,7 +37,7 @@ function test_one_lp_descent(spec)
     sv.durationmax = 1                         # Devra être écrasé
     # solve(sv, startsol=sol, nb_cons_reject_max=Args.get(:itermax))
     # Args.set(:level, 3)
-    solve(sv, startsol=sol, nb_cons_reject_max=200, durationmax=3)
+    solve(sv, swap_operator!, startsol=sol, nb_cons_reject_max=200, durationmax=3)
     # println("\nrésolution faite")
     @test sv.durationmax == 3
     @test sv.nb_cons_reject_max == 200
@@ -76,7 +75,7 @@ function test_one_lp_annealing(spec)
     sv.durationmax = 1                         # Devra être écrasé
     # solve(sv, startsol=sol, nb_cons_reject_max=Args.get(:itermax))
     # Args.set(:level, 3)
-    solve(sv, startsol=sol, nb_cons_reject_max=200, durationmax=3)
+    solve(sv, swap_operator!, startsol=sol, nb_cons_reject_max=200, durationmax=3)
     # println("\nrésolution faite")
     @test sv.durationmax == 3
     @test sv.nb_cons_reject_max == 200

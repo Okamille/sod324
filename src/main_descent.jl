@@ -9,13 +9,11 @@ function main_descent(args)
     sv = DescentSolver(inst)
 
     # Voir aussi option startsol de la méthode solve
-    # duration = Args.get(:duration) # CETTE OPTION N'EXISTE PAS (ou plus ;-)
-    # duration = 120 # secondes
-    # duration = 20 # secondes
-    duration = 300 # secondes
+    duration = 30*60 # secondes
     itermax = Args.get(:itermax) # existe encore :-)
     ms_start = ms() # seconde depuis le démarrage avec précision à la ms
-    costs, steps = solve(sv, durationmax=duration, nb_cons_reject_max=itermax)
+    costs, steps = solve(sv, swap_operator!,
+                         durationmax=duration, nb_cons_reject_max=itermax)
     ms_stop = ms()
 
     bestsol = sv.bestsol

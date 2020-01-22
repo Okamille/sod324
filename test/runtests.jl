@@ -72,6 +72,7 @@ else
     excluded = [
         "test-14b-dmip-cbc.jl", # long (1.5mn)
         "test-14c-dmip-glpk.jl", # trés trés long !!
+        "test-08-explore.jl"
     ]
     # global old_pwd = pwd() # global sinon warning julia07
     old_pwd = pwd()

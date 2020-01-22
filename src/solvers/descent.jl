@@ -87,7 +87,7 @@ function DescentSolver(inst::Instance;
     return descent_solver
 end
 
-function solve(sv::DescentSolver;
+function solve(sv::DescentSolver, neighbour_operator!;
                nb_cons_reject_max::Int = 0,
                startsol::Union{Nothing, Solution} = nothing,
                durationmax::Int = 0,
@@ -126,7 +126,7 @@ function solve(sv::DescentSolver;
     while !finished(sv)
 
         copy!(sv.testsol, sv.cursol)
-        swap!(sv.testsol)
+        neighbour_operator!(sv.testsol)
         sv.nb_test += 1
 
         # current_costs[sv.nb_test] = sv.testsol.cost

@@ -127,10 +127,6 @@ function solve(sv::AnnealingSolver, neighbour_operator!)
     return current_costs[1:sv.nb_steps]
 end
 
-function swap_operator!(sol::Solution)
-    swap!(sol)
-end
-
 """
 Retourne true ssi l'état justifie l'arrêt de l'algorithme.
 
