@@ -1,6 +1,6 @@
-@ms include("solvers/descent.jl")
+@ms include("solvers/annealing.jl")
 
-function loop_descent(args)
+function loop_annealing(args)
     # Résolution de l'action
     println("="^70)
     instances = [
@@ -20,23 +20,34 @@ function loop_descent(args)
     ]
     for instance_name in instances
         instance_path = "data/$instance_name.alp"
-        println("Descente: instance $instance_name")
+        println("Recuit: instance $instance_name")
         inst = Instance(instance_path)
 
-        sv = DescentSolver(inst)
+        sol = Solution(inst)
+        ln1("Solution correspondant à l'ordre de l'instance")
+        ln1(to_s(sol))
+    
+        # ON POURRAIT AUSSI REPARTIR DE LA SOLUTION DU GLOUTON INTELLIGENT 
+        initial_sort!(sol)
+        ln1("Solution initiale envoyée au solver")
+        ln1(to_s(sol))
 
-        # Voir aussi option startsol de la méthode solve
-        duration = 15*60 # secondes
-        itermax = Args.get(:itermax) # existe encore :-)
-        ms_start = ms() # seconde depuis le démarrage avec précision à la ms
-        costs, steps = solve(sv, swap_operator!,
-                            durationmax=duration, nb_cons_reject_max=itermax)
+        sv = AnnealingSolver(
+            inst; 
+            temp_init_rate=0.3,
+            step_size=inst.nb_planes,
+            startsol=sol,
+            temp_coef=0.999_95
+        )
+        ln1(get_stats(sv))
+    
+        ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
+        costs = solve(sv, swap_operator!)
         ms_stop = ms()
-
+    
         bestsol = sv.bestsol
-        write(bestsol)
         print_sol(bestsol)
-
+    
         nb_calls = bestsol.solver.nb_calls
         nb_infeasable = bestsol.solver.nb_infeasable
         nb_sec = round(ms_stop - ms_start, digits=3)
@@ -46,15 +57,9 @@ function loop_descent(args)
         println("  nb_infeasable=$nb_infeasable")
         println("  nb_sec=$nb_sec")
         println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
-
-        println("Fin de la méthode de descente")
-        inst_name, _ = splitext(basename(args[:infile]))
-        save_path = "$APPDIR/_tmp/figures/$(inst.name)_descent_$itermax"
-        plot_save_costs(costs, steps, save_path,
-                        plot=args[:plot], save=false)
-        println(costs)
-        println(steps)
+    
+        ln1("Fin de l'action annealing")
     end
 end
 
-loop_descent(Args.args)
+loop_annealing(Args.args)

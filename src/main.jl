@@ -47,9 +47,9 @@ function main()
     action = args[:action]
     if args[:loop]
         if action == :descent
-            include("$APPDIR/src/descent_loop.jl")
+            include("$APPDIR/src/loop_descent.jl")
         elseif action == :annealing
-            include("$APPDIR/src/annealing_loop.jl")
+            include("$APPDIR/src/loop_annealing.jl")
         end
     else
         if action == :validate
