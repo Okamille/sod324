@@ -18,10 +18,10 @@ function loop_descent(args)
         "12",
         "13"
     ]
-    for instance in instances
-        instance = "data/$name.alp"
-        println("Descente: instance $instance")
-        inst = Instance(instance)
+    for instance_name in instances
+        instance_path = "data/$instance_name.alp"
+        println("Descente: instance $instance_name")
+        inst = Instance(instance_path)
 
         sv = DescentSolver(inst)
 
