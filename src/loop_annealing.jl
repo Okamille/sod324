@@ -40,11 +40,11 @@ function loop_annealing(args)
             temp_coef=0.999_95
         )
         ln1(get_stats(sv))
-    
+
         ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
-        costs = solve(sv, swap_operator!)
+        costs = solve(sv, swap_operator!, durationmax=15*60)
         ms_stop = ms()
-    
+
         bestsol = sv.bestsol
         print_sol(bestsol)
     

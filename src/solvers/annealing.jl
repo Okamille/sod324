@@ -23,6 +23,10 @@ Attributes:
     nb_cons_no_improv (Int): Nombre de tests non améliorants
     nb_cons_no_improv_max (Int): Nombre de maxi tests non améliorants
 
+    duration (Float64): Durée réelle (mesurée) de l'exécution
+    durationmax (Float64): Durée max de l'exécution (--duration)
+    starttime (Float64): Heure de début d'une résolution
+
     cursol (Solution): Solution courante
     bestsol (Solution): meilleure Solution rencontrée
     testsol (Solution): nouvelle solution courante potentielle
@@ -48,6 +52,10 @@ mutable struct AnnealingSolver
     nb_cons_no_improv::Int
     nb_cons_no_improv_max::Int
 
+    duration::Float64     # durée réelle (mesurée) de l'exécution
+    durationmax::Float64  # durée max de l'exécution (--duration)
+    starttime::Float64    # heure de début d'une résolution
+
     cursol::Solution
     bestsol::Solution
     testsol::Solution
@@ -72,24 +80,33 @@ function AnnealingSolver(inst::Instance;
         temp_init = guess_temp_init(cursol, temp_init_rate, 100)
     end
 
-    # A POURSUIVRE !! TODO
-
     bestsol = Solution(cursol)
     testsol = Solution(cursol)
+
+    durationmax = 15*60
+    duration = 0.0 # juste pour initialisation
+    starttime = 0.0 # juste pour initialisation
 
     solver = AnnealingSolver(inst,
                              temp_init, temp_mini, temp_coef, temp_init,
                              0, 0, 0, 0, 0, step_size,
                              0, n_cons_reject_max,
                              0, nb_cons_no_improv_max,
+                             durationmax, duration, starttime,
                              cursol, bestsol, testsol)
     return solver
 end
 
-function solve(sv::AnnealingSolver, neighbour_operator!)
+function solve(sv::AnnealingSolver, neighbour_operator!;
+               durationmax::Int = 0)
     println("BEGIN solve(AnnealingSolver)")
 
+    if durationmax != 0
+        sv.durationmax = durationmax
+    end
+
     current_costs = Vector{Float64}(undef, 10_000_000)
+    sv.starttime = time_ns()/1_000_000_000
     while ! finished(sv)
     #    for _ in 1:sv.nb_steps
             copy!(sv.testsol, sv.cursol)
@@ -134,8 +151,11 @@ On pourra utiliser d'autres critères sans toucher au programme principal
 """
 function finished(sv::AnnealingSolver)
     # return sv.nb_cons_reject >= sv.nb_cons_reject_max
+    sv.duration = time_ns()/1_000_000_000 - sv.starttime
+    too_long = sv.duration >= sv.durationmax
     ratio = sv.nb_move / sv.nb_steps
-    return ratio < sv.nb_cons_reject_max
+    too_many_cons_reject = ratio < sv.nb_cons_reject_max 
+    return too_many_cons_reject || too_long
 end
 
 function get_stats(sv::AnnealingSolver)
