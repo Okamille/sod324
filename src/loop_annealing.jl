@@ -19,18 +19,18 @@ function loop_annealing(args)
         "13"
     ]
     for instance_name in instances
-        instance_path = "data/$instance_name.alp"
         println("Recuit: instance $instance_name")
+        instance_path = "data/$instance_name.alp"
         inst = Instance(instance_path)
 
         sol = Solution(inst)
-        ln1("Solution correspondant à l'ordre de l'instance")
-        ln1(to_s(sol))
+        # ln1("Solution correspondant à l'ordre de l'instance")
+        # ln1(to_s(sol))
     
-        # ON POURRAIT AUSSI REPARTIR DE LA SOLUTION DU GLOUTON INTELLIGENT 
+        # # ON POURRAIT AUSSI REPARTIR DE LA SOLUTION DU GLOUTON INTELLIGENT 
         initial_sort!(sol)
-        ln1("Solution initiale envoyée au solver")
-        ln1(to_s(sol))
+        # ln1("Solution initiale envoyée au solver")
+        # ln1(to_s(sol))
 
         sv = AnnealingSolver(
             inst; 
