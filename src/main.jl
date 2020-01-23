@@ -45,38 +45,45 @@ function main()
     # date1= now() # en secondes entières
     time1= time() # secondes précision microsecondes
     action = args[:action]
-
-    if action == :validate
-        include("$APPDIR/src/main_validate.jl")
-    elseif action == :timing
-        include("$APPDIR/src/main_timing.jl")
-    elseif action == :carlo
-        include("$APPDIR/src/main_carlo.jl")
-    elseif action == :explore
-        include("$APPDIR/src/main_explore.jl")
-    elseif action == :descent
-        include("$APPDIR/src/main_descent.jl")
-    elseif action == :greedy
-        include("$APPDIR/src/main_greedy.jl")
-    elseif action == :annealing
-        include("$APPDIR/src/main_annealing.jl")
-    elseif action == :mip
-        include("$APPDIR/src/main_mip.jl")
-        main_mip(Args.args)
-    elseif action == :dmip
-        include("$APPDIR/src/main_dmip.jl")
-    elseif action == :stats
-        include("$APPDIR/src/main_stats.jl")
-    elseif action == :test
-        include("$APPDIR/src/main_test.jl")
-    elseif action == :none
-        println("Aucune action indiquée")
-        println(Args.get_syntaxe())
-        exit(1)
+    if args[:loop]
+        if action == :descent
+            include("$APPDIR/src/descent_loop.jl")
+        elseif action == :annealing
+            include("$APPDIR/src/annealing_loop.jl")
+        end
     else
-        println("Erreur : action $action non implémentée (dans main.jl)")
-        println(Args.get_syntaxe())
-        exit(1)
+        if action == :validate
+            include("$APPDIR/src/main_validate.jl")
+        elseif action == :timing
+            include("$APPDIR/src/main_timing.jl")
+        elseif action == :carlo
+            include("$APPDIR/src/main_carlo.jl")
+        elseif action == :explore
+            include("$APPDIR/src/main_explore.jl")
+        elseif action == :descent
+            include("$APPDIR/src/main_descent.jl")
+        elseif action == :greedy
+            include("$APPDIR/src/main_greedy.jl")
+        elseif action == :annealing
+            include("$APPDIR/src/main_annealing.jl")
+        elseif action == :mip
+            include("$APPDIR/src/main_mip.jl")
+            main_mip(Args.args)
+        elseif action == :dmip
+            include("$APPDIR/src/main_dmip.jl")
+        elseif action == :stats
+            include("$APPDIR/src/main_stats.jl")
+        elseif action == :test
+            include("$APPDIR/src/main_test.jl")
+        elseif action == :none
+            println("Aucune action indiquée")
+            println(Args.get_syntaxe())
+            exit(1)
+        else
+            println("Erreur : action $action non implémentée (dans main.jl)")
+            println(Args.get_syntaxe())
+            exit(1)
+        end
     end
 
     # if costs !== nothing

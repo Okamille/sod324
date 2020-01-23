@@ -332,6 +332,10 @@ function parse_commandline(inargs= ["test"])
         help = "Mode test (pour mise au point d'une variante du code)"
         action = :store_true
 
+        "--loop"
+        help = "Loop over instances"
+        action = :store_true
+
         "--plot"
         help = "Plot current solution cost over time"
         action = :store_true
