@@ -304,7 +304,7 @@ function parse_commandline(inargs= ["test"])
 
         "--external-mip-solver", "-x"
         help = "Solver externe : [$(join(x_solvers(), ", "))]"
-        default = "clp"
+        default = "glpk"
         range_tester = (v->v in x_solvers())
 
         "--timing-algo-solver", "-t"
