@@ -326,7 +326,7 @@ function parse_commandline(inargs= ["test"])
         "--level", "--loglevel", "-L"
         help = "Niveau de verbosité (pour debug)"
         arg_type = Int
-        default = 2
+        default = 0
 
         "--test", "-T"
         help = "Mode test (pour mise au point d'une variante du code)"
