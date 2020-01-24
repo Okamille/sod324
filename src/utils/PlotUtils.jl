@@ -59,4 +59,17 @@ function save_costs(costs, steps, path::String)
     end
 end
 
+"""Finds the iterations whe the costs improved."""
+function arg_improvements(costs)
+    improvements_iter = Vector{Int}(undef, 0)
+    current_min = Inf
+    for (iter, cost) in enumerate(costs)
+        if cost < current_min
+            push!(improvements_iter, iter)
+            current_min = cost
+        end
+    end
+    return improvements_iter
+end
+
 end

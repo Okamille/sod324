@@ -15,6 +15,7 @@
 @ms using Statistics
 
 @ms using Random: randperm
+@ms using Distributions: NegativeBinomial
 @ms using StatsBase: sample, ProbabilityWeights
 @ms include("solvers/neighbour_operators.jl")
 

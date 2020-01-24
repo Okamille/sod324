@@ -544,7 +544,6 @@ function disturb!(sol::Solution;
                   idx_first=1, idx_last=-1, shift_max=1,
                   nb_shift=10, do_update::Bool=true,
                   )
-
     # VÉRIFICATION DU DOMAINE DES PARAMÈTRES
     if idx_last == -1   idx_last = length(sol.planes)   end
     @assert 1 <  idx_last  <= length(sol.planes)

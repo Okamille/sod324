@@ -2,6 +2,42 @@
 
 [Documentation](https://OKamille.github.io/sod324/index.html#)
 
+## Dépendances
+
+Ce code a été testé avec `Julia 1.3.0`. Il est nécessaire d'installer les packages suivants. La version correspond à la version avec laquelle le code a été testé.
+
+```julia
+"JuMP"           => v"0.20.1"
+"ArgParse"       => v"0.6.2"
+"DataStructures" => v"0.17.6"
+"Distributions"  => v"0.22.3"
+"StatsBase"      => v"0.32.0"
+"PyPlot"         => v"2.8.2"
+"PyCall"         => v"1.91.2"
+```
+
+Au moins un solveur doit être installé, ainsi que le wrapper Julia associé.
+
+```julia
+"CPLEX" => v"0.6.1"
+"GLPK"  => v"0.12.0"
+"Cbc"   => v"0.6.6"
+"Clp"   => v"0.7.0"
+```
+
+### Documentation
+
+La documentation a été construite avec le wrapper [Sphinx-Julia](http://bastikr.github.io/sphinx-julia/) de `Sphinx (version 2.3.1)`.
+
+La documentation peut être mise en jour par
+
+```bash
+cd docsrc
+make gh-pages
+```
+
+puis un push des modifications sur master.
+
 ## Introduction
 
 Ce répertoire contient le prototype d'un code de résolution d'un projet
