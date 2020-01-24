@@ -6,7 +6,7 @@ include("../src/solvers/earliest_timing.jl")
 include("../src/solvers/lp_timing.jl")
 
 using Random: randperm
-using StatsBase: sample
+using StatsBase: sample, ProbabilityWeights
 include("../src/solvers/neighbour_operators.jl")
 
 
