@@ -119,7 +119,7 @@ end
 actions() = collect(keys(actions_desc()))
 x_solvers() = ["cplex", "cbc", "clp", "glpk"]
 t_algos() = ["dp", "lp", "earliest"]
-presorts() = ["none", "target", "rtarget", "lb", "rlb", "ub", "rub", "shuffle"]
+presorts() = ["none", "target", "rtarget", "lb", "rlb", "ub", "rub", "mean", "bary", "shuffle"]
 # informats() = ["AUTO", "alp", "alpx", "orlib", "ampl"]
 # outformats() = ["AUTO", "alp", "alpx", "ampl"]
 # reductors() = ["mean", "median"]

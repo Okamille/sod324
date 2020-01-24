@@ -763,15 +763,11 @@ l'option --presort est utilisé
 
 Le timing de la solution est mis à jour.
 """
-function initial_sort!(sol::Solution; presort=:ARGS)
-
-    # On part de l'instance en triant les avions par ordre de lb croissant
+function initial_sort!(sol::Solution; presort=:ARGS, solve=true)
     if presort == :ARGS
         presort = Args.get("presort")
     end
-    # @show presort
-    # if presort == :sort
-    #     Base.sort!(sol.planes, by=p->p.lb)
+
     if presort == :target
         Base.sort!(sol.planes, by=p->p.target)
     elseif presort == :rtarget
@@ -784,6 +780,10 @@ function initial_sort!(sol::Solution; presort=:ARGS)
         Base.sort!(sol.planes, by=p->p.ub)
     elseif presort == :rub
         Base.sort!(sol.planes, by=p->p.ub, rev=true)
+    elseif presort == :mean
+        Base.sort!(sol.planes, by=p->(p.lb + p.ub))
+    elseif presort == :bary
+        Base.sort!(sol.planes, by=p->(p.lb + p.target + p.ub))
     elseif presort == :shuffle
         # Base.shuffle!(sol.planes)
         Random.shuffle!(sol.planes)
@@ -797,7 +797,6 @@ function initial_sort!(sol::Solution; presort=:ARGS)
     # On passe la fonction qui compare deux éléments :
     # Base.sort!(sol.planes, lt=(p1,p2)->p1.lb < p2.lb) # Marche aussi (comparator)
     # Base.sort!(sol.planes, rev=true,lt=(p1,p2)->p1.lb < p2.lb) # ok aussi THE WORST CASE
-
     solve!(sol, do_update_cost=true)
     return nothing
 end
