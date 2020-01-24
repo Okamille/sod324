@@ -50,6 +50,8 @@ function main()
             include("$APPDIR/src/loop_descent.jl")
         elseif action == :annealing
             include("$APPDIR/src/loop_annealing.jl")
+        elseif action == :greedy
+            include("$APPDIR/src/loop_greedy.jl")
         end
     else
         if action == :validate
