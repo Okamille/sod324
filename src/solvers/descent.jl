@@ -140,8 +140,8 @@ function solve(sv::DescentSolver, neighbour_operator!;
             copy!(sv.cursol, sv.testsol)
             if sv.cursol.cost < sv.bestsol.cost
                 copy!(sv.bestsol, sv.cursol)
-                push!(improvement_costs, sv.bestsol.cost)
-                push!(improvement_steps, sv.nb_test)
+                # push!(improvement_costs, sv.bestsol.cost)
+                # push!(improvement_steps, sv.nb_test)
                 if lg1()
                     msg = string("\niter ", sv.nb_test, "=", sv.nb_reject, "+",
                                  sv.nb_move)
@@ -159,18 +159,6 @@ function solve(sv::DescentSolver, neighbour_operator!;
             sv.nb_reject += 1
             sv.nb_cons_reject += 1
         end
-
-        # On peut ici tirer aléatoirement des voisinages différents plus ou 
-        # moins large (exemple un swap simple ou deux swaps proches, ...)
-        # # flottant entre 0 et 1
-        # proba = rand()
-        # # entier dans [1, n] :
-        # i1 = rand(1:sv.inst.nb_planes)
-        # 
-        # On modifie testsol, puis on teste sa valeur, puis on...
-
-        # ...
-
     end # fin while !finished
     ln2("END solve(DescentSolver)")
     return improvement_costs, improvement_steps

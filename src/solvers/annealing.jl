@@ -77,7 +77,7 @@ function AnnealingSolver(inst::Instance;
 
     # On calcule éventuellement la température initiale automatiquement
     if temp_init === nothing
-        temp_init = guess_temp_init(cursol, temp_init_rate, 100)
+        temp_init = guess_temp_init_cost(cursol, temp_init_rate)
     end
 
     bestsol = Solution(cursol)
@@ -99,26 +99,17 @@ end
 
 function solve(sv::AnnealingSolver, neighbour_operator!;
                durationmax::Int = 0)
-    println("BEGIN solve(AnnealingSolver)")
+    ln2("BEGIN solve(AnnealingSolver)")
 
     if durationmax != 0
         sv.durationmax = durationmax
     end
 
-    current_costs = Vector{Float64}(undef, 10_000_000)
     sv.starttime = time_ns()/1_000_000_000
     while ! finished(sv)
-    #    for _ in 1:sv.nb_steps
+        # for _ in 1:sv.nb_steps
             copy!(sv.testsol, sv.cursol)
             neighbour_operator!(sv.testsol)
-            # println(exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
-            # println(sv.testsol.cost)
-            # println(sv.cursol.cost)
-            # println()
-            # println("Ratio : ", sv.nb_move / sv.nb_steps)
-            # println("Temperature : ", sv.temp)
-            # println("Degradation : ", sv.testsol.cost - sv.cursol.cost)
-            # println("Acceptation proba : ", exp(-(max(sv.testsol.cost - sv.cursol.cost, 0)) / sv.temp))
             sv.nb_steps += 1
             if rand() < exp(-(max(sv.testsol.cost - sv.cursol.cost, 0)) / sv.temp)
                 copy!(sv.cursol, sv.testsol)
@@ -134,14 +125,12 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
                 println("Accepted solution with improvement : ", sv.bestsol.cost - sv.testsol.cost)
                 copy!(sv.bestsol, sv.testsol)
             end
-            current_costs[sv.nb_steps] = sv.cursol.cost
         # end
         sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
 
     lg2() && println(get_stats(sv))
-    println("END solve(AnnealingSolver)")
-    return current_costs[1:sv.nb_steps]
+    ln2("END solve(AnnealingSolver)")
 end
 
 """
@@ -158,31 +147,6 @@ function finished(sv::AnnealingSolver)
     return too_many_cons_reject || too_long
 end
 
-function get_stats(sv::AnnealingSolver)
-    # temp_init_rate=    $(sv.temp_init_rate)
-    txt = "
-    Paramètres de l'objet AnnealingSolver :
-    step_size=         $(sv.step_size)
-    temp_init=         $(sv.temp_init)
-    temp_mini=         $(sv.temp_mini)
-    temp_coef=         $(sv.temp_coef)
-    nb_cons_reject_max=$(sv.nb_cons_reject_max)
-    Etat de l'objet AnnealingSolver :
-    nb_steps=$(sv.nb_steps) step_size=$(sv.step_size)
-    nb_cons_reject=$(sv.nb_cons_reject) nb_cons_reject_max=$(sv.nb_cons_reject_max)
-    nb_cons_no_improv=$(sv.nb_cons_no_improv) nb_cons_no_improv_max=$(sv.nb_cons_no_improv_max)
-    nb_test=$(sv.nb_test)
-    nb_move=$(sv.nb_move)
-    nb_reject=$(sv.nb_reject)
-    temp=$(sv.temp) temp_init=$(sv.temp_init)
-    testsol.cost=$(sv.testsol.cost)
-    cursol.cost=$(sv.cursol.cost)
-    bestsol.cost=$(sv.bestsol.cost)
-    sv.testsol.solver.nb_infeasable=$(sv.testsol.solver.nb_infeasable)
-    "
-    # temp_init_rate=    $(sv.temp_init_rate)"
-    return replace(txt, r"^ {4}" => "")
-end
 
 """
 Calcul d'une température initiale de manière à avoir un taux d'acceptation τ en démarrage
@@ -224,12 +188,11 @@ Attention:
     Mais il faudra pouvoir paramétrer cette méthode pour des voisinages différents.
 
 """
-function guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
+function guess_temp_init_degrad(sol::Solution, nb_degrad_max::Int;
+                                taux_cible=0.8)
     # we apply the formula : exp(-delta_h/T_0) = taux_cible
     # from the formula we get -delta_h / ln(taux_cible) = T_0
-    #t_init = 0    # stupide : pour faire une descente pure !
-    # Initialisations diverses
-    
+    #t_init = 0    # stupide : pour faire une descente pure !    
     nb_degrad = 0
     last_cost = sol.cost
     degrads = []
@@ -250,4 +213,41 @@ function guess_temp_init(sol::Solution, taux_cible=0.8, nb_degrad_max=1000)
     t_init = - delta / log(taux_cible)
     ln2("Temp init : ", t_init)
     return t_init
+end
+
+"""
+Suppose que les variations de coût sont de l'ordre du coût trouvé par
+le glouton.
+"""
+function guess_temp_init_cost(sol::Solution, taux_cible=0.8)
+    delta = sol.cost
+    t_init = - delta / log(taux_cible)
+    ln2("Temp init : ", t_init)
+    return t_init
+end
+
+function get_stats(sv::AnnealingSolver)
+    # temp_init_rate=    $(sv.temp_init_rate)
+    txt = "
+    Paramètres de l'objet AnnealingSolver :
+    step_size=         $(sv.step_size)
+    temp_init=         $(sv.temp_init)
+    temp_mini=         $(sv.temp_mini)
+    temp_coef=         $(sv.temp_coef)
+    nb_cons_reject_max=$(sv.nb_cons_reject_max)
+    Etat de l'objet AnnealingSolver :
+    nb_steps=$(sv.nb_steps) step_size=$(sv.step_size)
+    nb_cons_reject=$(sv.nb_cons_reject) nb_cons_reject_max=$(sv.nb_cons_reject_max)
+    nb_cons_no_improv=$(sv.nb_cons_no_improv) nb_cons_no_improv_max=$(sv.nb_cons_no_improv_max)
+    nb_test=$(sv.nb_test)
+    nb_move=$(sv.nb_move)
+    nb_reject=$(sv.nb_reject)
+    temp=$(sv.temp) temp_init=$(sv.temp_init)
+    testsol.cost=$(sv.testsol.cost)
+    cursol.cost=$(sv.cursol.cost)
+    bestsol.cost=$(sv.bestsol.cost)
+    sv.testsol.solver.nb_infeasable=$(sv.testsol.solver.nb_infeasable)
+    "
+    # temp_init_rate=    $(sv.temp_init_rate)"
+    return replace(txt, r"^ {4}" => "")
 end
