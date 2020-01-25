@@ -2,7 +2,7 @@
 
 function loop_descent(args)
     instances = [
-        # "02",
+        "02",
         "03",
         "05",
         "08",
@@ -26,7 +26,7 @@ function loop_descent(args)
         itermax = Args.get(:itermax)
 
         ms_start = ms()
-        costs, steps = solve(sv, swap_close_costly_planes!, durationmax=duration,
+        costs, steps = solve(sv, swap_close_planes!, durationmax=duration,
                              nb_cons_reject_max=itermax,
                              startsol=sol)
         ms_stop = ms()

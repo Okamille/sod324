@@ -3,7 +3,7 @@
 function loop_annealing(args)
     instances = [
         # "02",
-        # "03",
+        "03",
         # "05",
         "08",
         "09",
@@ -29,7 +29,7 @@ function loop_annealing(args)
         )
 
         ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
-        costs = solve(sv, swap_operator!, durationmax=15*60)
+        costs = solve(sv, swap_close_planes!, durationmax=15*60)
         ms_stop = ms()
 
         bestsol = sv.bestsol
