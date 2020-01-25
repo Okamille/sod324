@@ -1,25 +1,26 @@
 # module NeighbourOperators
 
 # using Random: randperm
-using Distributions: NegativeBinomial
+# using Distributions: NegativeBinomial
 # using StatsBase: sample, ProbabilityWeights
 # using Solutions: Solution, swap!, permu!
 
-# export shift_small!,
+# export small_shift!,
 #        swap_close_planes!,
 #        swap_close_costly_planes!,
 #        permutation_operator!
 
-function shift_small!(sol::Solution; p=0.5)
+function small_shift!(sol::Solution; p=0.5)
     n = sol.inst.nb_planes
     shifted_plane = sample(1:n)
     new_position = find_shift_destination(shifted_plane, p, n)
     shift!(sol, shifted_plane, new_position)
 end
 
-function shift_costly_plane!(sol::Solution; p)
+function shift_costly_plane!(sol::Solution; p=0.5)
     shifted_plane = cost_weighted_sample(sol)
-    new_position = find_shift_destination(shifted_plane, p, sol.inst.nb_planes)
+    new_position = find_shift_destination(shifted_plane, p,
+                                          sol.inst.nb_planes)
     shift!(sol, shifted_plane, new_position)
 end
 
