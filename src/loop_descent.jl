@@ -2,15 +2,15 @@
 
 function loop_descent(args)
     instances = [
-        "02",
-        "03",
-        "05",
-        "08",
-        "09",
-        "10",
-        "11",
+        # "02",
+        # "03",
+        # "05",
+        # "08",
+        # "09",
+        # "10",
+        # "11",
         "12",
-        "13"
+        # "13"
     ]
     println("Instance n° & Cost & Time")
     for instance_name in instances
@@ -22,7 +22,7 @@ function loop_descent(args)
 
         sv = DescentSolver(inst)
 
-        duration = 15*60 # secondes
+        duration = 6*60*60 # secondes
         itermax = Args.get(:itermax)
 
         ms_start = ms()

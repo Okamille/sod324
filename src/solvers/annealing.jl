@@ -22,6 +22,8 @@ Attributes:
     nb_cons_no_improv (Int): Nombre de tests non améliorants
     nb_cons_no_improv_max (Int): Nombre de maxi tests non améliorants
 
+    min_acceptance_ratio (Float64): Taux d'acceptation minimal avant l'arrêt
+
     duration (Float64): Durée réelle (mesurée) de l'exécution
     durationmax (Float64): Durée max de l'exécution (--duration)
     starttime (Float64): Heure de début d'une résolution
@@ -50,6 +52,8 @@ mutable struct AnnealingSolver
     nb_cons_no_improv::Int
     nb_cons_no_improv_max::Int
 
+    min_acceptance_ratio::Float64
+
     duration::Float64
     durationmax::Float64
     starttime::Float64
@@ -61,14 +65,18 @@ end
 
 """Annealing solver outer constructor"""
 function AnnealingSolver(inst::Instance; 
-                         temp_init=nothing, temp_init_rate=0.75, temp_mini=1e-6,
+                         temp_init=nothing, temp_init_rate=0.8, temp_mini=1e-6,
                          temp_coef=0.999_999_9, step_size=1,
-                         n_cons_reject_max=0.001,
+                         n_cons_reject_max=nothing,
                          nb_cons_no_improv_max=nothing,
+                         min_acceptance_ratio=0.01,
                          startsol=nothing)
 
+    if n_cons_reject_max === nothing
+        n_cons_reject_max = inst.nb_planes^2
+    end
     if nb_cons_no_improv_max === nothing
-        nb_cons_no_improv_max = 5000 * inst.nb_planes
+        nb_cons_no_improv_max = inst.nb_planes^2
     end
 
     cursol = startsol === nothing ? Solution(inst) : startsol
@@ -87,9 +95,10 @@ function AnnealingSolver(inst::Instance;
 
     solver = AnnealingSolver(inst,
                              temp_init, temp_mini, temp_coef, temp_init,
-                             0, 0, 0, 0, 0, step_size,
-                             n_cons_reject_max,
+                             0, 0, 0, 0, step_size,
+                             0, n_cons_reject_max,
                              0, nb_cons_no_improv_max,
+                             min_acceptance_ratio,
                              durationmax, duration, starttime,
                              cursol, bestsol, testsol)
     return solver
@@ -98,6 +107,7 @@ end
 function solve(sv::AnnealingSolver, neighbour_operator!;
                durationmax::Int = 0)
     ln2("BEGIN solve(AnnealingSolver)")
+    lg2() && println(get_stats(sv))
 
     if durationmax != 0
         sv.durationmax = durationmax
@@ -108,44 +118,71 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
         for iter_in_step in 1:sv.step_size
             copy!(sv.testsol, sv.cursol)
             neighbour_operator!(sv.testsol)
-            sv.test += 1
-            if sv.testsol.cost < sv.cursol.cost
-                copy!(sv.cursol, sv.testsol)
-                if sv.cursol.cost < sv.bestsol.cost
-                    print_log(sv)
-                    copy!(sv.bestsol, sv.cursol)
+            sv.nb_test += 1
+            if sv.testsol.cost <= sv.cursol.cost
+                if sv.testsol.cost < sv.cursol.cost
+                    copy!(sv.cursol, sv.testsol)
+                    if sv.cursol.cost < sv.bestsol.cost
+                        print_log(sv)
+                        copy!(sv.bestsol, sv.cursol)
+                    end
+                    sv.nb_cons_reject = 0
+                    sv.nb_cons_no_improv = 0
+                    sv.nb_move += 1
+                else
+                    sv.nb_cons_reject += 1
+                    sv.nb_cons_no_improv += 1
                 end
-                sv.nb_cons_reject = 0
-                sv.nb_move += 1
             elseif rand() < exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp)
+                # ln4("Move ", sv.testsol.cost - sv.cursol.cost,
+                    # " Proba ", exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
                 copy!(sv.cursol, sv.testsol)
                 sv.nb_cons_reject = 0
                 sv.nb_move += 1
+                sv.nb_cons_no_improv += 1
             else
+                # ln5("No move ", sv.testsol.cost - sv.cursol.cost,
+                    # "proba ", exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
                 sv.nb_cons_reject += 1
                 sv.nb_reject += 1
                 sv.nb_cons_no_improv += 1
             end
         end
         sv.nb_steps += 1
+        ln3(sv.temp)
         sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
-    lg2() && println(get_stats(sv))
     ln2("END solve(AnnealingSolver)")
 end
 
 """
 Retourne true ssi l'état justifie l'arrêt de l'algorithme.
-
-On pourra utiliser d'autres critères sans toucher au programme principal
 """
 function finished(sv::AnnealingSolver)
     # return sv.nb_cons_reject >= sv.nb_cons_reject_max
     sv.duration = time_ns()/1_000_000_000 - sv.starttime
     too_long = sv.duration >= sv.durationmax
-    ratio = sv.nb_move / sv.nb_test
-    too_many_cons_reject = ratio < sv.nb_cons_reject_max 
-    return too_many_cons_reject || too_long
+
+    too_many_no_improv = sv.nb_cons_no_improv >= sv.nb_cons_no_improv_max
+    too_many_cons_reject = sv.nb_cons_reject >= sv.nb_cons_reject_max
+
+    # ratio = sv.nb_move > 10 ? sv.nb_move / sv.nb_test : 1.0
+    # acceptance_ratio_too_low = ratio < sv.min_acceptance_ratio
+    # stop = too_long || acceptance_ratio_too_low
+    stop = too_long || too_many_no_improv || too_many_cons_reject
+    if stop && lg1()
+        println("\nSTOP car :")
+        println("     sv.nb_cons_reject=$(sv.nb_cons_reject)")
+        println("     sv.nb_cons_reject_max=$(sv.nb_cons_reject_max)")
+        println("     sv.nb_cons_no_improv=$(sv.nb_cons_no_improv)")
+        println("     sv.nb_cons_no_improv_max=$(sv.nb_cons_no_improv_max)")
+        println("     sv.duration=$(sv.duration)")
+        println("     sv.durationmax=$(sv.durationmax)")
+        # println("     acceptance_ratio=$ratio")
+        # println("     sv.min_acceptance_ratio=$(sv.min_acceptance_ratio)")
+        println(get_stats(sv))
+    end
+    return stop
 end
 
 
@@ -217,13 +254,12 @@ function guess_temp_init_degrad(sol::Solution, nb_degrad_max::Int;
 end
 
 """
-Suppose que les variations de coût sont de l'ordre du coût trouvé par
-le glouton.
+Suppose que les variations de coût sont de l'ordre du coût moyen par avion.
 """
 function guess_temp_init_cost(sol::Solution, taux_cible=0.8)
-    delta = sol.cost
+    delta = maximum(sol.costs)
     t_init = - delta / log(taux_cible)
-    ln2("Temp init : ", t_init)
+    ln1("Temp init : ", t_init)
     return t_init
 end
 

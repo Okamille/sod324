@@ -56,7 +56,7 @@ function DescentSolver(inst::Instance;
     nb_move = 0
     nb_reject = 0
     nb_cons_reject = 0
-    nb_cons_reject_max = inst.nb_planes^2
+    nb_cons_reject_max = 1_000_000_000#inst.nb_planes^2
 
     bestiter = 0
 
@@ -79,9 +79,9 @@ function DescentSolver(inst::Instance;
     testsol = Solution(cursol)
     do_save_bestsol = true
     descent_solver = DescentSolver(inst, nb_test, nb_move, nb_reject,
-                                    nb_cons_reject, nb_cons_reject_max, duration,
-                                    durationmax, starttime, cursol, bestsol,
-                                    testsol, bestiter, do_save_bestsol)
+                                   nb_cons_reject, nb_cons_reject_max, duration,
+                                   durationmax, starttime, cursol, bestsol,
+                                   testsol, bestiter, do_save_bestsol)
     return descent_solver
 end
 
@@ -94,6 +94,9 @@ function solve(sv::DescentSolver, neighbour_operator!;
     ln2("BEGIN solve(DescentSolver)")
     if durationmax != 0
         sv.durationmax = durationmax
+    end
+    if nb_cons_reject_max != 0
+        sv.nb_cons_reject_max = nb_cons_reject_max
     end
 
     if startsol !== nothing
@@ -110,18 +113,14 @@ function solve(sv::DescentSolver, neighbour_operator!;
     end
 
     sv.starttime = time_ns()/1_000_000_000
-    if nb_cons_reject_max != 0
-        sv.nb_cons_reject_max = nb_cons_reject_max
-    end
 
     if lg3()
         println("Début de solve : get_stats(sv)=\n", get_stats(sv))
     end
 
-    improvement_costs = [sv.bestsol.cost]
-    improvement_steps = [0]
+    # improvement_costs = [sv.bestsol.cost]
+    # improvement_steps = [0]
     while !finished(sv)
-
         copy!(sv.testsol, sv.cursol)
         neighbour_operator!(sv.testsol)
         sv.nb_test += 1
@@ -129,7 +128,6 @@ function solve(sv::DescentSolver, neighbour_operator!;
         # current_costs[sv.nb_test] = sv.testsol.cost
 
         degrad = sv.testsol.cost - sv.cursol.cost
-
         ln4("degrad=$(degrad)")
         if degrad < 0
             sv.nb_cons_reject = 0
@@ -148,7 +146,7 @@ function solve(sv::DescentSolver, neighbour_operator!;
         end
     end # fin while !finished
     ln2("END solve(DescentSolver)")
-    return improvement_costs, improvement_steps
+    # return improvement_costs, improvement_steps
 end
 
 """Retourne true ssi l'état justifie l'arrêt de l'algorithme"""
@@ -157,19 +155,15 @@ function finished(sv::DescentSolver)
     too_long = sv.duration >= sv.durationmax
     too_many_reject = (sv.nb_cons_reject >= sv.nb_cons_reject_max)
     stop = too_long || too_many_reject
-    if stop
-        if lg1()
-            println("\nSTOP car :")
-            println("     sv.nb_cons_reject=$(sv.nb_cons_reject)")
-            println("     sv.nb_cons_reject_max=$(sv.nb_cons_reject_max)")
-            println("     sv.duration=$(sv.duration)")
-            println("     sv.durationmax=$(sv.durationmax)")
-            println(get_stats(sv))
-        end
-        return true
-    else
-        return false
+    if stop && lg1()
+        println("\nSTOP car :")
+        println("     sv.nb_cons_reject=$(sv.nb_cons_reject)")
+        println("     sv.nb_cons_reject_max=$(sv.nb_cons_reject_max)")
+        println("     sv.duration=$(sv.duration)")
+        println("     sv.durationmax=$(sv.durationmax)")
+        println(get_stats(sv))
     end
+    return stop
 end
 
 """
