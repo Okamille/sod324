@@ -1,9 +1,7 @@
+include("./logging.jl")
+
 # BEGIN TYPE DescentSolver
 
-# AMELIORATION POSSIBLE
-# - revoir la gestion des options du solver (utiliser les params par clé-valeur)
-# - plus besoin de gérer cursol (car ici, bestsol suffit contrainrement au
-#   ExploreSolver)
 """Descent Solver
 
 Args:
@@ -108,8 +106,7 @@ function solve(sv::DescentSolver, neighbour_operator!;
             println("Dans DescentSolver : sv.cursol = sv.opts[:startsol] ")
             println("sv.cursol", to_s(sv.cursol))
         end
-    else
-        # on garde la dernière solution sv.cursol
+    # else on garde la dernière solution sv.cursol
     end
 
     sv.starttime = time_ns()/1_000_000_000
@@ -142,18 +139,8 @@ function solve(sv::DescentSolver, neighbour_operator!;
                 copy!(sv.bestsol, sv.cursol)
                 # push!(improvement_costs, sv.bestsol.cost)
                 # push!(improvement_steps, sv.nb_test)
-                if lg1()
-                    msg = string("\niter ", sv.nb_test, "=", sv.nb_reject, "+",
-                                 sv.nb_move)
-                    if lg2()
-                        # affiche coût + ordre des avions
-                        msg *= string(" => ", to_s(sv.bestsol))
-                    else
-                        # affiche seulement le coût
-                        msg *= string(" => ", sv.bestsol.cost)
-                    end
-                    print(msg)
-                end
+                sv.bestiter = sv.nb_test
+                print_log(sv)
             end
         else
             sv.nb_reject += 1
@@ -220,7 +207,7 @@ end
 
 function get_stats(sv::DescentSolver)
     # txt = <<-EOT.gsub /^ {4}/,''
-    txt = """
+    txt = "
     ==Etat de l'objet DescentSolver==
     sv.nb_test=$(sv.nb_test)
     sv.nb_move=$(sv.nb_move)
@@ -235,7 +222,7 @@ function get_stats(sv::DescentSolver)
     sv.bestsol.cost=$(sv.bestsol.cost)
     sv.bestiter=$(sv.bestiter)
     sv.testsol.solver.nb_infeasable=$(sv.testsol.solver.nb_infeasable)
-    """
+    "
     txt = replace(txt, r"^ {4}" => "")
 end
 

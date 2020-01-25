@@ -1,4 +1,4 @@
-
+include("./logging.jl")
 
 """Annealing solver
 
@@ -15,7 +15,6 @@ Attributes:
     nb_reject (Int): Nombre de voisins refusés
     nb_steps (Int): Nombre de paliers à température constante effectués
     step_size (Int): Nombre d'itérations à température constante
-    iter_in_step (Int): Nombre d'itérations effectués dans le palier courant
 
     nb_cons_reject (Int): Nombre de refus consécutifs
     nb_cons_reject_max (Int): Nombre maxi de refus consécutifs
@@ -44,7 +43,6 @@ mutable struct AnnealingSolver
     nb_reject::Int
     nb_steps::Int
     step_size::Int
-    iter_in_step::Int
 
     nb_cons_reject::Int
     nb_cons_reject_max::Float64
@@ -52,9 +50,9 @@ mutable struct AnnealingSolver
     nb_cons_no_improv::Int
     nb_cons_no_improv_max::Int
 
-    duration::Float64     # durée réelle (mesurée) de l'exécution
-    durationmax::Float64  # durée max de l'exécution (--duration)
-    starttime::Float64    # heure de début d'une résolution
+    duration::Float64
+    durationmax::Float64
+    starttime::Float64
 
     cursol::Solution
     bestsol::Solution
@@ -84,13 +82,13 @@ function AnnealingSolver(inst::Instance;
     testsol = Solution(cursol)
 
     durationmax = 15*60
-    duration = 0.0 # juste pour initialisation
-    starttime = 0.0 # juste pour initialisation
+    duration = 0.0
+    starttime = 0.0
 
     solver = AnnealingSolver(inst,
                              temp_init, temp_mini, temp_coef, temp_init,
                              0, 0, 0, 0, 0, step_size,
-                             0, n_cons_reject_max,
+                             n_cons_reject_max,
                              0, nb_cons_no_improv_max,
                              durationmax, duration, starttime,
                              cursol, bestsol, testsol)
@@ -107,28 +105,31 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
 
     sv.starttime = time_ns()/1_000_000_000
     while ! finished(sv)
-        # for _ in 1:sv.nb_steps
+        for iter_in_step in 1:sv.step_size
             copy!(sv.testsol, sv.cursol)
             neighbour_operator!(sv.testsol)
-            sv.nb_steps += 1
-            if rand() < exp(-(max(sv.testsol.cost - sv.cursol.cost, 0)) / sv.temp)
+            sv.test += 1
+            if sv.testsol.cost < sv.cursol.cost
+                copy!(sv.cursol, sv.testsol)
+                if sv.cursol.cost < sv.bestsol.cost
+                    print_log(sv)
+                    copy!(sv.bestsol, sv.cursol)
+                end
+                sv.nb_cons_reject = 0
+                sv.nb_move += 1
+            elseif rand() < exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp)
                 copy!(sv.cursol, sv.testsol)
                 sv.nb_cons_reject = 0
                 sv.nb_move += 1
-                # println(sv.testsol.cost)
             else
                 sv.nb_cons_reject += 1
                 sv.nb_reject += 1
                 sv.nb_cons_no_improv += 1
             end
-            if sv.testsol.cost < sv.bestsol.cost
-                println("Accepted solution with improvement : ", sv.bestsol.cost - sv.testsol.cost)
-                copy!(sv.bestsol, sv.testsol)
-            end
-        # end
+        end
+        sv.nb_steps += 1
         sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
-
     lg2() && println(get_stats(sv))
     ln2("END solve(AnnealingSolver)")
 end
@@ -142,7 +143,7 @@ function finished(sv::AnnealingSolver)
     # return sv.nb_cons_reject >= sv.nb_cons_reject_max
     sv.duration = time_ns()/1_000_000_000 - sv.starttime
     too_long = sv.duration >= sv.durationmax
-    ratio = sv.nb_move / sv.nb_steps
+    ratio = sv.nb_move / sv.nb_test
     too_many_cons_reject = ratio < sv.nb_cons_reject_max 
     return too_many_cons_reject || too_long
 end
