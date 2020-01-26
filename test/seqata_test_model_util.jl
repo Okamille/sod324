@@ -37,7 +37,7 @@ function test_one_lp_descent(spec)
     sv.durationmax = 1                         # Devra être écrasé
     # solve(sv, startsol=sol, nb_cons_reject_max=Args.get(:itermax))
     # Args.set(:level, 3)
-    solve(sv, swap_operator!, startsol=sol, nb_cons_reject_max=200, durationmax=3)
+    solve(sv, small_shift!, startsol=sol, nb_cons_reject_max=200, durationmax=3)
     # println("\nrésolution faite")
     @test sv.durationmax == 3
     @test sv.nb_cons_reject_max == 200
@@ -58,25 +58,18 @@ function test_one_lp_annealing(spec)
     model = sol.solver.model
     initial_sort!(sol, presort=:shuffle)
 
-
     @test isa(sol.solver, spec.lp_timing_solver)
     # On vérifie par exemple que le nom du solver externe "Clp" effectif 
     # correspondant bien au symbole :clp du solveur demandé
     @test Symbol(lowercase(solver_name(model))) == spec.external_mip_solver
     lg2("ok (avec sol.cost=$(sol.cost))\n")
 
-
     # ===========
     lg2("Création AnnealingSolver nb_cons_reject_max=$(Args.get(:itermax))")
     lg2(" (cost=700<=850.0?)... ")
-    sv = AnnealingSolver(inst)
-    # println("\nconstruction faite")
-    sv.nb_cons_reject_max = Args.get(:itermax) # Devra être écrasé
-    sv.durationmax = 1                         # Devra être écrasé
-    # solve(sv, startsol=sol, nb_cons_reject_max=Args.get(:itermax))
-    # Args.set(:level, 3)
-    solve(sv, swap_operator!, startsol=sol, nb_cons_reject_max=200, durationmax=3)
-    # println("\nrésolution faite")
+    sv = AnnealingSolver(inst, startsol=sol, nb_cons_reject_max=200,)
+    solve(sv, small_shift!, durationmax=3)
+
     @test sv.durationmax == 3
     @test sv.nb_cons_reject_max == 200
     @test isa(sv.bestsol.solver, spec.lp_timing_solver)

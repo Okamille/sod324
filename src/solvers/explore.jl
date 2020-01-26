@@ -31,7 +31,7 @@ mutable struct ExploreSolver
     end
 end
 
-function solve(sv::ExploreSolver, itermax::Int)
+function solve(sv::ExploreSolver, itermax::Int, neighbour_operator!)
     ln2("BEGIN solve(ExploreSolver)")
     ### Début du glouton  ### FIXME
 
@@ -59,7 +59,7 @@ function solve(sv::ExploreSolver, itermax::Int)
     current_costs = Vector{Float64}(undef, itermax)
     for iter in 1:itermax
         prevcost = sv.cursol.cost
-        swap!(sv.cursol)
+        neighbour_operator!(sv.cursol)
         sv.nb_move += 1
         degrad = sv.cursol.cost - prevcost
         ln4("degrad=$(degrad)")

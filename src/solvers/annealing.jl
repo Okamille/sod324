@@ -67,13 +67,13 @@ end
 function AnnealingSolver(inst::Instance; 
                          temp_init=nothing, temp_init_rate=0.8, temp_mini=1e-6,
                          temp_coef=0.999_999_9, step_size=1,
-                         n_cons_reject_max=nothing,
+                         nb_cons_reject_max=nothing,
                          nb_cons_no_improv_max=nothing,
                          min_acceptance_ratio=0.01,
                          startsol=nothing)
 
-    if n_cons_reject_max === nothing
-        n_cons_reject_max = inst.nb_planes^2
+    if nb_cons_reject_max === nothing
+        nb_cons_reject_max = inst.nb_planes^2
     end
     if nb_cons_no_improv_max === nothing
         nb_cons_no_improv_max = inst.nb_planes^2
@@ -96,7 +96,7 @@ function AnnealingSolver(inst::Instance;
     solver = AnnealingSolver(inst,
                              temp_init, temp_mini, temp_coef, temp_init,
                              0, 0, 0, 0, step_size,
-                             0, n_cons_reject_max,
+                             0, nb_cons_reject_max,
                              0, nb_cons_no_improv_max,
                              min_acceptance_ratio,
                              durationmax, duration, starttime,
@@ -112,7 +112,8 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
     if durationmax != 0
         sv.durationmax = durationmax
     end
-
+    # movements_costs = [sv.cursol.cost]
+    # movements_steps = [0]
     sv.starttime = time_ns()/1_000_000_000
     while ! finished(sv)
         for iter_in_step in 1:sv.step_size

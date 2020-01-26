@@ -25,7 +25,7 @@ function main_annealing(args)
     ln1(get_stats(sv))
 
     ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
-    costs = solve(sv, swap_operator!, durationmax=15*60)
+    costs = solve(sv, swap_close_planes!, durationmax=15*60)
     ms_stop = ms()
 
     bestsol = sv.bestsol
@@ -42,7 +42,6 @@ function main_annealing(args)
     println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
 
     ln1("Fin de l'action annealing")
-    return costs
 end
 
-costs = main_annealing(Args.args)
+main_annealing(Args.args)

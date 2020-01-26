@@ -26,7 +26,7 @@ function loop_annealing(args)
             step_size=1,
             startsol=sol,
             temp_coef=0.985,
-            n_cons_reject_max=1_000_000_000,
+            nb_cons_reject_max=1_000_000_000,
             nb_cons_no_improv_max=1_000_000_000
         )
 

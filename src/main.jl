@@ -69,9 +69,6 @@ function main()
             include("$APPDIR/src/main_greedy.jl")
         elseif action == :annealing
             include("$APPDIR/src/main_annealing.jl")
-        elseif action == :mip
-            include("$APPDIR/src/main_mip.jl")
-            main_mip(Args.args)
         elseif action == :dmip
             include("$APPDIR/src/main_dmip.jl")
         elseif action == :stats

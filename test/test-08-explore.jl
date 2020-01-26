@@ -38,7 +38,7 @@ lg1("3. Résolution avec itermax=$itermax) itérations ")
 lg1("(cost=700 <= 5500.0 ?)... ")
 # solve(solver, Args.get(:itermax))
 Args.set(:level, 0)
-solve(solver, itermax)
+solve(solver, itermax, small_shift!)
 Args.set(:level, TEST_LEVEL)
 bestsol = solver.bestsol
 @test bestsol.cost <= 5500.0
@@ -50,7 +50,7 @@ lg1("4. Résolution avec itermax=$itermax) itérations supplémentaires")
 lg1("(cost=700 <= 5500.0 ?)... ")
 # solve(solver, Args.get(:itermax))
 Args.set(:level, 0)
-solve(solver, itermax)
+solve(solver, itermax, swap!)
 Args.set(:level, TEST_LEVEL)
 bestsol = solver.bestsol
 @test bestsol.cost <= 5500.0

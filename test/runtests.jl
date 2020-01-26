@@ -40,6 +40,12 @@ include("../src/processing/instance_read_alp.jl")
 include("../src/processing/instance_generators.jl")
 # include("../src/solution.jl")
 
+@ms using Statistics
+
+@ms using Distributions: NegativeBinomial
+@ms using StatsBase: sample, ProbabilityWeights
+@ms include("../src/solvers/neighbour_operators.jl")
+
 include("seqata_test_util.jl")
 
 Args.parse_commandline(["test"])
@@ -72,7 +78,6 @@ else
     excluded = [
         "test-14b-dmip-cbc.jl", # long (1.5mn)
         "test-14c-dmip-glpk.jl", # trés trés long !!
-        "test-08-explore.jl"
     ]
     # global old_pwd = pwd() # global sinon warning julia07
     old_pwd = pwd()

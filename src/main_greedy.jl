@@ -7,8 +7,13 @@ function main_greedy(args)
 
     filename = args[:infile]
     instance = Instance(filename)
+    solution = Solution(instance)
 
-    solution = greedy(instance)
+    ms_start = ms()
+    # initial_sort!(solution)
+    greedy!(solution)
+    ms_stop = ms()
+    nb_sec = round(ms_stop - ms_start, digits=3)
     print_sol(solution)
     println("Fin de l'algorithme glouton")
 end
