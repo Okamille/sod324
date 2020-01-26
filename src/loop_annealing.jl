@@ -26,12 +26,10 @@ function loop_annealing(args)
             step_size=1,
             startsol=sol,
             temp_coef=0.985,
-            nb_cons_reject_max=1_000_000_000,
-            nb_cons_no_improv_max=1_000_000_000
         )
 
         ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
-        costs = solve(sv, swap_close_planes!, durationmax=3*60*60)
+        solve(sv, swap_close_planes!, durationmax=15*60)
         ms_stop = ms()
 
         bestsol = sv.bestsol

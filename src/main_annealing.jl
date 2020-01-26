@@ -10,22 +10,21 @@ function main_annealing(args)
     ln1("Solution correspondant à l'ordre de l'instance")
     ln1(to_s(sol))
 
-    # ON POURRAIT AUSSI REPARTIR DE LA SOLUTION DU GLOUTON INTELLIGENT 
     initial_sort!(sol)
     ln1("Solution initiale envoyée au solver")
     ln1(to_s(sol))
 
     sv = AnnealingSolver(
         inst; 
-        temp_init_rate=0.3,
-        step_size=inst.nb_planes,
+        temp_init_rate=0.8,
+        step_size=1,
         startsol=sol,
-        temp_coef=0.999_95
+        temp_coef=0.985,
     )
     ln1(get_stats(sv))
 
-    ms_start = ms() # nb secondes depuis démarrage avec précision à la ms
-    costs = solve(sv, swap_close_planes!, durationmax=15*60)
+    ms_start = ms()
+    solve(sv, swap_close_planes!, durationmax=15*60)
     ms_stop = ms()
 
     bestsol = sv.bestsol

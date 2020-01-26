@@ -26,9 +26,9 @@ function loop_descent(args)
         itermax = Args.get(:itermax)
 
         ms_start = ms()
-        costs, steps = solve(sv, swap_close_planes!, durationmax=duration,
-                             nb_cons_reject_max=itermax,
-                             startsol=sol)
+        solve(sv, swap_close_planes!, durationmax=duration,
+              nb_cons_reject_max=itermax,
+              startsol=sol)
         ms_stop = ms()
 
         bestsol = sv.bestsol
@@ -43,11 +43,6 @@ function loop_descent(args)
         # println("  nb_sec=$nb_sec")
         # println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
         println("$instance_name & $(bestsol.cost) & $nb_sec")
-
-        # inst_name, _ = splitext(basename(args[:infile]))
-        # save_path = "$APPDIR/_tmp/figures/$(inst.name)_descent_$itermax"
-        # plot_save_costs(costs, steps, save_path,
-        #                 plot=args[:plot], save=false)
     end
 end
 

@@ -112,8 +112,7 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
     if durationmax != 0
         sv.durationmax = durationmax
     end
-    # movements_costs = [sv.cursol.cost]
-    # movements_steps = [0]
+
     sv.starttime = time_ns()/1_000_000_000
     while ! finished(sv)
         for iter_in_step in 1:sv.step_size

@@ -56,7 +56,7 @@ function DescentSolver(inst::Instance;
     nb_move = 0
     nb_reject = 0
     nb_cons_reject = 0
-    nb_cons_reject_max = 1_000_000_000#inst.nb_planes^2
+    nb_cons_reject_max = inst.nb_planes^2
 
     bestiter = 0
 
