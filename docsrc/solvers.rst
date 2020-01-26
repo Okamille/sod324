@@ -23,4 +23,8 @@ Descent
 
 Annealing
 ---------
-.. jl:type:: AnnealingSolver
+.. jl:autofile:: src/solvers/annealing.jl
+
+Neighbour Operators
+-------------------
+.. jl:autofile:: src/solvers/neighbour_operators.jl

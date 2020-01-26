@@ -2,7 +2,7 @@ include("./logging.jl")
 
 """Annealing solver
 
-Attributes:
+Args:
     inst (Instance): instance
 
     temp_init (Float64): température courante

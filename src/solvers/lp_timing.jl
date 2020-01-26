@@ -44,13 +44,13 @@ function symbol(sv::LpTimingSolver)
 end
 
 """
-    solve!(sv::LpTimingSolver, sol::Solution)
+Trouve les temps d'atterrissage optimales pour un ordre d'avions donné par
+la solution `sol`.
 
-Finds the optimal landing times given the ordering defined by the solution `sol`.
-The solution landing times landing and cost are modified in-place.
+Les temps d'atterrissage de la solution sont modifiés in-place.
 
-This function relies on solving a linear program. If the program has no solution,
-then earliest landing strategy is applied.
+Cette fonction résoud un problème linéaire. Si le problème n'a pas de solution,
+la stratégie d'atterrissage au plus tôt est appliquée.
 """
 function solve!(sv::LpTimingSolver, sol::Solution)
     sv.nb_calls += 1

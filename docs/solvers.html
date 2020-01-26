@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#explore">Explore</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#descent">Descent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#annealing">Annealing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neighbour-operators">Neighbour Operators</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
@@ -176,6 +177,7 @@
 </dd>
 </dl>
 </p>
+</dd></dl><dl class="function"><dt id="greedy!-6f60f434270586dd2e948311437e2b59"><em class="property">function </em><code class="descname">greedy!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>presort</em> = <tt>:ARGS</tt><span class="sig-paren">)</span><a class="headerlink" href="#greedy!-6f60f434270586dd2e948311437e2b59" title="Permalink to this function">¶</a></dt><dd><p></p>
 </dd></dl></div>
 <div class="section" id="earliest-timing">
 <h2>Earliest timing<a class="headerlink" href="#earliest-timing" title="Lien permanent vers ce titre">¶</a></h2>
@@ -203,46 +205,167 @@ ne contient pas d’attribut bestsol</p>
 </p>
 </dd></dl></dd></dl><dl class="function"><dt id="symbol-bb9eea630e88defd3d63b184ec405a19"><em class="property">function </em><code class="descname">symbol</code><span class="sig-paren">(</span><em>sv</em>::LpTimingSolver<span class="sig-paren">)</span><a class="headerlink" href="#symbol-bb9eea630e88defd3d63b184ec405a19" title="Permalink to this function">¶</a></dt><dd><p><p>Permet de retrouver le nom de notre XxxxTimingSolver à partir de l’objet</p>
 </p>
-</dd></dl><dl class="function"><dt id="solve!-e3e66aaf17791bdf41da047f50761ec7"><em class="property">function </em><code class="descname">solve!</code><span class="sig-paren">(</span><em>sv</em>::LpTimingSolver, <em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#solve!-e3e66aaf17791bdf41da047f50761ec7" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>solve!(sv::LpTimingSolver, sol::Solution)</p>
-</div></blockquote>
-<p>Finds the optimal landing times given the ordering defined by the solution <cite>sol</cite>.
-The solution landing times landing and cost are modified in-place.</p>
-<p>This function relies on solving a linear program. If the program has no solution,
-then earliest landing strategy is applied.</p>
+</dd></dl><dl class="function"><dt id="solve!-e3e66aaf17791bdf41da047f50761ec7"><em class="property">function </em><code class="descname">solve!</code><span class="sig-paren">(</span><em>sv</em>::LpTimingSolver, <em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#solve!-e3e66aaf17791bdf41da047f50761ec7" title="Permalink to this function">¶</a></dt><dd><p><p>Trouve les temps d’atterrissage optimales pour un ordre d’avions donné par
+la solution <cite>sol</cite>.</p>
+<p>Les temps d’atterrissage de la solution sont modifiés in-place.</p>
+<p>Cette fonction résoud un problème linéaire. Si le problème n’a pas de solution,
+la stratégie d’atterrissage au plus tôt est appliquée.</p>
 </p>
 </dd></dl></div>
 <div class="section" id="explore">
 <h2>Explore<a class="headerlink" href="#explore" title="Lien permanent vers ce titre">¶</a></h2>
 <dl class="class"><dt id=ExploreSolver><em class="property">type </em><code class="descname">ExploreSolver</code><a class="headerlink" href="#ExploreSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p></p>
 <dl class="function"><dt id="ExploreSolver-3c7e3bd7f411f1bbe044ce58447ddfb0"><em class="property">function </em><code class="descname">ExploreSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance<span class="sig-paren">)</span><a class="headerlink" href="#ExploreSolver-3c7e3bd7f411f1bbe044ce58447ddfb0" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl></dd></dl><dl class="function"><dt id="solve-91b74c05e1035de9104cf7c60708a754"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::ExploreSolver, <em>itermax_max</em>::Int<span class="sig-paren">)</span><a class="headerlink" href="#solve-91b74c05e1035de9104cf7c60708a754" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></dd></dl><dl class="function"><dt id="solve-06987c345f2c3671fcba3269132dedf1"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::ExploreSolver, <em>itermax</em>::Int, <em>neighbour_operator!</em><span class="sig-paren">)</span><a class="headerlink" href="#solve-06987c345f2c3671fcba3269132dedf1" title="Permalink to this function">¶</a></dt><dd><p></p>
 </dd></dl></div>
 <div class="section" id="descent">
 <h2>Descent<a class="headerlink" href="#descent" title="Lien permanent vers ce titre">¶</a></h2>
-<dl class="class"><dt id=DescentSolver><em class="property">type </em><code class="descname">DescentSolver</code><a class="headerlink" href="#DescentSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p></p>
-<dl class="function"><dt id="DescentSolver-19ab65e3c5e281716c25d7f49b3f383e"><em class="property">function </em><code class="descname">DescentSolver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DescentSolver-19ab65e3c5e281716c25d7f49b3f383e" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl></dd></dl><dl class="function"><dt id="DescentSolver-0ee7bcbd435fe69c00c74941b228840e"><em class="property">function </em><code class="descname">DescentSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance; <em>startsol</em>::Union{Nothing, Solution} = <tt>nothing</tt><span class="sig-paren">)</span><a class="headerlink" href="#DescentSolver-0ee7bcbd435fe69c00c74941b228840e" title="Permalink to this function">¶</a></dt><dd><p></p>
+<dl class="class"><dt id=DescentSolver><em class="property">type </em><code class="descname">DescentSolver</code><a class="headerlink" href="#DescentSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p><p>Descent Solver</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inst</strong> (<em>Instance</em>) – </p></li>
+<li><p><strong>nb_test</strong> (<em>Int</em>) – Nombre total de voisins testé</p></li>
+<li><p><strong>nb_move</strong> (<em>Int</em>) – nombre de voisins acceptés (améliorant ou non)</p></li>
+<li><p><strong>nb_reject</strong> (<em>Int</em>) – nombre de voisins refusés</p></li>
+<li><p><strong>nb_cons_reject</strong> (<em>Int</em>) – Nombre de refus consécutifs</p></li>
+<li><p><strong>nb_cons_reject_max</strong> (<em>Int</em>) – Nombre maxi de refus consécutifs</p></li>
+<li><p><strong>duration</strong> (<em>Float64</em>) – Durée réelle (mesurée) de l’exécution</p></li>
+<li><p><strong>durationmax</strong> (<em>Float64</em>) – Durée max de l’exécution (–duration)</p></li>
+<li><p><strong>starttime</strong> (<em>Float64</em>) – Heure de début d’une résolution</p></li>
+<li><p><strong>cursol</strong> (<em>Solution</em>) – Solution courante</p></li>
+<li><p><strong>bestsol</strong> (<em>Solution</em>) – Meilleure Solution rencontrée</p></li>
+<li><p><strong>testsol</strong> (<em>Solution</em>) – Nouvelle solution potentielle</p></li>
+<li><p><strong>bestiter</strong> (<em>Int</em>) – </p></li>
+<li><p><strong>do_save_bestsol</strong> (<em>Bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Amélioriations possibles:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>revoir la gestion des options du solver (utiliser les params par clé-valeur)</p></li>
+<li><p>plus besoin de gérer cursol (car ici, bestsol suffit contrainrement au ExploreSolver)</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd></dl><dl class="function"><dt id="DescentSolver-0ee7bcbd435fe69c00c74941b228840e"><em class="property">function </em><code class="descname">DescentSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance; <em>startsol</em>::Union{Nothing, Solution} = <tt>nothing</tt><span class="sig-paren">)</span><a class="headerlink" href="#DescentSolver-0ee7bcbd435fe69c00c74941b228840e" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="solve-d9d77d8cf8d2d3fc8d5196753537c69a"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver, <em>neighbour_operator!</em>; <em>nb_cons_reject_max</em>::Int = <tt>0</tt>, <em>startsol</em>::Union{Nothing, Solution} = <tt>nothing</tt>, <em>durationmax</em>::Int = <tt>0</tt>, <em>record_cost</em> = <tt>false</tt><span class="sig-paren">)</span><a class="headerlink" href="#solve-d9d77d8cf8d2d3fc8d5196753537c69a" title="Permalink to this function">¶</a></dt><dd><p></p>
 </dd></dl><dl class="function"><dt id="finished-c14eadb433b1e0faab58b9cf24a604ed"><em class="property">function </em><code class="descname">finished</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver<span class="sig-paren">)</span><a class="headerlink" href="#finished-c14eadb433b1e0faab58b9cf24a604ed" title="Permalink to this function">¶</a></dt><dd><p><p>Retourne true ssi l’état justifie l’arrêt de l’algorithme</p>
 </p>
-</dd></dl><dl class="function"><dt id="solve-75752287487832b87bfca6147819d381"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver; <em>nb_cons_reject_max</em>::Int = <tt>0</tt>, <em>startsol</em>::Union{Nothing, Solution} = <tt>nothing</tt>, <em>durationmax</em>::Int = <tt>0</tt><span class="sig-paren">)</span><a class="headerlink" href="#solve-75752287487832b87bfca6147819d381" title="Permalink to this function">¶</a></dt><dd><p></p>
-</dd></dl><dl class="function"><dt id="sample_two_shifts-d56fc2f2c18b899bae1b8757ce164d34"><em class="property">function </em><code class="descname">sample_two_shifts</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>ecartmaxin</em>::Int = <tt>10</tt>, <em>ecartmaxout</em>::Int = <tt>-1</tt><span class="sig-paren">)</span><a class="headerlink" href="#sample_two_shifts-d56fc2f2c18b899bae1b8757ce164d34" title="Permalink to this function">¶</a></dt><dd><p><blockquote>
-<div><p>sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)</p>
-</div></blockquote>
-<p>Retourne un quadruplet d’indices destiné à affectuer deux shifts relativement
-proches
-- ecartmaxin est l’écart maxi au sein d’une paire d’indices
-- ecartmaxout est l’écart maxi entre deux paires d’indices (cumulables)
-- ecartmaxin et ecartmaxout sont imposés dans les bornes de l’instance
-- abs(i2-i1) et abs(i4-i3) sont limités par ecartmaxin
-- i3 est distant au maximum de ecartmaxout du couple (i1,i2)</p>
+</dd></dl><dl class="function"><dt id="sample_two_shifts-d56fc2f2c18b899bae1b8757ce164d34"><em class="property">function </em><code class="descname">sample_two_shifts</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>ecartmaxin</em>::Int = <tt>10</tt>, <em>ecartmaxout</em>::Int = <tt>-1</tt><span class="sig-paren">)</span><a class="headerlink" href="#sample_two_shifts-d56fc2f2c18b899bae1b8757ce164d34" title="Permalink to this function">¶</a></dt><dd><p><p>Retourne un quadruplet d’indices destiné à affectuer deux shifts relativement
+proches</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>est l'écart maxi au sein d'une paire d'indices</strong> (<em>ecartmaxin</em>) – </p></li>
+<li><p><strong>est l'écart maxi entre deux paires d'indices</strong> (<em>ecartmaxout</em>) – </p></li>
+<li><p><strong>et ecartmaxout sont imposés dans les bornes de l'instance</strong> (<em>ecartmaxin</em>) – </p></li>
+<li><p><strong>abs</strong> (<em>i2-i1) et abs(i4-i3</em>) – </p></li>
+<li><p><strong>est distant au maximum de ecartmaxout du couple</strong> (<em>i3</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </p>
 </dd></dl><dl class="function"><dt id="record_bestsol-cc401a122d8856f5c12b99dd7865a079"><em class="property">function </em><code class="descname">record_bestsol</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver; <em>movemsg</em> = <tt>""</tt><span class="sig-paren">)</span><a class="headerlink" href="#record_bestsol-cc401a122d8856f5c12b99dd7865a079" title="Permalink to this function">¶</a></dt><dd><p></p>
 </dd></dl><dl class="function"><dt id="get_stats-c14eadb433b1e0faab58b9cf24a604ed"><em class="property">function </em><code class="descname">get_stats</code><span class="sig-paren">(</span><em>sv</em>::DescentSolver<span class="sig-paren">)</span><a class="headerlink" href="#get_stats-c14eadb433b1e0faab58b9cf24a604ed" title="Permalink to this function">¶</a></dt><dd><p></p>
 </dd></dl></div>
 <div class="section" id="annealing">
 <h2>Annealing<a class="headerlink" href="#annealing" title="Lien permanent vers ce titre">¶</a></h2>
-<dl class="class"><dt id=AnnealingSolver><em class="property">type </em><code class="descname">AnnealingSolver</code><a class="headerlink" href="#AnnealingSolver" title="Permalink to thistype">¶</a></dt><dd class="body"></dd></dl></div>
+<dl class="class"><dt id=AnnealingSolver><em class="property">type </em><code class="descname">AnnealingSolver</code><a class="headerlink" href="#AnnealingSolver" title="Permalink to thistype">¶</a></dt><dd class="body"><p><p>Annealing solver</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inst</strong> (<em>Instance</em>) – instance</p></li>
+<li><p><strong>temp_init</strong> (<em>Float64</em>) – température courante</p></li>
+<li><p><strong>temp_mini</strong> (<em>Float64</em>) – température mini avant arrêt</p></li>
+<li><p><strong>temp_coef</strong> (<em>Float64</em>) – coefficiant de refroidissement</p></li>
+<li><p><strong>temp</strong> (<em>Float64</em>) – température courante</p></li>
+<li><p><strong>nb_test</strong> (<em>Int</em>) – Nombre total de voisins testés</p></li>
+<li><p><strong>nb_move</strong> (<em>Int</em>) – Nombre de voisins acceptés (améliorant ou non)</p></li>
+<li><p><strong>nb_reject</strong> (<em>Int</em>) – Nombre de voisins refusés</p></li>
+<li><p><strong>nb_steps</strong> (<em>Int</em>) – Nombre de paliers à température constante effectués</p></li>
+<li><p><strong>step_size</strong> (<em>Int</em>) – Nombre d’itérations à température constante</p></li>
+<li><p><strong>nb_cons_reject</strong> (<em>Int</em>) – Nombre de refus consécutifs</p></li>
+<li><p><strong>nb_cons_reject_max</strong> (<em>Int</em>) – Nombre maxi de refus consécutifs</p></li>
+<li><p><strong>nb_cons_no_improv</strong> (<em>Int</em>) – Nombre de tests non améliorants</p></li>
+<li><p><strong>nb_cons_no_improv_max</strong> (<em>Int</em>) – Nombre de maxi tests non améliorants</p></li>
+<li><p><strong>min_acceptance_ratio</strong> (<em>Float64</em>) – Taux d’acceptation minimal avant l’arrêt</p></li>
+<li><p><strong>duration</strong> (<em>Float64</em>) – Durée réelle (mesurée) de l’exécution</p></li>
+<li><p><strong>durationmax</strong> (<em>Float64</em>) – Durée max de l’exécution (–duration)</p></li>
+<li><p><strong>starttime</strong> (<em>Float64</em>) – Heure de début d’une résolution</p></li>
+<li><p><strong>cursol</strong> (<em>Solution</em>) – Solution courante</p></li>
+<li><p><strong>bestsol</strong> (<em>Solution</em>) – meilleure Solution rencontrée</p></li>
+<li><p><strong>testsol</strong> (<em>Solution</em>) – nouvelle solution courante potentielle</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl><dl class="function"><dt id="AnnealingSolver-48f484cbfe327418557f0ea5877eeb94"><em class="property">function </em><code class="descname">AnnealingSolver</code><span class="sig-paren">(</span><em>inst</em>::Instance; <em>temp_init</em> = <tt>nothing</tt>, <em>temp_init_rate</em> = <tt>0.8</tt>, <em>temp_mini</em> = <tt>1.0e-6</tt>, <em>temp_coef</em> = <tt>0.9999999</tt>, <em>step_size</em> = <tt>1</tt>, <em>nb_cons_reject_max</em> = <tt>nothing</tt>, <em>nb_cons_no_improv_max</em> = <tt>nothing</tt>, <em>min_acceptance_ratio</em> = <tt>0.01</tt>, <em>startsol</em> = <tt>nothing</tt><span class="sig-paren">)</span><a class="headerlink" href="#AnnealingSolver-48f484cbfe327418557f0ea5877eeb94" title="Permalink to this function">¶</a></dt><dd><p><p>Annealing solver outer constructor</p>
+</p>
+</dd></dl><dl class="function"><dt id="solve-d5156f5a6a0ac05eeb058642cfdc4cba"><em class="property">function </em><code class="descname">solve</code><span class="sig-paren">(</span><em>sv</em>::AnnealingSolver, <em>neighbour_operator!</em>; <em>durationmax</em>::Int = <tt>0</tt><span class="sig-paren">)</span><a class="headerlink" href="#solve-d5156f5a6a0ac05eeb058642cfdc4cba" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="finished-97faa6ccc96d443d502c09129fc7ab05"><em class="property">function </em><code class="descname">finished</code><span class="sig-paren">(</span><em>sv</em>::AnnealingSolver<span class="sig-paren">)</span><a class="headerlink" href="#finished-97faa6ccc96d443d502c09129fc7ab05" title="Permalink to this function">¶</a></dt><dd><p><p>Retourne true ssi l’état justifie l’arrêt de l’algorithme.</p>
+</p>
+</dd></dl><dl class="function"><dt id="guess_temp_init_degrad-26b83471ff1e13b87c915d0dc027a709"><em class="property">function </em><code class="descname">guess_temp_init_degrad</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>nb_degrad_max</em>::Int; <em>taux_cible</em> = <tt>0.8</tt><span class="sig-paren">)</span><a class="headerlink" href="#guess_temp_init_degrad-26b83471ff1e13b87c915d0dc027a709" title="Permalink to this function">¶</a></dt><dd><p><p>Calcul d’une température initiale de manière à avoir un taux d’acceptation τ en démarrage</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>taux_cible</strong> – pourcentage représentant le taux d’acceptation cible(e.g. 0.8)</p></li>
+<li><p><strong>nb_degrad_max</strong> – nbre de degradation à accepter pour le calcul de la moyenne</p></li>
+</ul>
+</dd>
+</dl>
+<p>On lance une suite de mutations (succession de mouvement systématiquement
+acceptés). On relève le nombre et la moyenne des mouvements conduisant à une
+dégradation du coût de la solution.</p>
+<p>degrad : dégradation moyenne du coût pour deux mutations consécutives de coût croissant</p>
+<p>La probabilité standard d’acceptation d’une mauvaise solution est :</p>
+<dl class="simple">
+<dt>..math::</dt><dd><p>p = e^{ -degrad/T } = 0.8    =&gt;    T = t_init = -degrad / ln(p)</p>
+</dd>
+</dl>
+<p>avec :</p>
+<ul class="simple">
+<li><p>p = taux_cible = proba(t_init)</p></li>
+<li><p>degrad = moyenne des dégradations de l’énergie</p></li>
+<li><p>T = t_init = la température initiale à calculer</p></li>
+</ul>
+<p class="rubric">Exemple</p>
+<p>On va lancer des mutations jusqu’à avoir 1000 dégradations.
+Si par exemple le coût des voisins forme une suite de la forme :
+990, 1010, 990, 1010, 990,…
+On devra faire 2000 mutations pour obtenir 1000 dégradations de valeur 20,
+d’où t_init = -degrad / ln(proba)
+proba = 0.8   =&gt;  t_init = degrad * 4.5
+proba = 0.37  =&gt;  t_init = degrad</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Cette fonction n’est <strong>pas</strong> une méthode de AnnealingSolver.
+Elle a juste besoin d’une solution et du type de mouvement à effectuer.
+Ici, on suppose que le seul mouvement possible est swap!(sol::Solution)
+Mais il faudra pouvoir paramétrer cette méthode pour des voisinages différents.</p>
+</div>
+</p>
+</dd></dl><dl class="function"><dt id="guess_temp_init_cost-6506e00e357b716b8ca5537e418cf6c9"><em class="property">function </em><code class="descname">guess_temp_init_cost</code><span class="sig-paren">(</span><em>sol</em>::Solution, <em>taux_cible</em> = <tt>0.8</tt><span class="sig-paren">)</span><a class="headerlink" href="#guess_temp_init_cost-6506e00e357b716b8ca5537e418cf6c9" title="Permalink to this function">¶</a></dt><dd><p><p>Suppose que les variations de coût sont de l’ordre du coût moyen par avion.</p>
+</p>
+</dd></dl><dl class="function"><dt id="get_stats-97faa6ccc96d443d502c09129fc7ab05"><em class="property">function </em><code class="descname">get_stats</code><span class="sig-paren">(</span><em>sv</em>::AnnealingSolver<span class="sig-paren">)</span><a class="headerlink" href="#get_stats-97faa6ccc96d443d502c09129fc7ab05" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></div>
+<div class="section" id="neighbour-operators">
+<h2>Neighbour Operators<a class="headerlink" href="#neighbour-operators" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="function"><dt id="small_shift!-03aa92bfec747e73e086e336cca91756"><em class="property">function </em><code class="descname">small_shift!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>p</em> = <tt>0.5</tt><span class="sig-paren">)</span><a class="headerlink" href="#small_shift!-03aa92bfec747e73e086e336cca91756" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="shift_costly_plane!-03aa92bfec747e73e086e336cca91756"><em class="property">function </em><code class="descname">shift_costly_plane!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>p</em> = <tt>0.5</tt><span class="sig-paren">)</span><a class="headerlink" href="#shift_costly_plane!-03aa92bfec747e73e086e336cca91756" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="find_shift_destination-9932c6e99760caf67a3cd74be7e1f622"><em class="property">function </em><code class="descname">find_shift_destination</code><span class="sig-paren">(</span><em>current_position</em>::Int, <em>p</em>::Float64, <em>n_planes</em>::Int<span class="sig-paren">)</span><a class="headerlink" href="#find_shift_destination-9932c6e99760caf67a3cd74be7e1f622" title="Permalink to this function">¶</a></dt><dd><p><p>Given a position, returns a random but valid destination.</p>
+<p>The size of the shift is a random variable 1 + X,
+where X follows a Negative Binomial of parameters (1, p)</p>
+</p>
+</dd></dl><dl class="function"><dt id="swap_close_planes!-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">swap_close_planes!</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#swap_close_planes!-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Swaps a random plane and one of its neighbour.</p>
+</p>
+</dd></dl><dl class="function"><dt id="swap_close_costly_planes!-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">swap_close_costly_planes!</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#swap_close_costly_planes!-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p><p>Swaps a random plane according to the cost distribution and one of its neighbour.</p>
+</p>
+</dd></dl><dl class="function"><dt id="permutation_operator!-ddafd12216bca9abc1d62bb9415207fe"><em class="property">function </em><code class="descname">permutation_operator!</code><span class="sig-paren">(</span><em>sol</em>::Solution; <em>permuted_ratio</em> = <tt>0.1</tt><span class="sig-paren">)</span><a class="headerlink" href="#permutation_operator!-ddafd12216bca9abc1d62bb9415207fe" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl><dl class="function"><dt id="cost_weighted_sample-60967fd402e0ea4918589ea3077544fa"><em class="property">function </em><code class="descname">cost_weighted_sample</code><span class="sig-paren">(</span><em>sol</em>::Solution<span class="sig-paren">)</span><a class="headerlink" href="#cost_weighted_sample-60967fd402e0ea4918589ea3077544fa" title="Permalink to this function">¶</a></dt><dd><p></p>
+</dd></dl></div>
 </div>
 
 
