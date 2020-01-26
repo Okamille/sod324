@@ -113,12 +113,14 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
         sv.durationmax = durationmax
     end
 
+    costs = Vector{Float64}(undef, 20_000)
     sv.starttime = time_ns()/1_000_000_000
     while ! finished(sv)
         for iter_in_step in 1:sv.step_size
             copy!(sv.testsol, sv.cursol)
             neighbour_operator!(sv.testsol)
             sv.nb_test += 1
+            costs[sv.nb_test] = sv.testsol.cost
             if sv.testsol.cost <= sv.cursol.cost
                 if sv.testsol.cost < sv.cursol.cost
                     copy!(sv.cursol, sv.testsol)
@@ -152,6 +154,7 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
         sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
     ln2("END solve(AnnealingSolver)")
+    return costs[1:sv.nb_test]
 end
 
 """
@@ -256,7 +259,7 @@ end
 Suppose que les variations de coût sont de l'ordre du coût moyen par avion.
 """
 function guess_temp_init_cost(sol::Solution, taux_cible=0.8)
-    delta = mean(sol.costs)/10
+    delta = mean(sol.costs)
     t_init = - delta / log(taux_cible)
     ln1("Temp init : ", t_init)
     return t_init

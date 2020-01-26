@@ -120,12 +120,13 @@ function solve(sv::DescentSolver, neighbour_operator!;
 
     # improvement_costs = [sv.bestsol.cost]
     # improvement_steps = [0]
+    costs = Vector{Float64}(undef, 20_000)
     while !finished(sv)
         copy!(sv.testsol, sv.cursol)
         neighbour_operator!(sv.testsol)
         sv.nb_test += 1
 
-        # current_costs[sv.nb_test] = sv.testsol.cost
+        costs[sv.nb_test] = sv.testsol.cost
 
         degrad = sv.testsol.cost - sv.cursol.cost
         ln4("degrad=$(degrad)")
@@ -146,7 +147,7 @@ function solve(sv::DescentSolver, neighbour_operator!;
         end
     end # fin while !finished
     ln2("END solve(DescentSolver)")
-    # return improvement_costs, improvement_steps
+    return costs[1:sv.nb_test]
 end
 
 """Retourne true ssi l'état justifie l'arrêt de l'algorithme"""

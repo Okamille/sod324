@@ -28,7 +28,6 @@ end
 
 """Plots a cost vector."""
 function plot_costs(costs, path::String)
-    println(path)
     plt.plot(costs)
     plt.xlabel("Iteration")
     plt.ylabel("Cost")
@@ -37,7 +36,6 @@ function plot_costs(costs, path::String)
 end
 
 function plot_costs(costs, steps, path::String)
-    println(path)
     plt.plot(steps, costs)
     plt.xlabel("Iteration")
     plt.ylabel("Cost")

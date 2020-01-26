@@ -6,10 +6,10 @@ function loop_descent(args)
         # "03",
         # "05",
         # "08",
-        # "09",
+        "09",
         # "10",
         # "11",
-        "12",
+        # "12",
         # "13"
     ]
     println("Instance n° & Cost & Time")
@@ -22,13 +22,13 @@ function loop_descent(args)
 
         sv = DescentSolver(inst)
 
-        duration = 6*60*60 # secondes
+        duration = 10*60 # secondes
         itermax = Args.get(:itermax)
 
         ms_start = ms()
-        solve(sv, swap_close_planes!, durationmax=duration,
-              nb_cons_reject_max=itermax,
-              startsol=sol)
+        costs = solve(sv, swap_close_planes!, durationmax=duration,
+                      nb_cons_reject_max=itermax,
+                      startsol=sol)
         ms_stop = ms()
 
         bestsol = sv.bestsol
@@ -43,6 +43,12 @@ function loop_descent(args)
         # println("  nb_sec=$nb_sec")
         # println("  => nb_call_per_sec = $nb_call_per_sec call/sec")
         println("$instance_name & $(bestsol.cost) & $nb_sec")
+        println("Fin de la méthode de descente")
+        save_path = "$APPDIR/_tmp/figures/$(instance_name)_descent"
+        mean_cost = costs / length(costs)
+        costs = min.(costs, 23_000)
+        plot_save_costs(costs, save_path,
+                        plot=args[:plot], save=args[:save_costs])
     end
 end
 
