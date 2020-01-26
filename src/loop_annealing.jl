@@ -23,9 +23,9 @@ function loop_annealing(args)
         sv = AnnealingSolver(
             inst; 
             temp_init_rate=0.8,
-            step_size=inst.nb_planes,
+            step_size=1,
             startsol=sol,
-            temp_coef=0.99,
+            temp_coef=0.985,
             n_cons_reject_max=1_000_000_000,
             nb_cons_no_improv_max=1_000_000_000
         )

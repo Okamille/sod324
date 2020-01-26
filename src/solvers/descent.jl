@@ -167,15 +167,15 @@ function finished(sv::DescentSolver)
 end
 
 """
-    sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)
-
 Retourne un quadruplet d'indices destiné à affectuer deux shifts relativement
 proches
-- ecartmaxin est l'écart maxi au sein d'une paire d'indices
-- ecartmaxout est l'écart maxi entre deux paires d'indices (cumulables)
-- ecartmaxin et ecartmaxout sont imposés dans les bornes de l'instance
-- abs(i2-i1) et abs(i4-i3) sont limités par ecartmaxin
-- i3 est distant au maximum de ecartmaxout du couple (i1,i2)
+
+Args:
+    ecartmaxin est l'écart maxi au sein d'une paire d'indices
+    ecartmaxout est l'écart maxi entre deux paires d'indices (cumulables)
+    ecartmaxin et ecartmaxout sont imposés dans les bornes de l'instance
+    abs(i2-i1) et abs(i4-i3) sont limités par ecartmaxin
+    i3 est distant au maximum de ecartmaxout du couple (i1,i2)
 """
 function sample_two_shifts(sol::Solution; ecartmaxin::Int=10, ecartmaxout::Int=-1)
     # Version stupide car trop large !

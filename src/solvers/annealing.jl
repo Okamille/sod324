@@ -134,8 +134,8 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
                     sv.nb_cons_no_improv += 1
                 end
             elseif rand() < exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp)
-                # ln4("Move ", sv.testsol.cost - sv.cursol.cost,
-                    # " Proba ", exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
+                ln4("Move ", sv.testsol.cost - sv.cursol.cost, " temp ", sv.temp,
+                    " Proba ", exp(-(sv.testsol.cost - sv.cursol.cost) / sv.temp))
                 copy!(sv.cursol, sv.testsol)
                 sv.nb_cons_reject = 0
                 sv.nb_move += 1
@@ -149,7 +149,6 @@ function solve(sv::AnnealingSolver, neighbour_operator!;
             end
         end
         sv.nb_steps += 1
-        ln3(sv.temp)
         sv.temp = max(sv.temp_coef * sv.temp, sv.temp_mini)
     end
     ln2("END solve(AnnealingSolver)")
@@ -257,7 +256,7 @@ end
 Suppose que les variations de coût sont de l'ordre du coût moyen par avion.
 """
 function guess_temp_init_cost(sol::Solution, taux_cible=0.8)
-    delta = maximum(sol.costs)
+    delta = mean(sol.costs)/10
     t_init = - delta / log(taux_cible)
     ln1("Temp init : ", t_init)
     return t_init
